@@ -13,15 +13,43 @@ interface Props {
 }
 
 export const ImageUpload: React.FC<Props> = ({ label, currentImage, onUpload, recommendations }) => {
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (file) {
+  //     // For demo purposes, we'll just create a fake URL
+  //     // In a real app, you'd upload to a server
+  //     const url = URL.createObjectURL(file);
+  //     onUpload(url);
+  //   }
+  // };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // For demo purposes, we'll just create a fake URL
-      // In a real app, you'd upload to a server
-      const url = URL.createObjectURL(file);
-      onUpload(url);
+      const formData = new FormData();
+      formData.append("image", file);
+  
+      try {
+        // Add a query parameter to specify the folder type
+        const response = await fetch("/api/upload-image?type=mlp", {
+          method: "POST",
+          body: formData,
+        });
+  
+        const result = await response.json();
+  
+        if (result.success) {
+          onUpload(result.url); // Pass the URL to the parent
+        } else {
+          alert("Failed to upload image: " + result.message);
+        }
+      } catch (error) {
+        console.error("Image upload failed:", error);
+        alert("Image upload failed. Please try again.");
+      }
     }
   };
+  
 
   return (
     <div className="space-y-2">
