@@ -12,7 +12,7 @@ import { TestimonialsEditor } from './editors/TestimonialsEditor';
 import { PricingEditor } from './editors/PricingEditor';
 import { FaqEditor } from './editors/FaqEditor';
 import { FinalCtaEditor } from './editors/FinalCtaEditor';
-
+import {api_Url} from "../../config"
 export const LandingPageEditor: React.FC = () => {
   const [mlp, setMlp] = useState<any>(null);
   const [isFetching, setIsFetching] = useState(false);
@@ -21,7 +21,7 @@ export const LandingPageEditor: React.FC = () => {
   const fetchLandingPage = async () => {
     try {
       setIsFetching(true);
-      const response = await fetch('/api/');
+      const response = await fetch(`${api_Url}/api/`);
       const data = await response.json();
       if (data.success) {
         setMlp(data.data);
@@ -45,7 +45,7 @@ export const LandingPageEditor: React.FC = () => {
   // Save changes to the database
   const handleSave = async () => {
     try {
-      const response = await fetch('/api/landing-page', {
+      const response = await fetch(`${api_Url}/api/landing-page`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

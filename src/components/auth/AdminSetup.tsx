@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '../ui/button';
 import { TwoFactorSetup } from './TwoFactorSetup';
 import axios from 'axios';
-
+import { api_Url } from '../../config';
 export const AdminSetup: React.FC = () => {
   const [step, setStep] = useState<'credentials' | '2fa'>('credentials');
   const [username, setUsername] = useState('');
@@ -29,7 +29,7 @@ export const AdminSetup: React.FC = () => {
 
   const handleTwoFactorComplete = async (twoFactorSecret: string) => {
     try {
-      const response = await axios.post('/api/admin/setup', {
+      const response = await axios.post(`${api_Url}/api/admin/setup`, {
         username,
         password,
         twoFactorSecret,

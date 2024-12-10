@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { Key } from 'lucide-react';
-
+import {api_Url} from '../../config'
 interface SecretKey {
   _id: string;
   secretKey: string;
@@ -20,7 +20,7 @@ export const SecretKeyManager: React.FC = () => {
   // Fetch keys from the database
   const fetchSecretKeys = async () => {
     try {
-      const response = await fetch('/api/admin/keys');
+      const response = await fetch(`${api_Url}/api/admin/keys`);
       const data = await response.json();
       if (data.success) {
         setSecretKeys(data.data);
@@ -42,7 +42,7 @@ export const SecretKeyManager: React.FC = () => {
     }
 
     try {
-      const response = await fetch('/api/admin/keys', {
+      const response = await fetch(`${api_Url}/api/admin/keys`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -67,7 +67,7 @@ export const SecretKeyManager: React.FC = () => {
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to revoke this key?')) {
       try {
-        const response = await fetch(`/api/admin/keys/${id}`, { method: 'DELETE' });
+        const response = await fetch(`${api_Url}/api/admin/keys/${id}`, { method: 'DELETE' });
         const data = await response.json();
         if (data.success) {
           setSecretKeys((prev) => prev.filter((key) => key._id !== id));
@@ -148,7 +148,7 @@ export const SecretKeyManager: React.FC = () => {
                   Link for the Public Page:
                   </p>
                   <code className="block  px-2 py-1 rounded text-sm font-mono text-[#D3D3DF]">
-                  http://localhost:5173/wheel/{secretKey.projectId}
+                  https://wheelodeal.com/wheel/{secretKey.projectId}
                   </code>
                 </div>
               </div>

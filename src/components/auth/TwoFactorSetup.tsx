@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import QRCode from 'qrcode';
 import { Button } from '../ui/button';
-
+import { api_Url } from '../../config';
 interface Props {
   onComplete: (secret: string) => void;
   onCancel: () => void;
@@ -45,7 +45,7 @@ export const TwoFactorSetup: React.FC<Props> = ({ onComplete, onCancel }) => {
     try {
       setError('');
 
-      const response = await fetch('/api/admin/verify-2fa', {
+      const response = await fetch(`${api_Url}/api/admin/verify-2fa`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ secret, token }),

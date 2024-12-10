@@ -11,7 +11,7 @@ import { Toaster, toast } from 'sonner';
 import { AnalyticsDashboard } from './analytics/AnalyticsDashboard';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-
+import { api_Url } from '../config';
 import { useParams } from 'react-router-dom'; // Import for accessing route parameters
 
 export const UserDashboard: React.FC = () => {
@@ -26,7 +26,7 @@ export const UserDashboard: React.FC = () => {
     const fetchConfig = async () => {
       try {
         setIsFetching(true);
-        const response = await fetch(`/api/public-page/${projectId}`); // Use projectId in API call
+        const response = await fetch(`${api_Url}/api/public-page/${projectId}`); // Use projectId in API call
         const data = await response.json();
         if (data.success) {
           setConfig(data.data);
@@ -49,7 +49,7 @@ export const UserDashboard: React.FC = () => {
   // Save configuration changes
   const handleSave = async () => {
     try {
-      const response = await fetch(`/api/public-page/${projectId}`, {
+      const response = await fetch(`${api_Url}/api/public-page/${projectId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(config),

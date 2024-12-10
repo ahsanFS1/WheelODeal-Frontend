@@ -4,6 +4,11 @@ import { Button } from '../ui/button';
 import { Key } from 'lucide-react';
 import { toast } from 'sonner';
 import { UserDashboard } from '../UserDashboard';
+import { api_Url } from '../../config';
+
+
+
+
 export const LoginForm: React.FC = () => {
   const [secretKey, setSecretKey] = useState('');
   const [error, setError] = useState('');
@@ -15,7 +20,7 @@ export const LoginForm: React.FC = () => {
 
     try {
       // Call backend to validate the secret key
-      const response = await fetch('/api/admin/keys/validate', {
+      const response = await fetch(`${api_Url}/api/admin/keys/validate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ secretKey }),

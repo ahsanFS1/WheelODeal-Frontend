@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '../ui/button';
-
+import { api_Url } from '../../config';
 interface Props {
   onLogin: () => void; // Callback after successful login
 }
@@ -20,7 +20,7 @@ export const AdminLogin: React.FC<Props> = ({ onLogin }) => {
 
 
     try {
-      const response = await fetch('/api/admin/login', {
+      const response = await fetch(`${api_Url}/api/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
@@ -44,7 +44,7 @@ export const AdminLogin: React.FC<Props> = ({ onLogin }) => {
     
     try {
      
-      const response = await fetch('/api/admin/verify-2fa', {
+      const response = await fetch(`${api_Url}/api/admin/verify-2fa`, {
        
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

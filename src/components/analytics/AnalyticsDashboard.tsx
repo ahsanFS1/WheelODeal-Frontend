@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
+import { api_Url } from '../../config';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -62,7 +63,7 @@ export const AnalyticsDashboard: React.FC<Props> = ({ pageId }) => {
       try {
         // Fetch general analytics metrics
         const analyticsResponse = await fetch(
-          `/api/analytics?pageId=${pageId}&startDate=${dateRange.startDate.toISOString().split('T')[0]}&endDate=${dateRange.endDate.toISOString().split('T')[0]}`
+          `${api_Url}/api/analytics?pageId=${pageId}&startDate=${dateRange.startDate.toISOString().split('T')[0]}&endDate=${dateRange.endDate.toISOString().split('T')[0]}`
         );
         const analyticsResult = await analyticsResponse.json();
 
@@ -84,7 +85,7 @@ export const AnalyticsDashboard: React.FC<Props> = ({ pageId }) => {
         }
 
         // Fetch most popular prize
-        const prizeResponse = await fetch(`/api/prizes/most-popular?pageId=${pageId}`);
+        const prizeResponse = await fetch(`${api_Url}/api/prizes/most-popular?pageId=${pageId}`);
         const prizeResult = await prizeResponse.json();
 
         if (prizeResult.success) {

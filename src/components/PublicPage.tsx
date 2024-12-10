@@ -5,7 +5,7 @@ import { SpinResult } from '../types';
 import { Carousel } from './carousel/Carousel';
 import { CountdownTimer } from './CountdownTimer';
 import confetti from 'canvas-confetti';
-
+import { api_Url } from '../config';
 export const PublicPage: React.FC = () => {
   const { projectId } = useParams(); // Extract projectId from URL
   const [config, setConfig] = useState<any>(null);
@@ -60,7 +60,7 @@ export const PublicPage: React.FC = () => {
       console.log('Fetching configuration for PublicPage');
       setIsFetching(true);
       try {
-        const response = await fetch(`/api/public-page/${projectId}`);
+        const response = await fetch(`${api_Url}/api/public-page/${projectId}`);
         const data = await response.json();
 
         if (data.success) {
@@ -110,7 +110,7 @@ const handleSpinEnd = async (result: SpinResult) => {
 
   // Save the prize to the backend
   try {
-    const response = await fetch('/api/prizes', {
+    const response = await fetch(`${api_Url}/api/prizes`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

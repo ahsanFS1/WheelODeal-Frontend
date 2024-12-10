@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { PageConfig, Prize, LandingPageConfig } from '../types';
-
+import {api_Url} from "../config";
 interface ConfigState {
   config: PageConfig;
   setConfig: (config: Partial<PageConfig>) => void;
@@ -298,7 +298,7 @@ export const usePublicPageConStore = create((set) => ({
   fetchPublicPage: async () => {
     console.log("Fetching public page...");
     try {
-      const res = await fetch('http://localhost:5000/api/'); // Adjust endpoint as needed
+      const res = await fetch(`${api_Url}/api/`); // Adjust endpoint as needed
       const data = await res.json();
       if (data.success) {
         set({ publicPage: data.data });
@@ -322,7 +322,7 @@ export const useConStore = create((set) => ({
   
   updateLandingPage: async (landingPageUpdate) => {
     try {
-      const response = await fetch(`/api/landing-page`, {
+      const response = await fetch(`${api_Url}/api/landing-page`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -354,7 +354,8 @@ export const useConStore = create((set) => ({
   
   fetchMLP: async () => {
     try {
-      const res = await fetch('/api/');
+      console.log(api_Url)
+      const res = await fetch(`${api_Url}/api/`);
       const data = await res.json();
       if (data.success) {
        

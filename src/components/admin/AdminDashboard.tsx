@@ -3,7 +3,7 @@ import { AdminSetup } from '../auth/AdminSetup';
 import { AdminLogin } from '../auth/AdminLogin';
 import { AdminPanel } from './AdminPanel';
 import { Toaster } from 'sonner';
-
+import { api_Url } from '../../config';
 export const AdminDashboard: React.FC = () => {
   const [isSetup, setIsSetup] = useState<boolean | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -13,7 +13,7 @@ export const AdminDashboard: React.FC = () => {
     const checkAdminSetup = async () => {
       try {
         console.log("Fetching");
-        const response = await fetch('/api/admin'); // API to check if admin exists
+        const response = await fetch(`${api_Url}/api/admin`); // API to check if admin exists
         const data = await response.json();
         if (data.success && data.data) {
           setIsSetup(true);

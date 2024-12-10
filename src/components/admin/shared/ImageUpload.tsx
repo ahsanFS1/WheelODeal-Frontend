@@ -1,6 +1,6 @@
 import React from 'react';
 import { Upload } from 'lucide-react';
-
+import { api_Url } from '../../../config';
 interface Props {
   label: string;
   type: string;
@@ -32,7 +32,7 @@ export const ImageUpload: React.FC<Props> = ({ label, currentImage, onUpload, re
   
       try {
         // Add a query parameter to specify the folder type
-        const response = await fetch(`/api/upload-image?type=${type}`, {
+        const response = await fetch(`${api_Url}/api/upload-image?type=${type}`, {
           method: "POST",
           body: formData,
         });
