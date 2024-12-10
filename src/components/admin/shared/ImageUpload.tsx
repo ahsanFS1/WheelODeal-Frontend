@@ -3,6 +3,7 @@ import { Upload } from 'lucide-react';
 
 interface Props {
   label: string;
+  type: string;
   currentImage?: string;
   onUpload: (url: string) => void;
   recommendations?: {
@@ -12,7 +13,7 @@ interface Props {
   };
 }
 
-export const ImageUpload: React.FC<Props> = ({ label, currentImage, onUpload, recommendations }) => {
+export const ImageUpload: React.FC<Props> = ({ label, currentImage, onUpload, recommendations,type }) => {
   // const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   const file = e.target.files?.[0];
   //   if (file) {
@@ -31,7 +32,7 @@ export const ImageUpload: React.FC<Props> = ({ label, currentImage, onUpload, re
   
       try {
         // Add a query parameter to specify the folder type
-        const response = await fetch("/api/upload-image?type=mlp", {
+        const response = await fetch(`/api/upload-image?type=${type}`, {
           method: "POST",
           body: formData,
         });

@@ -79,8 +79,21 @@ export const HeroEditor: React.FC<Props> = ({ data, onChange }) => {
         </div>
 
         <div className="border-t border-purple-900/20 pt-4 mt-4">
+             {/* Logo Upload */}
+          <ImageUpload
+            label="Logo"
+            type="mlp"
+            currentImage={data.logo}
+            onUpload={(url) => handleChange('logo', url)}
+            recommendations={{
+              maxSize: '1MB',
+              dimensions: '500x500px',
+              format: 'JPG, PNG',
+            }}
+          />
           <ImageUpload
             label="Background Image"
+            type="mlp"
             currentImage={data.backgroundImage}
             onUpload={(url) => handleChange('backgroundImage', url)}
             recommendations={{

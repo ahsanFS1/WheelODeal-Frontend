@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-
 import { useNavigate } from 'react-router-dom';
 import * as Tabs from '@radix-ui/react-tabs';
 import { Button } from './ui/button';
@@ -66,6 +65,7 @@ export const UserDashboard: React.FC = () => {
       toast.error('Error saving configuration.');
     }
   };
+
   const handleLogout = () => {
     if (window.confirm('Are you sure you want to log out?')) {
       navigate('/');
@@ -145,260 +145,279 @@ export const UserDashboard: React.FC = () => {
           </Tabs.List>
 
           <Tabs.Content value="general" className="space-y-8">
-  <div className="bg-[#1B1B21] rounded-lg shadow-lg p-6">
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      <div className="space-y-6">
-        <h2 className="text-xl font-semibold text-[#D3D3DF]">Page Settings</h2>
-        <TextInput
-          label="Title"
-          value={config.headerTitle}
-          onChange={(value) => setConfig({ ...config, headerTitle: value })}
-        />
-        <TextInput
-          label="Subtitle"
-          value={config.subtitle}
-          onChange={(value) => setConfig({ ...config, subtitle: value })}
-        />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <ImageUpload
-            label="Logo"
-            currentImage={config.logo}
-            onUpload={(url) => setConfig({ ...config, logo: url })}
-            recommendations={{
-              maxSize: "1MB",
-              dimensions: "200x200px",
-              format: "PNG, SVG preferred",
-            }}
-          />
-          <ImageUpload
-            label="Background Image"
-            currentImage={config.backgroundImage}
-            onUpload={(url) => setConfig({ ...config, backgroundImage: url })}
-            recommendations={{
-              maxSize: "1MB",
-              dimensions: "1920x1080px",
-              format: "JPG, PNG",
-            }}
-          />
-        </div>
-      </div>
-      <div>
-        <h2 className="text-xl font-semibold mb-6 text-[#D3D3DF]">Preview</h2>
-        <div className="bg-[#121218] border border-[#C33AFF]/20 rounded-lg p-4">
-          <div
-            className="relative aspect-video overflow-hidden rounded-lg"
-            style={{
-              backgroundImage: `url(${config.backgroundImage})`,
-              filter: " brightness(0.7)",
-            }}
-          >
-            <div className="relative z-10 p-8 flex flex-col items-center justify-center h-full text-center">
-              <img
-                src={config.logo}
-                alt="Logo"
-                className="h-20 mb-6 object-contain"
-              />
-              <h1 className="text-4xl font-bold text-white mb-4">
-                {config.headerTitle}
-              </h1>
-              <p className="text-xl text-white/80">{config.subtitle}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</Tabs.Content>
-
-<Tabs.Content value="carousel" className="space-y-8">
-  <div className="bg-[#1B1B21] rounded-lg shadow-lg p-6">
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      <div className="space-y-6">
-        <h2 className="text-xl font-semibold text-[#D3D3DF]">Carousel Images</h2>
-        <ImageUpload
-          label="Add Image (Max 6)"
-          currentImage=""
-          onUpload={(url) => {
-            if (!url) {
-              toast.error("Invalid image URL.");
-              return;
-            }
-            if (config.carouselImages.length >= 6) {
-              toast.error("Maximum 6 images allowed");
-              return;
-            }
-            setConfig({
-              ...config,
-              carouselImages: [...config.carouselImages, url], // Update carousel images
-            });
-          }}
-          recommendations={{
-            maxSize: "1MB",
-            dimensions: "1200x800px",
-            format: "JPG, PNG",
-          }}
-        />
-        <div className="grid grid-cols-2 gap-4">
-          {config.carouselImages.map((image:string, index: number) => (
-            <div key={index} className="relative">
-              <img
-                src={config.carouselImages[index].url}
-                alt={`Carousel ${index + 1}`}
-                className="w-full aspect-video object-cover rounded-lg"
-              />
-              <Button
-                onClick={() =>
-                  setConfig({
-                    ...config,
-                    carouselImages: config.carouselImages.filter(
-                      (_, i) => i !== index
-                    ),
-                  })
-                }
-                variant="destructive"
-                size="sm"
-                className="absolute top-2 right-2"
-              >
-                Remove
-              </Button>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div>
-        <h2 className="text-xl font-semibold mb-6 text-[#D3D3DF]">Preview</h2>
-        <div className="bg-[#121218] border border-[#C33AFF]/20 rounded-lg p-4">
-          {config.carouselImages && config.carouselImages.length > 0 ? (
-            <Carousel
-              images={(config?.carouselImages || []).map((url: string, index: number) => ({
-              id: index.toString(),
-              url: config.carouselImages[index].url,
-              alt: `Carousel ${index + 1}`,
-              }))}
-            />
-
-          ) : (
-            <p className="text-[#D3D3DF] text-center">No images to display in preview.</p>
-          )}
-        </div>
-      </div>
-    </div>
-  </div>
-</Tabs.Content>
-
-
-<Tabs.Content value="wheel" className="space-y-8">
-  <div className="bg-[#1B1B21] rounded-lg shadow-lg p-6">
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      <div className="space-y-6">
-        <h2 className="text-xl font-semibold text-[#D3D3DF]">Wheel Settings</h2>
-        {config.prizes.map((prize, index) => (
-          <div
-            key={index}
-            className="bg-[#121218] border border-[#C33AFF]/20 rounded-lg p-4"
-          >
-            <TextInput
-              label="Prize Text"
-              value={prize.text}
-              onChange={(value) =>
-                setConfig({
-                  ...config,
-                  prizes: config.prizes.map((p, i) =>
-                    i === index ? { ...p, text: value } : p
-                  ),
-                })
-              }
-            />
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-[#D3D3DF] mb-1">
-                  Color
-                </label>
-                <input
-                  type="color"
-                  value={prize.color}
-                  onChange={(e) =>
-                    setConfig({
-                      ...config,
-                      prizes: config.prizes.map((p, i) =>
-                        i === index ? { ...p, color: e.target.value } : p
-                      ),
-                    })
-                  }
-                  className="w-full h-10 px-1 py-1 bg-[#121218] border border-[#C33AFF]/20 rounded-lg"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-[#D3D3DF] mb-1">
-                  Probability (0-1)
-                </label>
-                <input
-                  type="number"
-                  min="0"
-                  max="1"
-                  step="0.1"
-                  value={prize.probability}
-                  onChange={(e) =>
-                    setConfig({
-                      ...config,
-                      prizes: config.prizes.map((p, i) =>
-                        i === index
-                          ? { ...p, probability: parseFloat(e.target.value) }
-                          : p
-                      ),
-                    })
-                  }
-                  className="w-full px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF]"
-                />
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-      <div>
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold text-[#D3D3DF]">Preview</h2>
-          <Button
-            onClick={() => setShowPreview(!showPreview)}
-            variant="outline"
-            className="flex items-center gap-2 bg-[#1B1B21] border-[#C33AFF] text-[#C33AFF] hover:bg-[#C33AFF] hover:text-white"
-          >
-            <Eye className="w-4 h-4" />
-            {showPreview ? "Hide Preview" : "Show Preview"}
-          </Button>
-        </div>
-        {showPreview && (
-          <div className="relative">
-            <SpinningWheel
-              prizes={config.prizes}
-              onSpinEnd={() => {}}
-              disabled={false}
-            />
-          </div>
-        )}
-      </div>
-    </div>
-  </div>
-</Tabs.Content>
-
-<Tabs.Content value="preview" className="space-y-8">
-  <div className="bg-[#1B1B21] rounded-lg shadow-lg p-6">
-    <iframe
-      src= {`/wheel/${projectId}`}
-      className="w-full h-[800px] rounded-lg border border-[#C33AFF]/20"
-      title="Page Preview"
-    />
-  </div>
-</Tabs.Content>
- {/* Analytics Tab */}
- <Tabs.Content value="analytics" className="space-y-8">
             <div className="bg-[#1B1B21] rounded-lg shadow-lg p-6">
-              <AnalyticsDashboard  pageId={projectId || 'defaultPageId'} /> 
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="space-y-6">
+                  <h2 className="text-xl font-semibold text-[#D3D3DF]">Page Settings</h2>
+                  <TextInput
+                    label="Title"
+                    value={config.headerTitle}
+                    onChange={(value) => setConfig({ ...config, headerTitle: value })}
+                  />
+                  <TextInput
+                    label="Subtitle"
+                    value={config.subtitle}
+                    onChange={(value) => setConfig({ ...config, subtitle: value })}
+                  />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <ImageUpload
+                      label="Logo"
+                      type="publicpage"
+                      currentImage={config.logo}
+                      onUpload={(url) => setConfig({ ...config, logo: url })}
+                      recommendations={{
+                        maxSize: '1MB',
+                        dimensions: '200x200px',
+                        format: 'PNG, SVG preferred',
+                      }}
+                    />
+                    <ImageUpload
+                      label="Background Image"
+                      type="publicpage"
+                      currentImage={config.backgroundImage}
+                      onUpload={(url) => setConfig({ ...config, backgroundImage: url })}
+                      recommendations={{
+                        maxSize: '1MB',
+                        dimensions: '1920x1080px',
+                        format: 'JPG, PNG',
+                      }}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <h2 className="text-xl font-semibold mb-6 text-[#D3D3DF]">Preview</h2>
+                  <div className="bg-[#121218] border border-[#C33AFF]/20 rounded-lg p-4">
+                    <a
+                      href={config.backgroundImage}
+                      target="_blank"
+                      rel="noopener noreferrer nofollow"
+                      className="relative aspect-video overflow-hidden rounded-lg"
+                      style={{
+                        backgroundImage: `url(${config.backgroundImage})`,
+                        filter: 'brightness(0.7)',
+                      }}
+                    >
+                      <div className="relative z-10 p-8 flex flex-col items-center justify-center h-full text-center">
+                        <img
+                          src={config.logo}
+                          alt="Logo"
+                          className="h-20 mb-6 object-contain"
+                        />
+                        <h1 className="text-4xl font-bold text-white mb-4">
+                          {config.headerTitle}
+                        </h1>
+                        <p className="text-xl text-white/80">{config.subtitle}</p>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
-</Tabs.Content>
+          </Tabs.Content>
+
+          <Tabs.Content value="carousel" className="space-y-8">
+            <div className="bg-[#1B1B21] rounded-lg shadow-lg p-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="space-y-6">
+                  <h2 className="text-xl font-semibold text-[#D3D3DF]">Carousel Images</h2>
+                  <ImageUpload
+                    label="Add Image (Max 6)"
+                    currentImage=""
+                    onUpload={(url) => {
+                      if (!url) {
+                        toast.error('Invalid image URL.');
+                        return;
+                      }
+                      if (config.carouselImages.length >= 6) {
+                        toast.error('Maximum 6 images allowed');
+                        return;
+                      }
+                      setConfig({
+                        ...config,
+                        carouselImages: [...config.carouselImages, url], // Update carousel images
+                      });
+                    }}
+                    recommendations={{
+                      maxSize: '1MB',
+                      dimensions: '1200x800px',
+                      format: 'JPG, PNG',
+                    }}
+                  />
+                  <div className="grid grid-cols-2 gap-4">
+                    {config.carouselImages.map((image: string, index: number) => (
+                      <a
+                        href={image}
+                        target="_blank"
+                        rel="noopener noreferrer nofollow"
+                        key={index}
+                        className="relative"
+                      >
+                        <img
+                          src={image}
+                          alt={`Carousel ${index + 1}`}
+                          className="w-full aspect-video object-cover rounded-lg"
+                        />
+                        <Button
+                          onClick={() =>
+                            setConfig({
+                              ...config,
+                              carouselImages: config.carouselImages.filter(
+                                (_, i) => i !== index
+                              ),
+                            })
+                          }
+                          variant="destructive"
+                          size="sm"
+                          className="absolute top-2 right-2"
+                        >
+                          Remove
+                        </Button>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <h2 className="text-xl font-semibold mb-6 text-[#D3D3DF]">Preview</h2>
+                  <div className="bg-[#121218] border border-[#C33AFF]/20 rounded-lg p-4">
+                    {config.carouselImages && config.carouselImages.length > 0 ? (
+                      <Carousel
+                        images={(config?.carouselImages || []).map((url: string, index: number) => ({
+                          id: index.toString(),
+                          url,
+                          alt: `Carousel ${index + 1}`,
+                        }))}
+                      />
+                    ) : (
+                      <p className="text-[#D3D3DF] text-center">No images to display in preview.</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Tabs.Content>
+          
 
 
-</Tabs.Root>
+          <Tabs.Content value="wheel" className="space-y-8">
+            <div className="bg-[#1B1B21] rounded-lg shadow-lg p-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="space-y-6">
+                  <h2 className="text-xl font-semibold text-[#D3D3DF]">Wheel Settings</h2>
+                  {config.prizes.map((prize, index) => (
+                    <div
+                      key={index}
+                      className="bg-[#121218] border border-[#C33AFF]/20 rounded-lg p-4"
+                    >
+                      <TextInput
+                        label="Prize Text"
+                        value={prize.text}
+                        onChange={(value) =>
+                          setConfig({
+                            ...config,
+                            prizes: config.prizes.map((p, i) =>
+                              i === index ? { ...p, text: value } : p
+                            ),
+                          })
+                        }
+                      />
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-[#D3D3DF] mb-1">
+                            Color
+                          </label>
+                          <input
+                            type="color"
+                            value={prize.color}
+                            onChange={(e) =>
+                              setConfig({
+                                ...config,
+                                prizes: config.prizes.map((p, i) =>
+                                  i === index ? { ...p, color: e.target.value } : p
+                                ),
+                              })
+                            }
+                            className="w-full h-10 px-1 py-1 bg-[#121218] border border-[#C33AFF]/20 rounded-lg"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-[#D3D3DF] mb-1">
+                            Probability (0-1)
+                          </label>
+                          <input
+                            type="number"
+                            min="0"
+                            max="1"
+                            step="0.1"
+                            value={prize.probability}
+                            onChange={(e) =>
+                              setConfig({
+                                ...config,
+                                prizes: config.prizes.map((p, i) =>
+                                  i === index
+                                    ? { ...p, probability: parseFloat(e.target.value) }
+                                    : p
+                                ),
+                              })
+                            }
+                            className="w-full px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF]"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-xl font-semibold text-[#D3D3DF]">Preview</h2>
+                    <Button
+                      onClick={() => setShowPreview(!showPreview)}
+                      variant="outline"
+                      className="flex items-center gap-2 bg-[#1B1B21] border-[#C33AFF] text-[#C33AFF] hover:bg-[#C33AFF] hover:text-white"
+                    >
+                      <Eye className="w-4 h-4" />
+                      {showPreview ? "Hide Preview" : "Show Preview"}
+                    </Button>
+                  </div>
+                  {showPreview && (
+                    <div className="relative">
+                      <SpinningWheel
+                        prizes={config.prizes}
+                        onSpinEnd={() => {}}
+                        disabled={false}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </Tabs.Content>
+
+
+
+
+
+
+
+          <Tabs.Content value="preview" className="space-y-8">
+            <div className="bg-[#1B1B21] rounded-lg shadow-lg p-6">
+              <iframe
+                src={`/wheel/${projectId}`}
+                className="w-full h-[800px] rounded-lg border border-[#C33AFF]/20"
+                title="Page Preview"
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+                sandbox="allow-scripts allow-same-origin"
+                allowFullScreen
+              />
+            </div>
+          </Tabs.Content>
+          
+          <Tabs.Content value="analytics" className="space-y-8">
+            <div className="bg-[#1B1B21] rounded-lg shadow-lg p-6">
+              <AnalyticsDashboard pageId={projectId || 'defaultPageId'} />
+            </div>
+          </Tabs.Content>
+        </Tabs.Root>
       </main>
     </div>
   );

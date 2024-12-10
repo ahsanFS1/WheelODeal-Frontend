@@ -5,26 +5,18 @@ import { MainLandingPage } from './components/MainLandingPage';
 import { AdminDashboard } from './components/admin/AdminDashboard';
 import { LoginForm } from './components/auth/LoginForm';
 import { UserDashboard } from './components/UserDashboard';
-import { useAuthStore } from './store/authStore';
+
 import { AnalyticsDashboard } from './components/analytics/AnalyticsDashboard';
 
 // Protected Route component
-// const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-//   const { user } = useAuthStore();
-//   if (!user) return <Navigate to="/" replace />;
-//   return <>{children}</>;
-// };
-
-// Admin Route component
-const AdminRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user } = useAuthStore();
-  if (!user || user.type !== 'admin') return <Navigate to="/" replace />;
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const token = sessionStorage.getItem('userToken'); // Check token in session storage
+  if (!token) return <Navigate to="/user001z" replace />; // Redirect to login if no token
   return <>{children}</>;
 };
 
 export default function App() {
   return (
-    console.log("Running the app"),
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<MainLandingPage />} />
@@ -32,37 +24,28 @@ export default function App() {
         <Route path="/user001z" element={<LoginForm />} />
         <Route 
           path="/admin_d01z" 
-          element={
-            <AdminDashboard />
-          } 
+          element={<AdminDashboard />} 
         />
         <Route 
           path="/login-form" 
+          element={<LoginForm />} 
+        />
+        <Route
+          path="/user-dashboard/:projectId"
           element={
-            // <ProtectedRoute>
-              <LoginForm />
-            // </ProtectedRoute>
+            <ProtectedRoute>
+              <UserDashboard />
+            </ProtectedRoute>
           }
         />
-
-      <Route
-        path = "/user-dashboard/:projectId"
-        element = {
-          <UserDashboard />
-        }
-      
-      />
-       <Route
-        path = "/analytics"
-        element = {
-          <AnalyticsDashboard
-          
-          pageId='1'/>
-        }
-      
-      />
-      
-        
+        <Route
+          path="/analytics"
+          element={
+            <ProtectedRoute>
+              <AnalyticsDashboard pageId="1" />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

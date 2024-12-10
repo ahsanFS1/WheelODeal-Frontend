@@ -63,49 +63,54 @@ console.log("Landing Page Data: ",landingPage);
   return (
     <div className="min-h-screen bg-[#121218] text-white">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {landingPage.hero.backgroundImage && (
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{
-              backgroundImage: `url(${landingPage.hero.backgroundImage})`,
-              filter: 'blur(2px) brightness(0.7)',
-            }}
-          />
-        )}
+      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+  {landingPage.hero.backgroundImage && (
+    <div
+      className="absolute inset-0 bg-cover bg-center"
+      style={{
+        backgroundImage: `url(${landingPage.hero.backgroundImage})`,
+        filter: 'blur(2px) brightness(0.7)',
+      }}
+    />
+  )}
 
-        <motion.div
-          className="relative z-10 container mx-auto px-4 text-center"
-          initial="initial"
-          animate="animate"
-          variants={fadeIn}
-        >
-          {landingPage.hero.logo && (
-            <img
-              src={landingPage.hero.logo}
-              alt="Logo"
-              className="h-24 mx-auto object-contain drop-shadow-lg mb-8"
-            />
-          )}
+  {/* Logo at the top */}
+  {landingPage.hero.logo && (
+    <img
+      src={landingPage.hero.logo}
+      alt="Logo"
+      className="absolute top-8 left-1/2 transform -translate-x-1/2 h-24 object-contain drop-shadow-lg"
+    />
+  )}
 
-          <h1 className="text-6xl md:text-7xl font-bold mb-6 text-shadow-lg bg-clip-text text-transparent bg-gradient-to-r from-white to-purple-200">
-            {landingPage.hero.headline}
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 text-gray-200 text-shadow-lg">
-            {landingPage.hero.subheadline}
-          </p>
-          <Button
-            onClick={() => document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' })}
-            style={{
-              backgroundColor: landingPage.hero.ctaButton.color,
-              color: landingPage.hero.ctaButton.textColor,
-            }}
-            className="text-lg px-8 py-4 rounded-full transform hover:scale-105 transition-all shadow-lg hover:shadow-purple-500/50"
-          >
-            {landingPage.hero.ctaButton.text}
-          </Button>
-        </motion.div>
-      </section>
+  <motion.div
+    className="relative z-10 container mx-auto px-4 text-center"
+    initial="initial"
+    animate="animate"
+    variants={{
+      initial: { opacity: 0, y: 20 },
+      animate: { opacity: 1, y: 0 },
+      transition: { duration: 0.6 },
+    }}
+  >
+    <h1 className="text-6xl md:text-7xl font-bold mb-6 text-shadow-lg bg-clip-text text-transparent bg-gradient-to-r from-white to-purple-200">
+      {landingPage.hero.headline}
+    </h1>
+    <p className="text-xl md:text-2xl mb-8 text-gray-200 text-shadow-lg">
+      {landingPage.hero.subheadline}
+    </p>
+    <Button
+      onClick={() => document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' })}
+      style={{
+        backgroundColor: landingPage.hero.ctaButton.color,
+        color: landingPage.hero.ctaButton.textColor,
+      }}
+      className="text-lg px-8 py-4 rounded-full transform hover:scale-105 transition-all shadow-lg hover:shadow-purple-500/50"
+    >
+      {landingPage.hero.ctaButton.text}
+    </Button>
+  </motion.div>
+</section>
 
       {/* Demo Section */}
       <section id="demo" className="py-20 bg-[#1B1B21]">

@@ -30,6 +30,7 @@ export interface LandingPageConfig {
       link: string;
     };
     backgroundImage?: string;
+    logo?:string;
   };
   demo: {
     title: string;
