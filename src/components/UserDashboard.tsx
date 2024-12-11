@@ -221,6 +221,7 @@ export const UserDashboard: React.FC = () => {
                 <div className="space-y-6">
                   <h2 className="text-xl font-semibold text-[#D3D3DF]">Carousel Images</h2>
                   <ImageUpload
+                    type = "carousel"
                     label="Add Image (Max 6)"
                     currentImage=""
                     onUpload={(url) => {
