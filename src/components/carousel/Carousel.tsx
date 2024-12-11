@@ -55,7 +55,7 @@ export const Carousel: React.FC<Props> = ({ images, autoPlayInterval = 5000, onI
         <motion.img
           key={currentIndex}
           src={images[currentIndex].url}
-          alt={images[currentIndex].alt}
+          
           className="absolute inset-0 w-full h-full object-cover"
           initial={{ opacity: 0, x: 100 }}
           animate={{ opacity: 1, x: 0 }}

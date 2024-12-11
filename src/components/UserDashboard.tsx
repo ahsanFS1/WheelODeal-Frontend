@@ -245,16 +245,16 @@ export const UserDashboard: React.FC = () => {
                     }}
                   />
                   <div className="grid grid-cols-2 gap-4">
-                    {config.carouselImages.map((image: string, index: number) => (
+                    {config.carouselImages.map((image: {url: string, alt: string}, index: number) => (
                       <a
-                        href={image}
+                        href={image.url}
                         target="_blank"
                         rel="noopener noreferrer nofollow"
                         key={index}
                         className="relative"
                       >
                         <img
-                          src={image}
+                          src={image.url}
                           alt={`Carousel ${index + 1}`}
                           className="w-full aspect-video object-cover rounded-lg"
                         />
@@ -282,12 +282,10 @@ export const UserDashboard: React.FC = () => {
                   <div className="bg-[#121218] border border-[#C33AFF]/20 rounded-lg p-4">
                     {config.carouselImages && config.carouselImages.length > 0 ? (
                       <Carousel
-                        images={(config?.carouselImages || []).map((url: string, index: number) => ({
-                          id: index.toString(),
-                          url,
-                          alt: `Carousel ${index + 1}`,
-                        }))}
-                      />
+                      images={(config?.carouselImages || [])}
+                      
+                    />
+                    
                     ) : (
                       <p className="text-[#D3D3DF] text-center">No images to display in preview.</p>
                     )}
