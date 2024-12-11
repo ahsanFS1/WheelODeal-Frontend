@@ -5,7 +5,7 @@ interface Props {
   label: string;
   type: string;
   currentImage?: string;
-  onUpload: (url: string) => void;
+  onUpload: (url: string,alt: string) => void;
   recommendations?: {
     maxSize?: string;
     dimensions?: string;
@@ -40,7 +40,7 @@ export const ImageUpload: React.FC<Props> = ({ label, currentImage, onUpload, re
         const result = await response.json();
   
         if (result.success) {
-          onUpload(result.url); // Pass the URL to the parent
+          onUpload(result.url,"Prize Image"); // Pass the URL to the parent
         } else {
           alert("Failed to upload image: " + result.message);
         }

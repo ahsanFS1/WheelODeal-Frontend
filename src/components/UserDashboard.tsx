@@ -214,17 +214,17 @@ export const UserDashboard: React.FC = () => {
               </div>
             </div>
           </Tabs.Content>
-
+          
           <Tabs.Content value="carousel" className="space-y-8">
             <div className="bg-[#1B1B21] rounded-lg shadow-lg p-6">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div className="space-y-6">
                   <h2 className="text-xl font-semibold text-[#D3D3DF]">Carousel Images</h2>
                   <ImageUpload
-                    type = "carousel"
                     label="Add Image (Max 6)"
+                    type = "carousel"
                     currentImage=""
-                    onUpload={(url) => {
+                    onUpload={(url,alt) => {
                       if (!url) {
                         toast.error('Invalid image URL.');
                         return;
@@ -235,7 +235,7 @@ export const UserDashboard: React.FC = () => {
                       }
                       setConfig({
                         ...config,
-                        carouselImages: [...config.carouselImages, url], // Update carousel images
+                        carouselImages: [...config.carouselImages,{ url,alt}], // Update carousel images
                       });
                     }}
                     recommendations={{
