@@ -158,7 +158,7 @@ console.log("Landing Page Data: ",landingPage);
       
 
       {/*Video Section*/}
-
+              {landingPage.videoId && (
         <section id='video' className="min-h-screen bg-[#121218] text-white">
       <motion.div
         className="px-auto py-20 container mx-auto px-4"
@@ -184,6 +184,7 @@ console.log("Landing Page Data: ",landingPage);
         </div>
       </motion.div>
     </section>
+    )}
 
 
 

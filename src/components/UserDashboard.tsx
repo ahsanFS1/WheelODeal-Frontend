@@ -13,6 +13,9 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { api_Url } from '../config';
 import { useParams } from 'react-router-dom'; // Import for accessing route parameters
+import { VideoEditor } from './admin/editors/VideoEditor';
+
+
 
 export const UserDashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -123,6 +126,9 @@ export const UserDashboard: React.FC = () => {
               className="px-4 py-2 text-[#D3D3DF] hover:text-[#C33AFF] data-[state=active]:text-[#C33AFF] data-[state=active]:border-b-2 data-[state=active]:border-[#C33AFF] transition-colors"
             >
               Carousel
+            </Tabs.Trigger>
+            <Tabs.Trigger value="video" className="px-4 py-2 text-[#D3D3DF] hover:text-[#C33AFF]">
+              Video Settings
             </Tabs.Trigger>
             <Tabs.Trigger
               value="wheel"
@@ -295,7 +301,15 @@ export const UserDashboard: React.FC = () => {
             </div>
           </Tabs.Content>
           
-
+          <Tabs.Content value="video" className="space-y-8">
+            <div className="bg-[#1B1B21] rounded-lg shadow-lg p-6">
+              <h2 className="text-xl font-semibold text-[#D3D3DF]">Video Settings</h2>
+              <VideoEditor
+                videoId={config.videoId || ''}
+                onChange={(videoId) => setConfig({ ...config, videoId })}
+              />
+            </div>
+          </Tabs.Content>          
 
           <Tabs.Content value="wheel" className="space-y-8">
             <div className="bg-[#1B1B21] rounded-lg shadow-lg p-6">

@@ -13,6 +13,11 @@ import { PricingEditor } from './editors/PricingEditor';
 import { FaqEditor } from './editors/FaqEditor';
 import { FinalCtaEditor } from './editors/FinalCtaEditor';
 import {api_Url} from "../../config"
+import { VideoEditor } from './editors/VideoEditor';
+
+
+
+
 export const LandingPageEditor: React.FC = () => {
   const [mlp, setMlp] = useState<any>(null);
   const [isFetching, setIsFetching] = useState(false);
@@ -117,6 +122,7 @@ export const LandingPageEditor: React.FC = () => {
           {[
             { value: 'hero', label: 'Hero' },
             { value: 'demo', label: 'Demo' },
+            { value:  'video', label: 'Video'},
             { value: 'features', label: 'Features' },
             { value: 'benefits', label: 'Benefits' },
             { value: 'howItWorks', label: 'How It Works' },
@@ -137,6 +143,8 @@ export const LandingPageEditor: React.FC = () => {
 
         <div className="overflow-y-auto max-h-[calc(100vh-300px)] pr-4 -mr-4">
           <Tabs.Content value="hero" className="text-[#D3D3DF]">
+            
+            
             <HeroEditor
               data={mlp.hero}
               onChange={(hero) => setMlp({ ...mlp, hero })}
@@ -148,6 +156,13 @@ export const LandingPageEditor: React.FC = () => {
             <DemoEditor
               data={mlp.demo}
               onChange={(demo) => setMlp({ ...mlp, demo })}
+            />
+          </Tabs.Content>
+
+          <Tabs.Content value="video" className="text-[#D3D3DF]">
+            <VideoEditor
+              videoId={mlp.videoId || ''}
+              onChange={(videoId) => setMlp({ ...mlp, videoId })}
             />
           </Tabs.Content>
 

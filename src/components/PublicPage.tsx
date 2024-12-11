@@ -5,6 +5,7 @@ import { SpinResult } from '../types';
 import { Carousel } from './carousel/Carousel';
 import { CountdownTimer } from './CountdownTimer';
 import confetti from 'canvas-confetti';
+import { motion } from 'framer-motion';
 import { api_Url } from '../config';
 export const PublicPage: React.FC = () => {
   const { projectId } = useParams(); // Extract projectId from URL
@@ -173,6 +174,12 @@ const handleSpinEnd = async (result: SpinResult) => {
     return <div>Failed to load page configuration.</div>;
   }
 
+  const fadeIn = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.6 },
+  };
+
   return (
     <div className="min-h-screen bg-[#121218] text-white relative">
       {/* Background Image */}
@@ -209,6 +216,13 @@ const handleSpinEnd = async (result: SpinResult) => {
             <p className="text-lg text-gray-300">{config.subtitle}</p>
           </div>
         </section>
+
+
+
+
+
+
+
   
         {/* Product Carousel Section */}
         {config.carouselImages && config.carouselImages.length > 0 && (
@@ -219,6 +233,36 @@ const handleSpinEnd = async (result: SpinResult) => {
           </section>
         )}
   
+
+
+    {config.videoId && (
+        <section id='video' className="py-8">
+      <motion.div
+        className="px-auto py-20 container mx-auto px-4"
+        initial="initial"
+        whileInView="animate"
+        variants={fadeIn}
+        viewport={{ once: true }}
+      >
+        
+
+        <div className="max-w-4xl mx-auto">
+          {/* Embed a random YouTube video */}
+          <iframe
+            width="100%"
+            height="500"
+            src={`https://www.youtube.com/embed/${config.videoId}`}
+            title="Random YouTube Video"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="rounded-lg shadow-xl"
+          ></iframe>
+        </div>
+      </motion.div>
+    </section>
+    )}
+        
         {/* Wheel Section */}
         <section className="py-8">
           <div className="max-w-4xl mx-auto px-4">
