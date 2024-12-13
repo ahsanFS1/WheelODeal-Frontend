@@ -20,7 +20,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<MainLandingPage />} />
-        <Route path="/wheel/:projectId" element={<PublicPage />} />
+        <Route path="/wheel/:publicPageId" element={<PublicPage />} />
         <Route path="/user001z" element={<LoginForm />} />
         <Route 
           path="/admin_d01z" 

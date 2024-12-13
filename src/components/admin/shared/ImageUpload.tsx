@@ -38,7 +38,7 @@ export const ImageUpload: React.FC<Props> = ({ label, currentImage, onUpload, re
         });
   
         const result = await response.json();
-  
+        console.log(result.url)
         if (result.success) {
           onUpload(result.url,"Prize Image"); // Pass the URL to the parent
         } else {

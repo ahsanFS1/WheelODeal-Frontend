@@ -11,76 +11,174 @@ import { Toaster, toast } from 'sonner';
 import { AnalyticsDashboard } from './analytics/AnalyticsDashboard';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { api_Url } from '../config';
+import { api_Url, web_Url } from '../config';
 import { useParams } from 'react-router-dom'; // Import for accessing route parameters
 import { VideoEditor } from './admin/editors/VideoEditor';
+import { Select, SelectItem } from './ui/select'; // Example dropdown component
+
 
 
 
 export const UserDashboard: React.FC = () => {
   const navigate = useNavigate();
-  const { projectId } = useParams(); // Access projectId from URL
-  const [config, setConfig] = useState<any>(null);
-  const [showPreview, setShowPreview] = useState(false); // Define showPreview state
+  const { projectId } = useParams();
+  interface PublicPage {
+    publicPageId: string;
+    publicPageName: string;
+    [key: string]: any; // Include other properties if applicable
+  }
+  
+  const [publicPages, setPublicPages] = useState<PublicPage[]>([]);
+  
+  const [selectedPage, setSelectedPage] = useState<any>(null);
   const [isFetching, setIsFetching] = useState(false);
-
-  // Fetch configuration from the backend API
+  const [planDetails, setPlanDetails] = useState(null);
+  const [remainingPages, setRemainingPages] = useState(0);
+  const [newPageName, setNewPageName] = useState('');
+  const [showPreview, setShowPreview] = useState(null);
   useEffect(() => {
-    const fetchConfig = async () => {
+    const fetchPublicPages = async () => {
       try {
         setIsFetching(true);
-        const response = await fetch(`${api_Url}/api/public-page/${projectId}`); // Use projectId in API call
-        const data = await response.json();
-        if (data.success) {
-          setConfig(data.data);
-        } else {
-          toast.error('Failed to fetch configuration.');
+        const [pagesResponse, planResponse] = await Promise.all([
+          fetch(`${api_Url}/api/public-page/${projectId}`),
+          fetch(`${api_Url}/api/admin/SPkeys/${projectId}`),
+        ]);
+
+        const pagesData = await pagesResponse.json();
+        const planData = await planResponse.json();
+
+        if (pagesData.success) {
+          setPublicPages(pagesData.data);
+          setSelectedPage(pagesData.data[0] || null);
         }
+
+        if (planData.success) {
+          
+          setPlanDetails(planData.data[0]);
+          setRemainingPages(planData.data[0].remainingPages);
+        }
+
         setIsFetching(false);
       } catch (error) {
-        console.error('Error fetching configuration:', error);
-        toast.error('Error fetching configuration.');
+        console.error('Error fetching data:', error);
+        toast.error('Error fetching data.');
         setIsFetching(false);
       }
     };
 
-    if (projectId) {
-      fetchConfig();
+    if (projectId) fetchPublicPages();
+  }, [projectId]);
+  const handlePageSelection = (pageId: string) => {
+    const selected = publicPages.find((page) => page.publicPageId === pageId);
+    if (selected) {
+      setSelectedPage(selected);
+    } else {
+      console.error('Page not found for the given ID:', pageId);
+      setSelectedPage(null); // Set to null if no matching page is found
     }
-  }, [projectId]); // Re-fetch if projectId changes
+  };
+  
 
-  // Save configuration changes
-  const handleSave = async () => {
+  const handleCreatePage = async () => {
+    if (remainingPages <= 0 || !newPageName.trim()) {
+      toast.error('Cannot create a page. Please check remaining pages and enter a name.');
+      return;
+    }
+
     try {
-      const response = await fetch(`${api_Url}/api/public-page/${projectId}`, {
-        method: 'PUT',
+      const response = await fetch(`${api_Url}/api/public-page/`, {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(config),
+        body: JSON.stringify({ projectId, publicPageName: newPageName }),
       });
+
       const data = await response.json();
       if (data.success) {
+        toast.success('Public page created successfully!');
+        setPublicPages([...publicPages, data.data]);
+        setRemainingPages(remainingPages - 1);
+        setSelectedPage(data.data);
+        setNewPageName('');
+      } else {
+        toast.error('Failed to create a public page.');
+      }
+    } catch (error) {
+      console.error('Error creating a public page:', error);
+      toast.error('Error creating a public page.');
+    }
+  };
+  const handleSave = async () => {
+    if (!selectedPage) {
+      toast.error('No public page selected to save changes.');
+      return;
+    }
+  
+    try {
+      const response = await fetch(`${api_Url}/api/public-page/${selectedPage.publicPageId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(selectedPage),
+      });
+      const data = await response.json();
+  
+      if (data.success) {
         toast.success('Changes saved successfully!');
+  
+        // Update the publicPages array
+        setPublicPages((prev) =>
+          prev.map((page) =>
+            page.publicPageId === selectedPage.publicPageId ? { ...page, ...selectedPage } : page
+          )
+        );
       } else {
         toast.error('Failed to save changes.');
       }
     } catch (error) {
-      console.error('Error saving configuration:', error);
-      toast.error('Error saving configuration.');
+      console.error('Error saving public page:', error);
+      toast.error('Error saving public page.');
     }
   };
-
   const handleLogout = () => {
     if (window.confirm('Are you sure you want to log out?')) {
       navigate('/');
     }
   };
 
+  if (!publicPages.length) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center text-white space-y-4 bg-purple-950">
+        <h1 className="text-2xl font-semibold">No public pages found for this project.</h1>
+        <div className="space-y-4">
+          <TextInput
+            label="Enter a Name for Your First Page"
+            value={newPageName}
+            onChange={(value) => setNewPageName(value)}
+          />
+          <Button
+            onClick={handleCreatePage}
+            disabled={!newPageName.trim()}
+            className={`px-4 py-2 rounded-lg ${
+              newPageName.trim()
+                ? "bg-[#A22BD9] text-white hover:bg-purple-900"
+                : "bg-gray-700 text-gray-500 cursor-not-allowed"
+            }`}
+          >
+            Create Your First Public Page
+          </Button>
+        </div>
+      </div>
+    );
+  }
+  
+  const formattedDate = new Date(planDetails?.expiryDate).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
   if (isFetching) {
     return <div className="min-h-screen flex items-center justify-center text-white">Loading...</div>;
-  }
-
-  if (!config) {
-    return <div className="min-h-screen flex items-center justify-center text-white">Failed to load configuration.</div>;
   }
 
   return (
@@ -97,7 +195,6 @@ export const UserDashboard: React.FC = () => {
               onClick={handleSave}
               className="flex items-center gap-2 bg-[#1B1B21] text-[#C33AFF] border border-[#C33AFF] hover:bg-[#C33AFF] hover:text-white transition-all duration-200"
             >
-              <Save className="w-4 h-4" />
               Save Changes
             </Button>
             <Button
@@ -105,7 +202,6 @@ export const UserDashboard: React.FC = () => {
               variant="outline"
               className="flex items-center gap-2 bg-[#1B1B21] border-[#C33AFF] text-[#C33AFF] hover:bg-[#C33AFF] hover:text-white"
             >
-              <LogOut className="w-4 h-4" />
               Logout
             </Button>
           </div>
@@ -113,7 +209,70 @@ export const UserDashboard: React.FC = () => {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Tabs.Root defaultValue="general" className="space-y-8">
+        <div className="space-y-4 mb-6">
+        <div className="bg-[#1B1B21] rounded-lg shadow-md p-6 text-white space-y-4">
+  <h2 className="text-2xl font-bold text-[#C33AFF]">Plan Details</h2>
+  <div className="space-y-2">
+    <p className="text-lg font-bold">
+      <span className="font-bold text-[#A22BD9]">Plan:</span> {planDetails?.plan || 'N/A'}
+    </p>
+    <p className="text-lg font-bold">
+      <span className="font-semibold text-[#A22BD9]">Remaining Pages:</span> {remainingPages}
+    </p>
+    <p className="text-lg">
+      <span className="font-semibold text-[#A22BD9]">Public Page Link:</span>{' '}
+      {selectedPage ? (
+        <a
+          href={`/wheel/${selectedPage.publicPageId}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[#C33AFF] underline hover:text-[#A22BD9]"
+        >
+         {web_Url}/wheel/{selectedPage.publicPageId}
+        </a>
+      ) : (
+        'No page selected'
+      )}
+    </p>
+    
+    <p className="text-lg font-bold">
+      <span className="font-semibold text-[#A22BD9]">Your plan expires on: {formattedDate}</span> 
+    </p>
+  </div>
+</div>
+
+          <Select
+            value={selectedPage?.publicPageId || ''}
+            onChange={(e) => handlePageSelection(e.target.value)}
+            className="bg-[#1B1B21] text-[#C33AFF] px-4 py-2 rounded-lg"
+          >
+            {publicPages.map((page) => (
+              <SelectItem key={page.publicPageName} value={page.publicPageId}>
+                {page.publicPageName}
+              </SelectItem>
+            ))}
+          </Select>
+        </div>
+
+        <div className="space-y-4">
+          <TextInput
+            label="New Page Name"
+            value={newPageName}
+            onChange={(value) => setNewPageName(value)}
+          />
+          <Button
+            onClick={handleCreatePage}
+            className={`px-4 py-2 rounded-lg ${
+              remainingPages > 0 ? 'bg-[#A22BD9] text-white' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+            }`}
+            disabled={remainingPages <= 0}
+          >
+            Create New Public Page
+          </Button>
+        </div>
+
+    
+        <Tabs.Root defaultValue="general" className="space-y-8 py-6">
           <Tabs.List className="flex space-x-4 border-b border-[#C33AFF]/20">
             <Tabs.Trigger
               value="general"
@@ -157,20 +316,20 @@ export const UserDashboard: React.FC = () => {
                   <h2 className="text-xl font-semibold text-[#D3D3DF]">Page Settings</h2>
                   <TextInput
                     label="Title"
-                    value={config.headerTitle}
-                    onChange={(value) => setConfig({ ...config, headerTitle: value })}
+                    value={selectedPage.headerTitle}
+                    onChange={(value) => setSelectedPage({ ...selectedPage, headerTitle: value })}
                   />
                   <TextInput
                     label="Subtitle"
-                    value={config.subtitle}
-                    onChange={(value) => setConfig({ ...config, subtitle: value })}
+                    value={selectedPage.subtitle}
+                    onChange={(value) => setSelectedPage({ ...selectedPage, subtitle: value })}
                   />
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <ImageUpload
                       label="Logo"
                       type="publicpage"
-                      currentImage={config.logo}
-                      onUpload={(url) => setConfig({ ...config, logo: url })}
+                      currentImage={selectedPage.logo}
+                      onUpload={(url) => setSelectedPage({ ...selectedPage, logo: url })}
                       recommendations={{
                         maxSize: '1MB',
                         dimensions: '200x200px',
@@ -180,8 +339,8 @@ export const UserDashboard: React.FC = () => {
                     <ImageUpload
                       label="Background Image"
                       type="publicpage"
-                      currentImage={config.backgroundImage}
-                      onUpload={(url) => setConfig({ ...config, backgroundImage: url })}
+                      currentImage={selectedPage.backgroundImage}
+                      onUpload={(url) => setSelectedPage({ ...selectedPage, backgroundImage: url })}
                       recommendations={{
                         maxSize: '1MB',
                         dimensions: '1920x1080px',
@@ -194,25 +353,25 @@ export const UserDashboard: React.FC = () => {
                   <h2 className="text-xl font-semibold mb-6 text-[#D3D3DF]">Preview</h2>
                   <div className="bg-[#121218] border border-[#C33AFF]/20 rounded-lg p-4">
                     <a
-                      href={config.backgroundImage}
+                      href={selectedPage.backgroundImage}
                       target="_blank"
                       rel="noopener noreferrer nofollow"
                       className="relative aspect-video overflow-hidden rounded-lg"
                       style={{
-                        backgroundImage: `url(${config.backgroundImage})`,
-                        filter: 'brightness(0.7)',
+                        backgroundImage: `url(${selectedPage.backgroundImage})`,
+                      
                       }}
                     >
                       <div className="relative z-10 p-8 flex flex-col items-center justify-center h-full text-center">
                         <img
-                          src={config.logo}
+                          src={selectedPage.logo}
                           alt="Logo"
                           className="h-20 mb-6 object-contain"
                         />
                         <h1 className="text-4xl font-bold text-white mb-4">
-                          {config.headerTitle}
+                          {selectedPage.headerTitle}
                         </h1>
-                        <p className="text-xl text-white/80">{config.subtitle}</p>
+                        <p className="text-xl text-white/80">{selectedPage.subtitle}</p>
                       </div>
                     </a>
                   </div>
@@ -235,13 +394,13 @@ export const UserDashboard: React.FC = () => {
                         toast.error('Invalid image URL.');
                         return;
                       }
-                      if (config.carouselImages.length >= 6) {
+                      if (selectedPage.carouselImages.length >= 6) {
                         toast.error('Maximum 6 images allowed');
                         return;
                       }
-                      setConfig({
-                        ...config,
-                        carouselImages: [...config.carouselImages,{ url,alt}], // Update carousel images
+                      setSelectedPage({
+                        ...selectedPage,
+                        carouselImages: [...selectedPage.carouselImages,{ url,alt}], // Update carousel images
                       });
                     }}
                     recommendations={{
@@ -251,7 +410,7 @@ export const UserDashboard: React.FC = () => {
                     }}
                   />
                   <div className="grid grid-cols-2 gap-4">
-                    {config.carouselImages.map((image: {url: string, alt: string}, index: number) => (
+                    {selectedPage.carouselImages.map((image: {url: string, alt: string}, index: number) => (
                       <a
                         href={image.url}
                         target="_blank"
@@ -266,9 +425,9 @@ export const UserDashboard: React.FC = () => {
                         />
                         <Button
                           onClick={() =>
-                            setConfig({
-                              ...config,
-                              carouselImages: config.carouselImages.filter(
+                            setSelectedPage({
+                              ...selectedPage,
+                              carouselImages: selectedPage.carouselImages.filter(
                                 (_, i) => i !== index
                               ),
                             })
@@ -286,9 +445,9 @@ export const UserDashboard: React.FC = () => {
                 <div>
                   <h2 className="text-xl font-semibold mb-6 text-[#D3D3DF]">Preview</h2>
                   <div className="bg-[#121218] border border-[#C33AFF]/20 rounded-lg p-4">
-                    {config.carouselImages && config.carouselImages.length > 0 ? (
+                    {selectedPage.carouselImages && selectedPage.carouselImages.length > 0 ? (
                       <Carousel
-                      images={(config?.carouselImages || [])}
+                      images={(selectedPage?.carouselImages || [])}
                       
                     />
                     
@@ -305,8 +464,8 @@ export const UserDashboard: React.FC = () => {
             <div className="bg-[#1B1B21] rounded-lg shadow-lg p-6">
               <h2 className="text-xl font-semibold text-[#D3D3DF]">Video Settings</h2>
               <VideoEditor
-                videoId={config.videoId || ''}
-                onChange={(videoId) => setConfig({ ...config, videoId })}
+                videoId={selectedPage.videoId || ''}
+                onChange={(videoId) => setSelectedPage({ ...selectedPage, videoId })}
               />
             </div>
           </Tabs.Content>          
@@ -316,7 +475,7 @@ export const UserDashboard: React.FC = () => {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div className="space-y-6">
                   <h2 className="text-xl font-semibold text-[#D3D3DF]">Wheel Settings</h2>
-                  {config.prizes.map((prize, index) => (
+                  {selectedPage.prizes.map((prize, index) => (
                     <div
                       key={index}
                       className="bg-[#121218] border border-[#C33AFF]/20 rounded-lg p-4"
@@ -325,9 +484,9 @@ export const UserDashboard: React.FC = () => {
                         label="Prize Text"
                         value={prize.text}
                         onChange={(value) =>
-                          setConfig({
-                            ...config,
-                            prizes: config.prizes.map((p, i) =>
+                          setSelectedPage({
+                            ...selectedPage,
+                            prizes: selectedPage.prizes.map((p, i) =>
                               i === index ? { ...p, text: value } : p
                             ),
                           })
@@ -342,9 +501,9 @@ export const UserDashboard: React.FC = () => {
                             type="color"
                             value={prize.color}
                             onChange={(e) =>
-                              setConfig({
-                                ...config,
-                                prizes: config.prizes.map((p, i) =>
+                              setSelectedPage({
+                                ...selectedPage,
+                                prizes: selectedPage.prizes.map((p, i) =>
                                   i === index ? { ...p, color: e.target.value } : p
                                 ),
                               })
@@ -363,9 +522,9 @@ export const UserDashboard: React.FC = () => {
                             step="0.1"
                             value={prize.probability}
                             onChange={(e) =>
-                              setConfig({
-                                ...config,
-                                prizes: config.prizes.map((p, i) =>
+                              setSelectedPage({
+                                ...selectedPage,
+                                prizes: selectedPage.prizes.map((p, i) =>
                                   i === index
                                     ? { ...p, probability: parseFloat(e.target.value) }
                                     : p
@@ -394,7 +553,7 @@ export const UserDashboard: React.FC = () => {
                   {showPreview && (
                     <div className="relative">
                       <SpinningWheel
-                        prizes={config.prizes}
+                        prizes={selectedPage.prizes}
                         onSpinEnd={() => {}}
                         disabled={false}
                       />
@@ -405,31 +564,36 @@ export const UserDashboard: React.FC = () => {
             </div>
           </Tabs.Content>
 
-
-
-
-
-
-
           <Tabs.Content value="preview" className="space-y-8">
+  <div className="bg-[#1B1B21] rounded-lg shadow-lg p-6">
+    <div className="flex justify-between items-center mb-6">
+      <h2 className="text-xl font-semibold text-[#D3D3DF]">Preview</h2>
+      <Button
+        onClick={() => setShowPreview(!showPreview)} // Toggle preview visibility
+        variant="outline"
+        className="flex items-center gap-2 bg-[#1B1B21] border-[#C33AFF] text-[#C33AFF] hover:bg-[#C33AFF] hover:text-white"
+      >
+        {showPreview ? "Hide Preview" : "Show Preview"}
+      </Button>
+    </div>
+    {showPreview && (
+      <div className="relative">
+        <iframe
+          src={`/wheel/${selectedPage.publicPageId}`}
+          className="w-full h-[800px] rounded-lg border border-[#C33AFF]/20"
+          title="Page Preview"
+          sandbox="allow-scripts allow-same-origin"
+          allowFullScreen
+        />
+      </div>
+    )}
+  </div>
+</Tabs.Content>
+<Tabs.Content value="analytics" className="space-y-8">
             <div className="bg-[#1B1B21] rounded-lg shadow-lg p-6">
-              <iframe
-                src={`/wheel/${projectId}`}
-                className="w-full h-[800px] rounded-lg border border-[#C33AFF]/20"
-                title="Page Preview"
-                target="_blank"
-                rel="noopener noreferrer nofollow"
-                sandbox="allow-scripts allow-same-origin"
-                allowFullScreen
-              />
+              <AnalyticsDashboard  pageId={selectedPage.publicPageId || 'defaultPageId'} /> 
             </div>
-          </Tabs.Content>
-          
-          <Tabs.Content value="analytics" className="space-y-8">
-            <div className="bg-[#1B1B21] rounded-lg shadow-lg p-6">
-              <AnalyticsDashboard pageId={projectId || 'defaultPageId'} />
-            </div>
-          </Tabs.Content>
+</Tabs.Content>
         </Tabs.Root>
       </main>
     </div>

@@ -8,7 +8,8 @@ import confetti from 'canvas-confetti';
 import { motion } from 'framer-motion';
 import { api_Url } from '../config';
 export const PublicPage: React.FC = () => {
-  const { projectId } = useParams(); // Extract projectId from URL
+  const { publicPageId } = useParams(); // Extract publicPageId from URL
+  console.log(publicPageId)
   const [config, setConfig] = useState<any>(null);
   const [isFetching, setIsFetching] = useState(false);
   const [spinResult, setSpinResult] = useState<SpinResult | null>(null);
@@ -41,10 +42,10 @@ export const PublicPage: React.FC = () => {
         // Track initial pageview
         window.gtag('js', new Date());
         window.gtag('config', measurementId, {
-          page_path: `/wheel/${projectId}`,
+          page_path: `/wheel/${publicPageId}`,
           debug_mode: true,
         });
-        console.log('Pageview tracked for:', `/wheel/${projectId}`);
+        console.log('Pageview tracked for:', `/wheel/${publicPageId}`);
       };
 
       script.onerror = () => {
@@ -53,15 +54,15 @@ export const PublicPage: React.FC = () => {
     };
 
     loadGtag();
-  }, [projectId, measurementId]);
+  }, [publicPageId, measurementId]);
 
   // Fetch public page configuration
   useEffect(() => {
     const fetchData = async () => {
-      console.log('Fetching configuration for PublicPage');
+      console.log('Fetching configuration for PublicPage', publicPageId);
       setIsFetching(true);
       try {
-        const response = await fetch(`${api_Url}/api/public-page/${projectId}`);
+        const response = await fetch(`${api_Url}/api/public-page/single/${publicPageId}`);
         const data = await response.json();
 
         if (data.success) {
@@ -71,8 +72,8 @@ export const PublicPage: React.FC = () => {
             console.log('Tracking page load event');
             window.gtag('event', 'page_loaded', {
               event_category: 'PublicPage',
-              event_label: `PublicPage_${projectId}`,
-              page_path: `/wheel/${projectId}`,
+              event_label: `PublicPage_${publicPageId}`,
+              page_path: `/wheel/${publicPageId}`,
               debug_mode: true,
             });
           }
@@ -87,7 +88,7 @@ export const PublicPage: React.FC = () => {
     };
 
     fetchData();
-  }, [projectId]);
+  }, [publicPageId]);
 
   // Handle the end of a spin
 // Handle the end of a spin
@@ -117,7 +118,7 @@ const handleSpinEnd = async (result: SpinResult) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        pageId: projectId, // Pass the project/page ID
+        pageId: publicPageId, // Pass the project/page ID
         prizeName: result.prize.text, // Pass the prize name
       }),
     });
@@ -125,7 +126,7 @@ const handleSpinEnd = async (result: SpinResult) => {
     const data = await response.json();
 
     if (data.success) {
-      console.log(`Prize "${result.prize.text}" saved successfully for pageId "${projectId}".`);
+      console.log(`Prize "${result.prize.text}" saved successfully for pageId "${publicPageId}".`);
     } else {
       console.error('Failed to save the prize:', data.message);
     }

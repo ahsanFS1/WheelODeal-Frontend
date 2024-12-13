@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { Key } from 'lucide-react';
-import {api_Url} from '../../config'
+import {api_Url} from '../../config';
+import { web_Url } from '../../config';
 interface SecretKey {
   _id: string;
   secretKey: string;
@@ -42,13 +43,35 @@ export const SecretKeyManager: React.FC = () => {
     }
 
     try {
+     
+      let totalPages = 0;
+      let remainingPages = 0; // Default value for remainingPages
+  
+      // Set pages based on the selected plan
+      switch (plan) {
+        case 'basic':
+          totalPages = 1;
+          remainingPages = 1
+          break;
+        case 'better':
+          totalPages = 3;
+          remainingPages = 3
+          break;
+        case 'best':
+          totalPages = 6;
+          remainingPages =6
+          break;
+      }
       const response = await fetch(`${api_Url}/api/admin/keys`, {
+      
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           projectName,
           plan,
           expiryDate,
+          totalPages, 
+          remainingPages
         }),
       });
 
@@ -64,7 +87,7 @@ export const SecretKeyManager: React.FC = () => {
   };
 
   // Delete a key
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string,projectId: string) => {
     if (window.confirm('Are you sure you want to revoke this key?')) {
       try {
         const response = await fetch(`${api_Url}/api/admin/keys/${id}`, { method: 'DELETE' });
@@ -148,12 +171,12 @@ export const SecretKeyManager: React.FC = () => {
                   Link for the Public Page:
                   </p>
                   <code className="block  px-2 py-1 rounded text-sm font-mono text-[#D3D3DF]">
-                  https://wheelodeal.com/wheel/{secretKey.projectId}
+                  {web_Url}/wheel/{secretKey.projectId}
                   </code>
                 </div>
               </div>
               <Button
-                onClick={() => handleDelete(secretKey._id)}
+                onClick={() => handleDelete(secretKey._id,secretKey.projectId)}
                 variant="destructive"
                 className="min-w-[100px]"
               >
