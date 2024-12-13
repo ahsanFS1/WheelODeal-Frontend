@@ -671,7 +671,7 @@ export const UserDashboard: React.FC = () => {
     {showPreview && (
       <div className="relative">
         <iframe
-          src={`${api_Url}/wheel/${selectedPage.publicPageId}`}
+          src={`${web_Url}/wheel/${selectedPage.publicPageId}`}
           className="w-full h-[800px] rounded-lg border border-[#C33AFF]/20"
           title="Page Preview"
           sandbox="allow-scripts allow-same-origin"
