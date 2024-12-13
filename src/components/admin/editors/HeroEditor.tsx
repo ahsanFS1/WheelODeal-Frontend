@@ -86,7 +86,7 @@ export const HeroEditor: React.FC<Props> = ({ data, onChange }) => {
             currentImage={data.logo}
             onUpload={(url) => handleChange('logo', url)}
             recommendations={{
-              maxSize: '1MB',
+              maxSize: 1,
               dimensions: '500x500px',
               format: 'JPG, PNG',
             }}
@@ -97,7 +97,7 @@ export const HeroEditor: React.FC<Props> = ({ data, onChange }) => {
             currentImage={data.backgroundImage}
             onUpload={(url) => handleChange('backgroundImage', url)}
             recommendations={{
-              maxSize: "2MB",
+              maxSize: 2,
               dimensions: "1920x1080px",
               format: "JPG, PNG"
             }}

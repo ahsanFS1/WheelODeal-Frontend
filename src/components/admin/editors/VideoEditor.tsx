@@ -21,7 +21,7 @@ export const VideoEditor: React.FC<Props> = ({ videoId, onChange }) => {
           Example URL: <code>https://www.youtube.com/watch?v=<strong>VIDEO_ID</strong></code>
         </div>
         <img
-          src="https://via.placeholder.com/600x300?text=Example+of+a+YouTube+Video+ID"
+          src="/assets/Youtube-example.png"
           alt="YouTube Video ID Example"
           className="mt-4 rounded-lg shadow-lg"
         />

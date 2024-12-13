@@ -7,7 +7,7 @@ interface Props {
   currentImage?: string;
   onUpload: (url: string,alt: string) => void;
   recommendations?: {
-    maxSize?: string;
+    maxSize?: number;
     dimensions?: string;
     format?: string;
   };
@@ -32,7 +32,7 @@ export const ImageUpload: React.FC<Props> = ({ label, currentImage, onUpload, re
   
       try {
         // Add a query parameter to specify the folder type
-        const response = await fetch(`${api_Url}/api/upload-image?type=${type}`, {
+        const response = await fetch(`${api_Url}/api/upload-image?type=${type}&maxSize=${recommendations?.maxSize}`, {
           method: "POST",
           body: formData,
         });
@@ -85,7 +85,7 @@ export const ImageUpload: React.FC<Props> = ({ label, currentImage, onUpload, re
             
             {recommendations && (
               <div className="text-xs text-[#D3D3DF]/70 text-center">
-                {recommendations.maxSize && <p>Max size: {recommendations.maxSize}</p>}
+                {recommendations.maxSize && <p>Max size: {recommendations.maxSize}MB</p>}
                 {recommendations.dimensions && <p>Recommended: {recommendations.dimensions}</p>}
                 {recommendations.format && <p>Formats: {recommendations.format}</p>}
               </div>

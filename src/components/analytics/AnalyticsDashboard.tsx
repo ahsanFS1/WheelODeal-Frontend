@@ -147,7 +147,7 @@ export const AnalyticsDashboard: React.FC<Props> = ({ pageId }) => {
           <p className="text-lg font-semibold text-white">{metrics.spins}</p>
         </div>
         <div className="bg-[#2B2B33] p-4 rounded-lg text-center">
-          <h4 className="text-sm text-gray-400">Spin Conversion Rate</h4>
+          <h4 className="text-sm text-gray-400">Conversion Rate</h4>
           <p className="text-lg font-semibold text-white">{metrics.spinConversionRate}%</p>
         </div>
         <div className="bg-[#2B2B33] p-4 rounded-lg text-center">

@@ -15,7 +15,7 @@ import { api_Url, web_Url } from '../config';
 import { useParams } from 'react-router-dom'; // Import for accessing route parameters
 import { VideoEditor } from './admin/editors/VideoEditor';
 import { Select, SelectItem } from './ui/select'; // Example dropdown component
-
+import { ColorPicker } from './admin/shared/ColorPicker';
 
 
 
@@ -240,7 +240,7 @@ export const UserDashboard: React.FC = () => {
     </p>
   </div>
 </div>
-
+<h2 className="text-xl font-semibold text-[#D3D3DF]">Pages:</h2>
           <Select
             value={selectedPage?.publicPageId || ''}
             onChange={(e) => handlePageSelection(e.target.value)}
@@ -301,6 +301,15 @@ export const UserDashboard: React.FC = () => {
             >
               Preview
             </Tabs.Trigger>
+             <Tabs.Trigger
+                  value="footer"
+                  className="px-4 py-2 text-[#D3D3DF] hover:text-[#C33AFF] data-[state=active]:text-[#C33AFF] data-[state=active]:border-b-2 data-[state=active]:border-[#C33AFF] transition-colors"
+                >
+                  Footer
+            </Tabs.Trigger>
+            <Tabs.Trigger value="final-cta" className="px-4 py-2 text-[#D3D3DF] hover:text-[#C33AFF] data-[state=active]:text-[#C33AFF] data-[state=active]:border-b-2 data-[state=active]:border-[#C33AFF] transition-colors">
+              Final CTA
+              </Tabs.Trigger>
             <Tabs.Trigger
               value="analytics"
               className="px-4 py-2 text-[#D3D3DF] hover:text-[#C33AFF] data-[state=active]:text-[#C33AFF] data-[state=active]:border-b-2 data-[state=active]:border-[#C33AFF] transition-colors"
@@ -331,7 +340,7 @@ export const UserDashboard: React.FC = () => {
                       currentImage={selectedPage.logo}
                       onUpload={(url) => setSelectedPage({ ...selectedPage, logo: url })}
                       recommendations={{
-                        maxSize: '1MB',
+                        maxSize: 1,
                         dimensions: '200x200px',
                         format: 'PNG, SVG preferred',
                       }}
@@ -342,7 +351,7 @@ export const UserDashboard: React.FC = () => {
                       currentImage={selectedPage.backgroundImage}
                       onUpload={(url) => setSelectedPage({ ...selectedPage, backgroundImage: url })}
                       recommendations={{
-                        maxSize: '1MB',
+                        maxSize: 1,
                         dimensions: '1920x1080px',
                         format: 'JPG, PNG',
                       }}
@@ -404,7 +413,7 @@ export const UserDashboard: React.FC = () => {
                       });
                     }}
                     recommendations={{
-                      maxSize: '1MB',
+                      maxSize: 1,
                       dimensions: '1200x800px',
                       format: 'JPG, PNG',
                     }}
@@ -412,9 +421,8 @@ export const UserDashboard: React.FC = () => {
                   <div className="grid grid-cols-2 gap-4">
                     {selectedPage.carouselImages.map((image: {url: string, alt: string}, index: number) => (
                       <a
-                        href={image.url}
-                        target="_blank"
-                        rel="noopener noreferrer nofollow"
+                        
+                       
                         key={index}
                         className="relative"
                       >
@@ -471,98 +479,182 @@ export const UserDashboard: React.FC = () => {
           </Tabs.Content>          
 
           <Tabs.Content value="wheel" className="space-y-8">
-            <div className="bg-[#1B1B21] rounded-lg shadow-lg p-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div className="space-y-6">
-                  <h2 className="text-xl font-semibold text-[#D3D3DF]">Wheel Settings</h2>
-                  {selectedPage.prizes.map((prize, index) => (
-                    <div
-                      key={index}
-                      className="bg-[#121218] border border-[#C33AFF]/20 rounded-lg p-4"
-                    >
-                      <TextInput
-                        label="Prize Text"
-                        value={prize.text}
-                        onChange={(value) =>
-                          setSelectedPage({
-                            ...selectedPage,
-                            prizes: selectedPage.prizes.map((p, i) =>
-                              i === index ? { ...p, text: value } : p
-                            ),
-                          })
-                        }
-                      />
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-[#D3D3DF] mb-1">
-                            Color
-                          </label>
-                          <input
-                            type="color"
-                            value={prize.color}
-                            onChange={(e) =>
-                              setSelectedPage({
-                                ...selectedPage,
-                                prizes: selectedPage.prizes.map((p, i) =>
-                                  i === index ? { ...p, color: e.target.value } : p
-                                ),
-                              })
-                            }
-                            className="w-full h-10 px-1 py-1 bg-[#121218] border border-[#C33AFF]/20 rounded-lg"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-[#D3D3DF] mb-1">
-                            Probability (0-1)
-                          </label>
-                          <input
-                            type="number"
-                            min="0"
-                            max="1"
-                            step="0.1"
-                            value={prize.probability}
-                            onChange={(e) =>
-                              setSelectedPage({
-                                ...selectedPage,
-                                prizes: selectedPage.prizes.map((p, i) =>
-                                  i === index
-                                    ? { ...p, probability: parseFloat(e.target.value) }
-                                    : p
-                                ),
-                              })
-                            }
-                            className="w-full px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF]"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div>
-                  <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-xl font-semibold text-[#D3D3DF]">Preview</h2>
-                    <Button
-                      onClick={() => setShowPreview(!showPreview)}
-                      variant="outline"
-                      className="flex items-center gap-2 bg-[#1B1B21] border-[#C33AFF] text-[#C33AFF] hover:bg-[#C33AFF] hover:text-white"
-                    >
-                      <Eye className="w-4 h-4" />
-                      {showPreview ? "Hide Preview" : "Show Preview"}
-                    </Button>
-                  </div>
-                  {showPreview && (
-                    <div className="relative">
-                      <SpinningWheel
-                        prizes={selectedPage.prizes}
-                        onSpinEnd={() => {}}
-                        disabled={false}
-                      />
-                    </div>
-                  )}
-                </div>
+  <div className="bg-[#1B1B21] rounded-lg shadow-lg p-6">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {/* Wheel Settings */}
+      <div className="space-y-6">
+        <h2 className="text-xl font-semibold text-[#D3D3DF]">Wheel Settings</h2>
+        {selectedPage.prizes.map((prize, index) => (
+          <div
+            key={index}
+            className="bg-[#121218] border border-[#C33AFF]/20 rounded-lg p-4 space-y-4 relative"
+          >
+            {/* Remove Prize Button */}
+            <button
+              onClick={() =>
+                setSelectedPage({
+                  ...selectedPage,
+                  prizes: selectedPage.prizes.filter((_, i) => i !== index),
+                })
+              }
+              className="absolute top-2 right-2 bg-[#FF4D4D] text-white px-2 py-1 rounded-full hover:bg-[#FF3333] transition"
+              title="Remove Prize"
+            >
+              ✕
+            </button>
+            {/* Prize Text */}
+            <TextInput
+              label="Prize Text"
+              value={prize.text}
+              onChange={(value) =>
+                setSelectedPage({
+                  ...selectedPage,
+                  prizes: selectedPage.prizes.map((p, i) =>
+                    i === index ? { ...p, text: value } : p
+                  ),
+                })
+              }
+            />
+            {/* Bonus Code */}
+            <TextInput
+              label="Bonus Code"
+              value={prize.bonusCode || ""}
+              onChange={(value) =>
+                setSelectedPage({
+                  ...selectedPage,
+                  prizes: selectedPage.prizes.map((p, i) =>
+                    i === index ? { ...p, bonusCode: value } : p
+                  ),
+                })
+              }
+            />
+            {/* Expiration Date */}
+            <div>
+              <label className="block text-sm font-medium text-[#D3D3DF] mb-1">
+                Set Code Expiration Date
+              </label>
+              <DatePicker
+                selected={new Date(prize.expirationDate || new Date())}
+                onChange={(date) =>
+                  setSelectedPage({
+                    ...selectedPage,
+                    prizes: selectedPage.prizes.map((p, i) =>
+                      i === index ? { ...p, expirationDate: date } : p
+                    ),
+                  })
+                }
+                className="w-full px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF]"
+              />
+            </div>
+            {/* Redirect URL */}
+            <TextInput
+              label="Redirect URL"
+              value={prize.redirectUrl || ""}
+              onChange={(value) =>
+                setSelectedPage({
+                  ...selectedPage,
+                  prizes: selectedPage.prizes.map((p, i) =>
+                    i === index ? { ...p, redirectUrl: value } : p
+                  ),
+                })
+              }
+            />
+            {/* Color and Probability */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-[#D3D3DF] mb-1">
+                  Color
+                </label>
+                <input
+                  type="color"
+                  value={prize.color}
+                  onChange={(e) =>
+                    setSelectedPage({
+                      ...selectedPage,
+                      prizes: selectedPage.prizes.map((p, i) =>
+                        i === index ? { ...p, color: e.target.value } : p
+                      ),
+                    })
+                  }
+                  className="w-full h-10 px-1 py-1 bg-[#121218] border border-[#C33AFF]/20 rounded-lg"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-[#D3D3DF] mb-1">
+                  Probability (0-1)
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  max="1"
+                  step="0.1"
+                  value={prize.probability}
+                  onChange={(e) =>
+                    setSelectedPage({
+                      ...selectedPage,
+                      prizes: selectedPage.prizes.map((p, i) =>
+                        i === index
+                          ? { ...p, probability: parseFloat(e.target.value) }
+                          : p
+                      ),
+                    })
+                  }
+                  className="w-full px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF]"
+                />
               </div>
             </div>
-          </Tabs.Content>
+          </div>
+        ))}
+        {/* Add Prize Button */}
+        <Button
+          onClick={() =>
+            setSelectedPage({
+              ...selectedPage,
+              prizes: [
+                ...selectedPage.prizes,
+                {
+                  text: "",
+                  bonusCode: "",
+                  expirationDate: "",
+                  redirectUrl: "",
+                  color: "#ffffff",
+                  probability: 0,
+                },
+              ],
+            })
+          }
+          className="bg-purple-900 hover:bg-purple-950 text-white w-full"
+        >
+          Add Prize
+        </Button>
+      </div>
+      {/* Wheel Preview */}
+      <div>
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-semibold text-[#D3D3DF]">Preview</h2>
+          <Button
+            onClick={() => setShowPreview(!showPreview)}
+            variant="outline"
+            className="flex items-center gap-2 bg-[#1B1B21] border-[#C33AFF] text-[#C33AFF] hover:bg-[#C33AFF] hover:text-white"
+          >
+            <Eye className="w-4 h-4" />
+            {showPreview ? "Hide Preview" : "Show Preview"}
+          </Button>
+        </div>
+        {showPreview && (
+          <div className="relative">
+            <SpinningWheel
+              prizes={selectedPage.prizes}
+              onSpinEnd={() => {}}
+              disabled={false}
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</Tabs.Content>
+
 
           <Tabs.Content value="preview" className="space-y-8">
   <div className="bg-[#1B1B21] rounded-lg shadow-lg p-6">
@@ -589,6 +681,168 @@ export const UserDashboard: React.FC = () => {
     )}
   </div>
 </Tabs.Content>
+<Tabs.Content value="footer" className="space-y-8">
+  <div className="bg-[#1B1B21] rounded-lg shadow-lg p-6">
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold text-[#D3D3DF]">Footer Content</h2>
+      
+      {/* HTML/Markdown Editor */}
+      <div>
+        <label className="block text-sm font-medium text-white mb-1">
+          Footer Text (HTML Allowed)
+        </label>
+        <textarea
+          value={selectedPage.footer || ""}
+          onChange={(e) =>
+            setSelectedPage({ ...selectedPage, footer: e.target.value })
+          }
+          rows={6}
+          className="w-full px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF]"
+          placeholder="<a href='https://example.com'>Terms & Conditions</a>"
+        />
+      </div>
+      
+      {/* Preview Section */}
+      <div>
+        <h3 className="text-lg font-semibold text-[#D3D3DF]">Footer Preview</h3>
+        <div
+          className="mt-4 p-4 border border-[#C33AFF]/20 bg-[#121218] rounded-lg"
+          dangerouslySetInnerHTML={{ __html: selectedPage.footer || "<p>Preview will appear here...</p>" }}
+        />
+      </div>
+    </div>
+  </div>
+</Tabs.Content>
+<Tabs.Content value="final-cta" className="space-y-8">
+  <div className="bg-[#1B1B21] p-6 text-white rounded-lg shadow-lg space-y-6 max-w-lg mx-auto">
+    <h2 className="text-xl font-bold text-[#D3D3DF]">Final CTA Settings</h2>
+
+    {/* Button Text */}
+    <TextInput
+      label="Button Text"
+      value={selectedPage.finalCta?.text || ''}
+      onChange={(value) =>
+        setSelectedPage({
+          ...selectedPage,
+          finalCta: { ...selectedPage.finalCta, text: value },
+        })
+      }
+    />
+
+    {/* Link URL */}
+    <TextInput
+      label="Link URL"
+      value={selectedPage.finalCta?.link || ''}
+      onChange={(value) =>
+        setSelectedPage({
+          ...selectedPage,
+          finalCta: { ...selectedPage.finalCta, link: value },
+        })
+      }
+    />
+
+    {/* Button Size */}
+    <Select
+      value={selectedPage.finalCta?.size || 'medium'}
+      onChange={(e) =>
+        setSelectedPage({
+          ...selectedPage,
+          finalCta: { ...selectedPage.finalCta, size: e.target.value },
+        })
+      }
+      className="bg-[#1B1B21] text-[#C33AFF] px-4 py-2 rounded-lg"
+    >
+      <SelectItem value="small">Small</SelectItem>
+      <SelectItem value="medium">Medium</SelectItem>
+      <SelectItem value="large">Large</SelectItem>
+    </Select>
+
+    {/* Text Color */}
+    <ColorPicker
+      label="Text Color"
+      value={selectedPage.finalCta?.textColor || '#ffffff'}
+      onChange={(value) =>
+        setSelectedPage({
+          ...selectedPage,
+          finalCta: { ...selectedPage.finalCta, textColor: value },
+        })
+      }
+    />
+
+    {/* Background Color */}
+    <ColorPicker
+      label="Background Color"
+      value={selectedPage.finalCta?.backgroundColor || '#4CAF50'}
+      onChange={(value) =>
+        setSelectedPage({
+          ...selectedPage,
+          finalCta: { ...selectedPage.finalCta, backgroundColor: value },
+        })
+      }
+    />
+
+    {/* Hover Color */}
+    <ColorPicker
+      label="Hover Color"
+      value={selectedPage.finalCta?.hoverColor || '#45a049'}
+      onChange={(value) =>
+        setSelectedPage({
+          ...selectedPage,
+          finalCta: { ...selectedPage.finalCta, hoverColor: value },
+        })
+      }
+    />
+
+    {/* Preview */}
+    <div className="pt-6">
+      <h3 className="text-lg font-semibold text-[#D3D3DF] text-center">
+        Preview
+      </h3>
+      <div className="flex justify-center mt-4">
+        <a
+          href={selectedPage.finalCta?.link || '#'}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block rounded-lg transition-all duration-200"
+          style={{
+            padding:
+              selectedPage.finalCta?.size === 'small'
+                ? '8px 16px'
+                : selectedPage.finalCta?.size === 'large'
+                ? '14px 28px'
+                : '10px 20px',
+            fontSize:
+              selectedPage.finalCta?.size === 'small'
+                ? '12px'
+                : selectedPage.finalCta?.size === 'large'
+                ? '18px'
+                : '16px',
+            backgroundColor: selectedPage.finalCta?.backgroundColor || '#4CAF50',
+            color: selectedPage.finalCta?.textColor || '#ffffff',
+            textAlign: 'center',
+            textDecoration: 'none',
+            width: 'fit-content',
+            cursor: 'pointer',
+          }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.backgroundColor =
+              selectedPage.finalCta?.hoverColor || '#45a049')
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.backgroundColor =
+              selectedPage.finalCta?.backgroundColor || '#4CAF50')
+          }
+        >
+          {selectedPage.finalCta?.text || 'Click Me'}
+        </a>
+      </div>
+    </div>
+  </div>
+</Tabs.Content>
+
+
+
+
 <Tabs.Content value="analytics" className="space-y-8">
             <div className="bg-[#1B1B21] rounded-lg shadow-lg p-6">
               <AnalyticsDashboard  pageId={selectedPage.publicPageId || 'defaultPageId'} /> 

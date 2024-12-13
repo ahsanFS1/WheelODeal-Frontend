@@ -29,14 +29,14 @@ export const SpinningWheel: React.FC<Props> = ({ prizes = [], onSpinEnd, disable
     spin: new Howl({
       src: ['https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3'],
       loop: true,
-      volume: 0.5,
+      volume: 0.0,
     }),
     tick: new Howl({
       src: ['https://assets.mixkit.co/active_storage/sfx/146/146-preview.mp3'],
-      volume: 0.3,
+      volume: 0.0,
     }),
     win: new Howl({
-      src: ['https://assets.mixkit.co/active_storage/sfx/2020/2020-preview.mp3'],
+      src: ['/assets/prize_won.mp3'],
       volume: 0.7,
     }),
   });
@@ -148,24 +148,24 @@ export const SpinningWheel: React.FC<Props> = ({ prizes = [], onSpinEnd, disable
       console.warn('Cannot spin: wheel is disabled or no prizes available.');
       return;
     }
-
+  
     setIsSpinning(true);
     const prize = getRandomPrize();
     const prizeIndex = prizes.findIndex((p) => p.id === prize.id);
-
+  
     // Calculate rotation
     const sliceAngle = (2 * Math.PI) / prizes.length;
     const targetRotation =
       currentRotation.current +
-      Math.PI * 8 + // Full rotations
+      Math.PI * 16 + // Increased number of full rotations for a longer spin
       (-((prizeIndex * sliceAngle) + sliceAngle / 2) - Math.PI / 2); // Align prize with top
-
+  
     // Start spin sound
     sounds.current.spin.play();
-
+  
     gsap.to(currentRotation, {
       current: targetRotation,
-      duration: 5,
+      duration: 9, // Increased duration to 8 seconds
       ease: 'power4.out',
       onUpdate: drawWheel,
       onComplete: () => {
@@ -176,7 +176,6 @@ export const SpinningWheel: React.FC<Props> = ({ prizes = [], onSpinEnd, disable
       },
     });
   };
-
   useEffect(() => {
     if (!wheelRef.current) return;
     ctx.current = wheelRef.current.getContext('2d');
@@ -197,27 +196,27 @@ export const SpinningWheel: React.FC<Props> = ({ prizes = [], onSpinEnd, disable
         className="w-full h-full"
       />
 
-      <button
-        onClick={spin}
-        disabled={disabled || isSpinning}
-        className={cn(
-          'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
-          'w-24 h-24 rounded-full',
-          'bg-gradient-to-r from-[#C084FC] via-[#8B5CF6] to-[#7C3AED]',
-          'text-white font-bold text-xl',
-          'shadow-lg hover:scale-105 transition-all duration-300',
-          'disabled:opacity-50 disabled:cursor-not-allowed',
-          'border-4 border-[#C084FC]',
-          'flex flex-col items-center justify-center gap-1'
-        )}
-        style={{
-          boxShadow:
-            '0 4px 6px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.5)',
-        }}
-      >
-        <ArrowUp className="w-8 h-8 stroke-[3]" />
-        <span>SPIN</span>
-      </button>
+<button
+  onClick={spin}
+  disabled={disabled || isSpinning}
+  className={cn(
+    'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
+    'w-24 h-24 rounded-full',
+    'bg-gradient-to-r from-[#C084FC] via-[#8B5CF6] to-[#7C3AED]',
+    'text-white font-bold text-2xl', // Increased font size for the icon
+    'shadow-lg hover:scale-105 transition-all duration-300',
+    'disabled:opacity-50 disabled:cursor-not-allowed',
+    'border-4 border-[#C084FC]',
+    'flex flex-col items-center justify-center gap-1'
+  )}
+  style={{
+    boxShadow:
+      '0 4px 6px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.5)',
+  }}
+>
+  <span className= {"text-4xl"} style={{ fontFamily: 'Arial, sans-serif', fontWeight: 'bold' }}>⮝</span>
+  <span>SPIN</span>
+</button>
     </div>
   );
 };

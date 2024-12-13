@@ -439,14 +439,6 @@ console.log("Landing Page Data: ",landingPage);
         </motion.div>
       </section>
 
-      <section>
-            Admin dashboard
-
-            <button onClick={handleAdminLogin}>
-              Admin
-            </button>
-
-      </section>
     </div>
   );
 };

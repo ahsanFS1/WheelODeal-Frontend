@@ -13,8 +13,8 @@ export const PublicPage: React.FC = () => {
   const [config, setConfig] = useState<any>(null);
   const [isFetching, setIsFetching] = useState(false);
   const [spinResult, setSpinResult] = useState<SpinResult | null>(null);
-  const [bonusCode] = useState('20CHRISTMAS');
-  const [expiryTime] = useState(Date.now() + 24 * 60 * 60 * 1000); // 24 hours expiry time
+  
+ 
   const measurementId = 'G-28B7K98MKT'; // Replace with your GA4 Measurement ID
 
   // Load gtag.js dynamically
@@ -273,21 +273,10 @@ const handleSpinEnd = async (result: SpinResult) => {
                 onSpinEnd={handleSpinEnd}
                 disabled={!!spinResult}
               />
-  
-              {/* Bonus Code Display */}
-              <div className="mt-6 text-center">
-                <div className="inline-block bg-purple-900/20 rounded-lg p-4">
-                  <p className="text-sm text-gray-300">Bonus Code:</p>
-                  <p className="text-xl font-bold text-purple-400">{bonusCode}</p>
-                  <p className="text-sm text-gray-300 mt-2">Expiring In:</p>
-                  <CountdownTimer expiryTimestamp={expiryTime} />
-                </div>
-              </div>
             </div>
-  
             {/* Spin Result */}
             {spinResult && (
-              <div className="mt-6 text-center">
+              <div className="mt-20 text-center">
                 <div className="bg-purple-900/20 rounded-lg p-6 inline-block">
                   <h3 className="text-xl font-bold mb-4">
                     Congratulations! You won: {spinResult.prize.text}
@@ -295,7 +284,7 @@ const handleSpinEnd = async (result: SpinResult) => {
                   <button
                     onClick={handleClaim}
                     className="px-6 py-2 bg-purple-600 text-white rounded-full hover:bg-purple-700 transition-colors"
-                  >
+                    >
                     Claim Offer!
                   </button>
                 </div>
@@ -303,13 +292,72 @@ const handleSpinEnd = async (result: SpinResult) => {
             )}
           </div>
         </section>
-  
-        {/* Footer Section */}
-        <footer className="border-t border-purple-900/20 py-4 mt-8">
-          <div className="max-w-4xl mx-auto px-4 text-center text-sm text-gray-400">
-            <p>Terms and offers, conditions, refund and trial policy apply.</p>
+          {/* Bonus Code Display */}
+{spinResult && (
+          <div className="mt-90 text-center">
+            <div className="inline-block bg-purple-900/20 rounded-lg p-4">
+              <p className="text-xl text-gray-300">Bonus Code:</p>
+              <p className="text-xl font-bold text-purple-400">{spinResult?.prize.bonusCode}</p>
+              <p className="text-sm text-gray-300 mt-2">Expiring In:</p>
+              <CountdownTimer   expiryTimestamp={new Date(spinResult?.prize.expirationDate).getTime()} />
+            </div>
           </div>
-        </footer>
+)}
+        {/*Final CTA Section*/}
+
+        <div className="flex justify-center mt-4">
+        <a
+          href={config.finalCta?.link || '#'}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block rounded-lg transition-all duration-200"
+          style={{
+            padding:
+              config.finalCta?.size === 'small'
+                ? '8px 16px'
+                : config.finalCta?.size === 'large'
+                ? '14px 28px'
+                : '10px 20px',
+            fontSize:
+              config.finalCta?.size === 'small'
+                ? '12px'
+                : config.finalCta?.size === 'large'
+                ? '18px'
+                : '16px',
+            backgroundColor: config.finalCta?.backgroundColor || '#4CAF50',
+            color: config.finalCta?.textColor || '#ffffff',
+            textAlign: 'center',
+            textDecoration: 'none',
+            width: 'fit-content',
+            cursor: 'pointer',
+          }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.backgroundColor =
+              config.finalCta?.hoverColor || '#45a049')
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.backgroundColor =
+              config.finalCta?.backgroundColor || '#4CAF50')
+          }
+        >
+          {config.finalCta?.text || 'Click Me'}
+        </a>
+      </div>
+       
+        {/* Footer Section */}
+        <footer className="text-gray-400 py-8 mt-8">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div
+                className="text-center text-sm md:text-base space-y-4 leading-relaxed"
+                dangerouslySetInnerHTML={{
+                  __html: config.footer || "<p>Preview will appear here...</p>",
+                }}
+              />
+              <div className="mt-4 border-t border-gray-700 pt-4 text-center text-xs text-gray-500">
+                © {new Date().getFullYear()} Your Company Name. All Rights Reserved.
+              </div>
+            </div>
+          </footer>
       </div>
     </div>
   );
