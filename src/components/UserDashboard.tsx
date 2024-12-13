@@ -263,7 +263,7 @@ export const UserDashboard: React.FC = () => {
           <Button
             onClick={handleCreatePage}
             className={`px-4 py-2 rounded-lg ${
-              remainingPages > 0 ? 'bg-[#A22BD9] text-white' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+              remainingPages > 0 ? 'bg-[#A22BD9] text-black' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
             }`}
             disabled={remainingPages <= 0}
           >
