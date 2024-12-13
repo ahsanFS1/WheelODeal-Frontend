@@ -87,19 +87,27 @@ export const SecretKeyManager: React.FC = () => {
   };
 
   // Delete a key
-  const handleDelete = async (id: string,projectId: string) => {
-    if (window.confirm('Are you sure you want to revoke this key?')) {
-      try {
-        const response = await fetch(`${api_Url}/api/admin/keys/${id}`, { method: 'DELETE' });
-        const data = await response.json();
-        if (data.success) {
-          setSecretKeys((prev) => prev.filter((key) => key._id !== id));
-        }
-      } catch (error) {
-        console.error('Error deleting secret key:', error.message);
+ const handleDelete = async (id: string, projectId: string) => {
+  if (window.confirm('Are you sure you want to revoke this key?')) {
+    // Optimistically update the UI
+    setSecretKeys((prev) => prev.filter((key) => key._id !== id));
+
+    try {
+      const response = await fetch(`${api_Url}/api/admin/keys/${id}`, { method: 'DELETE' });
+      const data = await response.json();
+
+      if (!data.success) {
+        // If the API fails, roll back the optimistic update
+        
+        fetchSecretKeys(); // Re-fetch the secret keys to ensure the UI is in sync
       }
+    } catch (error) {
+      console.error('Error deleting secret key:', error.message);
+      alert('An error occurred while revoking the key.');
+      fetchSecretKeys(); // Re-fetch to restore the state
     }
-  };
+  }
+};
 
   return (
     <div className="bg-[#1B1B21] rounded-lg shadow-lg p-6">
