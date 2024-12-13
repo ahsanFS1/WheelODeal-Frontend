@@ -223,7 +223,7 @@ export const UserDashboard: React.FC = () => {
       <span className="font-semibold text-[#A22BD9]">Public Page Link:</span>{' '}
       {selectedPage ? (
         <a
-          href={`/wheel/${selectedPage.publicPageId}`}
+          href={`${web_Url}/wheel/${selectedPage.publicPageId}`}
           target="_blank"
           rel="noopener noreferrer"
           className="text-[#C33AFF] underline hover:text-[#A22BD9]"
