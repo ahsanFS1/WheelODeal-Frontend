@@ -269,6 +269,10 @@ export const MainLandingPage: React.FC = () => {
                 key={index}
                 className="bg-[#1B1B21] p-6 rounded-lg shadow-lg hover:shadow-xl transition-all"
               >
+
+                  <div className="w-12 h-12 bg-[#C33AFF] rounded-lg flex items-center justify-center mb-4">
+                  {renderIcon(feature.icon)}
+                </div>
                 <h3 className="text-lg font-bold mb-2">
                   {feature.title}
                 </h3>
