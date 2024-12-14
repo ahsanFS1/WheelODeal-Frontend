@@ -11,7 +11,7 @@ import { AnalyticsDashboard } from './components/analytics/AnalyticsDashboard';
 // Protected Route component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const token = sessionStorage.getItem('userToken'); // Check token in session storage
-  if (!token) return <Navigate to="/user001z" replace />; // Redirect to login if no token
+  if (!token) return <Navigate to="/" replace />; // Redirect to login if no token
   return <>{children}</>;
 };
 

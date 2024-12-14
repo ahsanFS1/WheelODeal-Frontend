@@ -147,6 +147,8 @@ export const UserDashboard: React.FC = () => {
     }
   };
 
+
+  
   if (!publicPages.length) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center text-purple-200 space-y-4 bg-[#121218]">
@@ -162,7 +164,7 @@ export const UserDashboard: React.FC = () => {
             disabled={!newPageName.trim()}
             className={`px-4 py-2 rounded-lg ${
               newPageName.trim()
-                ? "bg-gray-700 text-white hover:bg-purple-900"
+                ? "bg-purple-700 text-white hover:bg-purple-900"
                 : "bg-gray-700 text-gray-500 cursor-not-allowed"
             }`}
           >
