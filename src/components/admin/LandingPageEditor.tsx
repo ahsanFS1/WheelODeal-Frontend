@@ -12,15 +12,13 @@ import { TestimonialsEditor } from './editors/TestimonialsEditor';
 import { PricingEditor } from './editors/PricingEditor';
 import { FaqEditor } from './editors/FaqEditor';
 import { FinalCtaEditor } from './editors/FinalCtaEditor';
-import {api_Url} from "../../config"
+import { api_Url } from '../../config';
 import { VideoEditor } from './editors/VideoEditor';
-
-
-
 
 export const LandingPageEditor: React.FC = () => {
   const [mlp, setMlp] = useState<any>(null);
   const [isFetching, setIsFetching] = useState(false);
+  const [activeTab, setActiveTab] = useState('hero'); // Manage active tab state
 
   // Fetch the landing page data from the database
   const fetchLandingPage = async () => {
@@ -117,12 +115,12 @@ export const LandingPageEditor: React.FC = () => {
         </Button>
       </div>
 
-      <Tabs.Root defaultValue="hero" className="space-y-6">
+      <Tabs.Root value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <Tabs.List className="flex space-x-2 overflow-x-auto border-b border-purple-900/20">
           {[
             { value: 'hero', label: 'Hero' },
             { value: 'demo', label: 'Demo' },
-            { value:  'video', label: 'Video'},
+            { value: 'video', label: 'Video' },
             { value: 'features', label: 'Features' },
             { value: 'benefits', label: 'Benefits' },
             { value: 'howItWorks', label: 'How It Works' },
@@ -143,15 +141,12 @@ export const LandingPageEditor: React.FC = () => {
 
         <div className="overflow-y-auto max-h-[calc(100vh-300px)] pr-4 -mr-4">
           <Tabs.Content value="hero" className="text-[#D3D3DF]">
-            
-            
             <HeroEditor
               data={mlp.hero}
               onChange={(hero) => setMlp({ ...mlp, hero })}
             />
           </Tabs.Content>
 
-          {/* Repeat similar structure for other sections */}
           <Tabs.Content value="demo" className="text-[#D3D3DF]">
             <DemoEditor
               data={mlp.demo}

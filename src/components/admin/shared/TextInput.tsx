@@ -8,7 +8,7 @@ interface Props {
 }
 
 export const TextInput: React.FC<Props> = ({ label, value, onChange, multiline }) => {
-  const inputClasses = "w-full px-3 py-2 bg-[#1B1B21] border border-purple-900/20 rounded-md text-[#D3D3DF] focus:outline-none focus:ring-2 focus:ring-purple-900/50 focus:border-transparent placeholder-gray-500";
+  const inputClasses = "w-full px-3 py-2 bg-[#1B1B21] border-2 border-purple-900/20 rounded-md text-[#D3D3DF] focus:outline-none focus:ring-2 focus:ring-purple-900/50 focus:border-transparent placeholder-gray-500";
   
   return (
     <div className="space-y-1">

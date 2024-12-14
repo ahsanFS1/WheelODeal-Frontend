@@ -16,7 +16,7 @@ import { useParams } from 'react-router-dom'; // Import for accessing route para
 import { VideoEditor } from './admin/editors/VideoEditor';
 import { Select, SelectItem } from './ui/select'; // Example dropdown component
 import { ColorPicker } from './admin/shared/ColorPicker';
-
+import TiptapEditor from './admin/shared/TiptapEditor';
 
 
 export const UserDashboard: React.FC = () => {
@@ -114,29 +114,31 @@ export const UserDashboard: React.FC = () => {
       return;
     }
   
+    // Optimistically update the publicPages state
+    setPublicPages((prev) =>
+      prev.map((page) =>
+        page.publicPageId === selectedPage.publicPageId ? { ...page, ...selectedPage } : page
+      )
+    );
+    toast('Saving changes...', { icon: '⏳' });
+  
     try {
       const response = await fetch(`${api_Url}/api/public-page/${selectedPage.publicPageId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(selectedPage),
       });
+  
       const data = await response.json();
   
       if (data.success) {
         toast.success('Changes saved successfully!');
-  
-        // Update the publicPages array
-        setPublicPages((prev) =>
-          prev.map((page) =>
-            page.publicPageId === selectedPage.publicPageId ? { ...page, ...selectedPage } : page
-          )
-        );
       } else {
-        toast.error('Failed to save changes.');
+        throw new Error(data.message || 'Save failed');
       }
     } catch (error) {
       console.error('Error saving public page:', error);
-      toast.error('Error saving public page.');
+      toast.error('Failed to save changes.');
     }
   };
   const handleLogout = () => {
@@ -147,8 +149,8 @@ export const UserDashboard: React.FC = () => {
 
   if (!publicPages.length) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center text-white space-y-4 bg-purple-950">
-        <h1 className="text-2xl font-semibold">No public pages found for this project.</h1>
+      <div className="min-h-screen flex flex-col items-center justify-center text-purple-200 space-y-4 bg-[#121218]">
+        <h1 className="text-2xl font-semibold">Welcome To Your Projects - You have 0/{planDetails?.remainingPages} projects created - Create your first project!</h1>
         <div className="space-y-4">
           <TextInput
             label="Enter a Name for Your First Page"
@@ -160,7 +162,7 @@ export const UserDashboard: React.FC = () => {
             disabled={!newPageName.trim()}
             className={`px-4 py-2 rounded-lg ${
               newPageName.trim()
-                ? "bg-[#A22BD9] text-white hover:bg-purple-900"
+                ? "bg-gray-700 text-white hover:bg-purple-900"
                 : "bg-gray-700 text-gray-500 cursor-not-allowed"
             }`}
           >
@@ -240,7 +242,7 @@ export const UserDashboard: React.FC = () => {
     </p>
   </div>
 </div>
-<h2 className="text-xl font-semibold text-[#D3D3DF]">Pages:</h2>
+<h2 className="text-xl font-semibold text-[#D3D3DF]">Projects:</h2>
           <Select
             value={selectedPage?.publicPageId || ''}
             onChange={(e) => handlePageSelection(e.target.value)}
@@ -263,7 +265,7 @@ export const UserDashboard: React.FC = () => {
           <Button
             onClick={handleCreatePage}
             className={`px-4 py-2 rounded-lg ${
-              remainingPages > 0 ? 'bg-[#A22BD9] text-black' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+              remainingPages > 0 ? 'px-4 py-2 rounded bg-neutral-900 text-purple-800 hover:bg-neutral-800 border border-[#C33AFF]' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
             }`}
             disabled={remainingPages <= 0}
           >
@@ -286,7 +288,7 @@ export const UserDashboard: React.FC = () => {
             >
               Carousel
             </Tabs.Trigger>
-            <Tabs.Trigger value="video" className="px-4 py-2 text-[#D3D3DF] hover:text-[#C33AFF]">
+            <Tabs.Trigger value="video" className="px-4 py-2 text-[#D3D3DF] hover:text-[#C33AFF] data-[state=active]:text-[#C33AFF] data-[state=active]:border-b-2 data-[state=active]:border-[#C33AFF] transition-colors">
               Video Settings
             </Tabs.Trigger>
             <Tabs.Trigger
@@ -323,16 +325,18 @@ export const UserDashboard: React.FC = () => {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div className="space-y-6">
                   <h2 className="text-xl font-semibold text-[#D3D3DF]">Page Settings</h2>
-                  <TextInput
-                    label="Title"
-                    value={selectedPage.headerTitle}
-                    onChange={(value) => setSelectedPage({ ...selectedPage, headerTitle: value })}
-                  />
-                  <TextInput
-                    label="Subtitle"
-                    value={selectedPage.subtitle}
-                    onChange={(value) => setSelectedPage({ ...selectedPage, subtitle: value })}
-                  />
+                  <TiptapEditor
+                      content={selectedPage.headerTitle || ''}
+                      onContentChange={(content) =>
+                        setSelectedPage({ ...selectedPage, headerTitle: content })
+                      }
+                        />
+                  <TiptapEditor
+                        content={selectedPage.subtitle || ''}
+                        onContentChange={(content) =>
+                          setSelectedPage({ ...selectedPage, subtitle: content })
+                        }
+                      />
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <ImageUpload
                       label="Logo"
@@ -362,7 +366,7 @@ export const UserDashboard: React.FC = () => {
                   <h2 className="text-xl font-semibold mb-6 text-[#D3D3DF]">Preview</h2>
                   <div className="bg-[#121218] border border-[#C33AFF]/20 rounded-lg p-4">
                     <a
-                      href={selectedPage.backgroundImage}
+                      href={`/wheel/${selectedPage?.publicPageId}`}
                       target="_blank"
                       rel="noopener noreferrer nofollow"
                       className="relative aspect-video overflow-hidden rounded-lg"
@@ -371,17 +375,26 @@ export const UserDashboard: React.FC = () => {
                       
                       }}
                     >
-                      <div className="relative z-10 p-8 flex flex-col items-center justify-center h-full text-center">
-                        <img
-                          src={selectedPage.logo}
-                          alt="Logo"
-                          className="h-20 mb-6 object-contain"
-                        />
-                        <h1 className="text-4xl font-bold text-white mb-4">
-                          {selectedPage.headerTitle}
-                        </h1>
-                        <p className="text-xl text-white/80">{selectedPage.subtitle}</p>
-                      </div>
+                  <div className="relative z-10 p-8 flex flex-col items-center justify-center h-full text-center">
+                              <img
+                                src={selectedPage.logo}
+                                alt="Logo"
+                                className="h-20 mb-6 object-contain"
+                              />
+                              <h1
+                                className="text-4xl font-bold text-white mb-4"
+                                dangerouslySetInnerHTML={{
+                                  __html: selectedPage.headerTitle || "Your Amazing Header",
+                                }}
+                              />
+                              <p
+                                className="text-xl text-white/80"
+                                dangerouslySetInnerHTML={{
+                                  __html: selectedPage.subtitle || "Your Subheadline Goes Here",
+                                }}
+                              />
+                            </div>
+
                     </a>
                   </div>
                 </div>
@@ -504,13 +517,12 @@ export const UserDashboard: React.FC = () => {
             </button>
             {/* Prize Text */}
             <TextInput
-              label="Prize Text"
-              value={prize.text}
-              onChange={(value) =>
-                setSelectedPage({
-                  ...selectedPage,
-                  prizes: selectedPage.prizes.map((p, i) =>
-                    i === index ? { ...p, text: value } : p
+          value={prize.text || ''}
+          onChange={(value) =>
+            setSelectedPage({
+              ...selectedPage,
+              prizes: selectedPage.prizes.map((p, i) =>
+                i === index ? { ...p, text: value } : p
                   ),
                 })
               }
@@ -689,27 +701,37 @@ export const UserDashboard: React.FC = () => {
       {/* HTML/Markdown Editor */}
       <div>
         <label className="block text-sm font-medium text-white mb-1">
-          Footer Text (HTML Allowed)
+          Footer Text 
         </label>
-        <textarea
-          value={selectedPage.footer || ""}
-          onChange={(e) =>
-            setSelectedPage({ ...selectedPage, footer: e.target.value })
+        <TiptapEditor
+          content={selectedPage.footer || ''}
+          onContentChange={(content) =>
+            setSelectedPage({ ...selectedPage, footer: content })
           }
-          rows={6}
-          className="w-full px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF]"
-          placeholder="<a href='https://example.com'>Terms & Conditions</a>"
         />
+        
+         <TextInput
+          label = "Lower Footer"
+          value={selectedPage.lowerFooter || ''}
+          onChange={(value) =>
+            setSelectedPage({ ...selectedPage, lowerFooter: value })
+          }
+        /><strong><span className='text-white'>(HTML Allowed)</span></strong>
       </div>
       
       {/* Preview Section */}
-      <div>
-        <h3 className="text-lg font-semibold text-[#D3D3DF]">Footer Preview</h3>
-        <div
-          className="mt-4 p-4 border border-[#C33AFF]/20 bg-[#121218] rounded-lg"
-          dangerouslySetInnerHTML={{ __html: selectedPage.footer || "<p>Preview will appear here...</p>" }}
+      <div
+          className="mt-4 p-4 border border-[#C33AFF]/20 bg-[#121218] rounded-lg text-[#C33AFF]"
+          dangerouslySetInnerHTML={{
+            __html: selectedPage.footer || '<p>Preview will appear here...</p>',
+          }}
         />
-      </div>
+         <div
+          className="mt-4 p-4 border border-[#C33AFF]/20 bg-[#121218] rounded-lg text-[#C33AFF]"
+          dangerouslySetInnerHTML={{
+            __html: selectedPage.lowerFooter || '<p>Preview will appear here...</p>',
+          }}
+        />
     </div>
   </div>
 </Tabs.Content>

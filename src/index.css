@@ -27,6 +27,24 @@
   }
 }
 
+
+
+
+.tiptap-editor-content {
+  background-clip: text;
+  background-image: linear-gradient(to right, #9f7aea, #ff63c3);
+  color: transparent; /* Actual color for saved state */
+}
+
+.tiptap-editor-content.simulate-transparent {
+  color: white; /* Visible white text for readability in the editor */
+}
+
+
+
+
+
+
 @layer utilities {
   .text-shadow {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);

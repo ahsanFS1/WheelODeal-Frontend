@@ -8,11 +8,11 @@ interface Props {
 
 export const VideoEditor: React.FC<Props> = ({ videoId, onChange }) => {
   return (
-    <div className="space-y-6">
+    <div className="py-4 space-y-6">
       <h3 className="text-lg font-bold text-[#D3D3DF]">Edit Video</h3>
 
       {/* Explanation Section */}
-      <div className="bg-[#1B1B21] p-4 rounded-lg shadow-md">
+      <div className="bg-[#1B1B21] p-4 rounded-lg shadow-md ">
         <h4 className="text-md font-semibold text-[#C33AFF]">What is a YouTube Video ID?</h4>
         <p className="text-[#D3D3DF] text-sm mt-2">
           A YouTube Video ID is a unique string of characters used to identify videos on YouTube. It can be found in the video URL as shown below:
@@ -29,6 +29,7 @@ export const VideoEditor: React.FC<Props> = ({ videoId, onChange }) => {
 
       {/* Video ID Input */}
       <TextInput
+       
         label="YouTube Video ID"
         value={videoId}
         onChange={onChange}

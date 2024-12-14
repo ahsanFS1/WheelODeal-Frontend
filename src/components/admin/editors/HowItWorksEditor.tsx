@@ -1,7 +1,7 @@
 import React from 'react';
 import { LandingPageConfig } from '../../../types';
+import  TiptapEditor  from '../shared/TiptapEditor'; // Ensure this path is correct
 import { TextInput } from '../shared/TextInput';
-
 interface Props {
   data: LandingPageConfig['howItWorks'];
   onChange: (data: LandingPageConfig['howItWorks']) => void;
@@ -16,11 +16,14 @@ export const HowItWorksEditor: React.FC<Props> = ({ data, onChange }) => {
 
   return (
     <div className="space-y-6">
-      <TextInput
-        label="Section Title"
-        value={data.title}
-        onChange={(value) => onChange({ ...data, title: value })}
-      />
+      {/* Section Title with TiptapEditor */}
+      <div>
+        <h3 className="text-sm font-medium text-[#D3D3DF] mb-2">Section Title</h3>
+        <TiptapEditor
+          content={data.title}
+          onContentChange={(content) => onChange({ ...data, title: content })}
+        />
+      </div>
 
       <div className="space-y-8">
         {data.steps.map((step, index) => (

@@ -1,116 +1,160 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import { Button } from './ui/button';
 import { SpinningWheel } from './SpinningWheel';
 import { motion } from 'framer-motion';
 import * as Accordion from '@radix-ui/react-accordion';
 import * as Icons from 'lucide-react';
 import { cn } from '../lib/utils';
-
-
 import { useConStore } from '../store/configStore';
 
-
-
-
-
 export const MainLandingPage: React.FC = () => {
-
-  const {fetchMLP, mlp: landingPage} = useConStore() as {
+  const { fetchMLP, mlp: landingPage } = useConStore() as {
     fetchMLP: () => void;
     landingPage: any;
   };
 
-  useEffect(()=>{
+  const [isLoading, setIsLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
 
-     fetchMLP();
-  },[fetchMLP]);
+  useEffect(() => {
+    const retryInterval = setInterval(() => {
+      if (!landingPage.hero) {
+        fetchMLP();
+      } else {
+        setIsLoading(false);
+        clearInterval(retryInterval);
+      }
+    }, 500); // Retry every 3 seconds
+
+    return () => clearInterval(retryInterval); // Cleanup on unmount
+  }, [fetchMLP, landingPage.hero]);
 
   const navigate = useNavigate();
-  
-  console.log(landingPage);
-  // Ensure `hero` exists
-  if (!landingPage.hero) {
-    return <div>Landing Page configuration is incomplete.</div>;
-  }
-  
-  
-  // const landingPage = config.landingPage;
 
-  
   const fadeIn = {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
     transition: { duration: 0.6 },
   };
 
-  // Helper function to render Lucide icons dynamically
   const renderIcon = (iconName: string): JSX.Element | null => {
     const Icon = Icons[iconName as keyof typeof Icons] as React.ComponentType<React.SVGProps<SVGSVGElement>>;
     return Icon ? <Icon className="w-6 h-6" /> : null;
   };
-
-
-
-  const handleAdminLogin = () => {
-    navigate('/admin_d01z');
-  };
- 
-
-
-console.log("Landing Page Data: ",landingPage);
+  const loadingTexts = [
+    "Spinning the Wheel...",
+    "Spinning up some marketing magic just for you! 🎡",
+    "Are we there yet?",
+    "Good things take time; great ones take a few more seconds!",
+    "Fetching prizes and pixels... because you deserve both!",
+  ];
+  
+  const randomText = loadingTexts[Math.floor(Math.random() * loadingTexts.length)];
+  if(isLoading||!landingPage.hero){
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#121218] text-white">
+      <svg
+        className="animate-spin h-16 w-16 text-purple-500 mb-6"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          className="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          strokeWidth="4"
+        ></circle>
+        <path
+          className="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+        ></path>
+      </svg>
+      <p className="text-lg text-gray-400">{randomText}</p>
+    </div>
+  )};
   return (
     <div className="min-h-screen bg-[#121218] text-white">
       {/* Hero Section */}
       <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
-  {landingPage.hero.backgroundImage && (
-    <div
-      className="absolute inset-0 bg-cover bg-center"
-      style={{
-        backgroundImage: `url(${landingPage.hero.backgroundImage})`,
-        filter: 'blur(2px) brightness(0.7)',
-      }}
-    />
-  )}
+        {landingPage.hero.backgroundImage && (
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: `url(${landingPage.hero.backgroundImage})`,
+              filter: 'blur(2px) brightness(0.7)',
+            }}
+          />
+        )}
 
-  {/* Logo at the top */}
-  {landingPage.hero.logo && (
-    <img
-      src={landingPage.hero.logo}
-      alt="Logo"
-      className="absolute top-8 left-1/2 transform -translate-x-1/2 h-24 object-contain drop-shadow-lg"
-    />
-  )}
+        {landingPage.hero.logo && (
+          <img
+            src={landingPage.hero.logo}
+            alt="Logo"
+            className="absolute top-8 left-1/2 transform -translate-x-1/2 h-24 object-contain drop-shadow-lg"
+          />
+        )}
 
-  <motion.div
-    className="relative z-10 container mx-auto px-4 text-center"
-    initial="initial"
-    animate="animate"
-    variants={{
-      initial: { opacity: 0, y: 20 },
-      animate: { opacity: 1, y: 0 },
-      transition: { duration: 0.6 },
-    }}
-  >
-    <h1 className="text-6xl md:text-7xl font-bold mb-6 text-shadow-lg bg-clip-text text-transparent bg-gradient-to-r from-white to-purple-200">
-      {landingPage.hero.headline}
-    </h1>
-    <p className="text-xl md:text-2xl mb-8 text-gray-200 text-shadow-lg">
-      {landingPage.hero.subheadline}
-    </p>
-    <Button
-      onClick={() => document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' })}
-      style={{
-        backgroundColor: landingPage.hero.ctaButton.color,
-        color: landingPage.hero.ctaButton.textColor,
-      }}
-      className="text-lg px-8 py-4 rounded-full transform hover:scale-105 transition-all shadow-lg hover:shadow-purple-500/50"
-    >
-      {landingPage.hero.ctaButton.text}
-    </Button>
-  </motion.div>
-</section>
+        
+        <motion.div
+          className="relative z-10 container mx-auto px-4 text-center"
+          initial="initial"
+          animate="animate"
+          variants={{
+            initial: { opacity: 0, y: 20 },
+            animate: { opacity: 1, y: 0 },
+            transition: { duration: 0.6 },
+          }}
+        >
+         {/* Headline */}
+         <h1
+          className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-shadow-lg bg-clip-text text-transparent bg-gradient-to-r from-white to-purple-200"
+          style={{
+            fontSize: 'clamp(2rem, 5vw, 4.5rem)', // Responsive scaling
+          }}
+          dangerouslySetInnerHTML={{ __html: landingPage.hero.headline }}
+          />
+
+      {/* Subheadline */}
+      <p
+        className="text-lg md:text-xl lg:text-2xl mb-8 text-gray-200 text-shadow-lg"
+        style={{
+          lineHeight: '1.8',
+        }}
+      >
+        <span
+          dangerouslySetInnerHTML={{ __html: landingPage.hero.subheadline }}
+          style={{
+            fontFamily: 'inherit', // Respect TiptapEditor font-family
+            fontSize: 'inherit',   // Keep Tiptap font-size intact
+            color: 'inherit',      // Respect the color set by TiptapEditor
+          }}
+        ></span>
+      </p>
+
+
+          {/* Call-to-Action Button */}
+          <Button
+            onClick={() =>
+              document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' })
+            }
+            style={{
+              backgroundColor: landingPage.hero.ctaButton.color,
+              color: landingPage.hero.ctaButton.textColor,
+            }}
+            className="text-lg px-8 py-4 rounded-full transform hover:scale-105 transition-all shadow-lg hover:shadow-purple-500/50"
+          >
+            {landingPage.hero.ctaButton.text}
+          </Button>
+        </motion.div>
+
+      </section>
+
+
 
       {/* Demo Section */}
       <section id="demo" className="py-20 bg-[#1B1B21]">
@@ -121,10 +165,17 @@ console.log("Landing Page Data: ",landingPage);
           variants={fadeIn}
           viewport={{ once: true }}
         >
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4 text-gradient">{landingPage.demo.title}</h2>
-            <p className="text-xl text-gray-300">{landingPage.demo.caption}</p>
-          </div>
+        <div className="text-center mb-12">
+  <h2
+    className="text-4xl font-bold mb-4 text-gradient"
+    dangerouslySetInnerHTML={{ __html: landingPage.demo.title }}
+  />
+  <p
+    className="text-xl text-gray-300"
+    dangerouslySetInnerHTML={{ __html: landingPage.demo.caption }}
+  />
+</div>
+
 
           <div className="max-w-3xl mx-auto">
             
@@ -193,29 +244,34 @@ console.log("Landing Page Data: ",landingPage);
 
       {/* Features Section */}
       <section className="py-20 bg-[#1B1B21]">
-        <motion.div 
+        <motion.div
           className="container mx-auto px-4"
           initial="initial"
           whileInView="animate"
-          variants={fadeIn}
-          viewport={{ once: true }}
+          variants={{
+            initial: { opacity: 0, y: 20 },
+            animate: { opacity: 1, y: 0 },
+            transition: { duration: 0.6 },
+          }}
         >
-          <h2 className="text-4xl font-bold text-center mb-12 text-gradient">
-            {landingPage.features.title}
-          </h2>
-          <p className="text-xl text-center text-gray-300 mb-12">
-            {landingPage.features.description}
-          </p>
+          <h2
+            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-8 text-center"
+            dangerouslySetInnerHTML={{ __html: landingPage.features.title }}
+          />
+          <p
+            className="text-lg md:text-xl text-center text-gray-300 mb-12"
+            dangerouslySetInnerHTML={{ __html: landingPage.features.description }}
+          />
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {landingPage.features.items.map((feature, index) => (
-              <div 
+              <div
                 key={index}
-                className="bg-[#1B1B21] p-6 rounded-lg shadow-xl hover:shadow-2xl transition-all hover:shadow-purple-500/20"
+                className="bg-[#1B1B21] p-6 rounded-lg shadow-lg hover:shadow-xl transition-all"
               >
-                <div className="w-12 h-12 bg-[#C33AFF] rounded-lg flex items-center justify-center mb-4">
-                  {renderIcon(feature.icon)}
-                </div>
-                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                <h3 className="text-lg font-bold mb-2">
+                  {feature.title}
+                </h3>
                 <p className="text-gray-300">{feature.description}</p>
               </div>
             ))}
@@ -229,57 +285,67 @@ console.log("Landing Page Data: ",landingPage);
 
       {/* Benefits Section */}
       <section className="py-20 bg-[#121218]">
-        <motion.div 
+        <motion.div
           className="container mx-auto px-4"
           initial="initial"
           whileInView="animate"
-          variants={fadeIn}
-          viewport={{ once: true }}
+          variants={{
+            initial: { opacity: 0, y: 20 },
+            animate: { opacity: 1, y: 0 },
+            transition: { duration: 0.6 },
+          }}
         >
-          <h2 className="text-4xl font-bold text-center mb-4 text-gradient">
-            {landingPage.benefits.title}
-          </h2>
-          <p className="text-xl text-center text-gray-300 mb-12">
-            {landingPage.benefits.description}
-          </p>
-          
+          <h2
+            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-8 text-center"
+            dangerouslySetInnerHTML={{ __html: landingPage.benefits.title }}
+          />
+          <p
+            className="text-lg md:text-xl text-center text-gray-300 mb-12"
+            dangerouslySetInnerHTML={{ __html: landingPage.benefits.description }}
+          />
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
             {landingPage.benefits.items.map((benefit, index) => (
-              <div 
+              <div
                 key={index}
                 className="flex items-center space-x-4 bg-[#121218] p-6 rounded-lg hover:shadow-lg hover:shadow-purple-500/20 transition-all"
               >
                 <div className="w-8 h-8 bg-[#C33AFF] rounded-full flex items-center justify-center">
-                  <Icons.Check className="w-5 h-5 text-white" />
+                  <span className="text-white font-bold text-lg">{index + 1}</span>
                 </div>
-                <p className="text-lg">{benefit}</p>
+                <p className="text-gray-300">{benefit}</p>
               </div>
             ))}
           </div>
         </motion.div>
       </section>
 
-      {/* How It Works Section */}
-      <section className="py-20 bg-[#1B1B21]">
-        <motion.div 
+
+        {/* How It Works Section */}
+        <section className="py-20 bg-[#1B1B21]">
+        <motion.div
           className="container mx-auto px-4"
           initial="initial"
           whileInView="animate"
-          variants={fadeIn}
-          viewport={{ once: true }}
+          variants={{
+            initial: { opacity: 0, y: 20 },
+            animate: { opacity: 1, y: 0 },
+            transition: { duration: 0.6 },
+          }}
         >
-          <h2 className="text-4xl font-bold text-center mb-12 text-gradient">
-            {landingPage.howItWorks.title}
-          </h2>
-          
+          <h2
+            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-8 text-center"
+            dangerouslySetInnerHTML={{ __html: landingPage.howItWorks.title }}
+          />
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {landingPage.howItWorks.steps.map((step, index) => (
-              <div 
+              <div
                 key={index}
                 className="text-center bg-[#1B1B21] p-8 rounded-lg hover:shadow-lg hover:shadow-purple-500/20 transition-all"
               >
                 <div className="w-16 h-16 bg-[#C33AFF] rounded-full flex items-center justify-center mx-auto mb-6">
-                  {renderIcon(step.icon)}
+                  <span className="text-white font-bold text-lg">{index + 1}</span>
                 </div>
                 <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
                 <p className="text-gray-300">{step.description}</p>
@@ -291,47 +357,56 @@ console.log("Landing Page Data: ",landingPage);
 
       {/* Testimonials Section */}
       <section className="py-20 bg-[#121218]">
-        <motion.div 
+        <motion.div
           className="container mx-auto px-4"
           initial="initial"
           whileInView="animate"
-          variants={fadeIn}
-          viewport={{ once: true }}
+          variants={{
+            initial: { opacity: 0, y: 20 },
+            animate: { opacity: 1, y: 0 },
+            transition: { duration: 0.6 },
+          }}
         >
-          <h2 className="text-4xl font-bold text-center mb-4 text-gradient">
-            {landingPage.testimonials.title}
-          </h2>
-          <p className="text-xl text-center text-gray-300 mb-12">
-            {landingPage.testimonials.subtitle}
-          </p>
-          
+          <h2
+            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-8 text-center"
+            dangerouslySetInnerHTML={{ __html: landingPage.testimonials.title }}
+          />
+          <p
+            className="text-lg md:text-xl text-center text-gray-300 mb-12"
+            dangerouslySetInnerHTML={{ __html: landingPage.testimonials.subtitle }}
+          />
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {landingPage.testimonials.items.map((testimonial) => (
-              <div 
-                key={testimonial.id}
+            {landingPage.testimonials.items.map((testimonial, index) => (
+              <div
+                key={index}
                 className="bg-[#121218] p-8 rounded-lg shadow-xl hover:shadow-2xl hover:shadow-purple-500/20 transition-all"
               >
                 <div className="flex items-center mb-4">
                   {[...Array(5)].map((_, i) => (
-                    <Icons.Star
+                    <span
                       key={i}
-                      className={cn(
-                        "w-5 h-5",
-                        i < testimonial.rating ? "text-yellow-400 fill-current" : "text-gray-400"
-                      )}
-                    />
+                      className={`w-5 h-5 ${
+                        i < testimonial.rating
+                          ? "text-yellow-400"
+                          : "text-gray-400"
+                      }`}
+                    >
+                      ★
+                    </span>
                   ))}
                 </div>
                 <p className="text-gray-300 mb-6 italic">{testimonial.content}</p>
                 <div>
                   <p className="font-semibold text-white">{testimonial.name}</p>
-                  <p className="text-sm text-gray-400">{testimonial.role}, {testimonial.company}</p>
+                  <p className="text-sm text-gray-400">{testimonial.role}</p>
                 </div>
               </div>
             ))}
           </div>
         </motion.div>
       </section>
+
 
       {/* Pricing Section */}
       <section className="py-20 bg-[#1B1B21]">
@@ -342,9 +417,10 @@ console.log("Landing Page Data: ",landingPage);
           variants={fadeIn}
           viewport={{ once: true }}
         >
-          <h2 className="text-4xl font-bold text-center mb-12 text-gradient">
-            {landingPage.pricing.title}
-          </h2>
+         <h2
+            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-8 text-center"
+            dangerouslySetInnerHTML={{ __html: landingPage.pricing.title }}
+          />
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {landingPage.pricing.plans.map((plan) => (
@@ -387,9 +463,10 @@ console.log("Landing Page Data: ",landingPage);
           variants={fadeIn}
           viewport={{ once: true }}
         >
-          <h2 className="text-4xl font-bold text-center mb-12 text-gradient">
-            {landingPage.faq.title}
-          </h2>
+           <h2
+            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-8 text-center"
+            dangerouslySetInnerHTML={{ __html: landingPage.faq.title }}
+          />
           
           <div className="max-w-3xl mx-auto">
             <Accordion.Root type="single" collapsible>
@@ -415,30 +492,33 @@ console.log("Landing Page Data: ",landingPage);
 
       {/* Final CTA Section */}
       <section className="py-20 bg-[#1B1B21]">
-        <motion.div 
+        <motion.div
           className="container mx-auto px-4 text-center"
           initial="initial"
           whileInView="animate"
-          variants={fadeIn}
-          viewport={{ once: true }}
+          variants={{
+            initial: { opacity: 0, y: 20 },
+            animate: { opacity: 1, y: 0 },
+            transition: { duration: 0.6 },
+          }}
         >
-          <h2 className="text-4xl font-bold mb-8 text-gradient">
-            {landingPage.finalCta.title}
-          </h2>
+          <h2
+            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-8"
+            dangerouslySetInnerHTML={{ __html: landingPage.finalCta.title }}
+          />
           <Button
-            onClick={() => navigate(landingPage.finalCta.buttonLink)}
+            onClick={() => window.location.href = landingPage.finalCta.buttonLink}
             style={{
               backgroundColor: landingPage.finalCta.buttonColor,
-              color: landingPage.finalCta.buttonTextColor
+              color: landingPage.finalCta.buttonTextColor,
             }}
-            className="text-lg px-8 py-4 rounded-full transform hover:scale-105 transition-all shadow-lg hover:shadow-purple-500/50 mb-6"
+            className="text-lg px-8 py-4 rounded-full transform hover:scale-105 transition-all shadow-lg hover:shadow-purple-500/50"
           >
             {landingPage.finalCta.buttonText}
           </Button>
-          <p className="text-gray-300">{landingPage.finalCta.guarantee}</p>
+          <p className="text-gray-300 mt-4">{landingPage.finalCta.guarantee}</p>
         </motion.div>
       </section>
-
     </div>
   );
 };

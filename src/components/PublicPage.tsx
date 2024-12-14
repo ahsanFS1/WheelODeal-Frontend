@@ -203,7 +203,7 @@ const handleSpinEnd = async (result: SpinResult) => {
             <img
               src={config.logo || '/logo.png'}
               alt="Logo"
-              className="h-12 object-contain"
+              className="h-16 object-contain"
             />
           </div>
         </header>
@@ -211,10 +211,27 @@ const handleSpinEnd = async (result: SpinResult) => {
         {/* Hero Section */}
         <section className="py-8 text-center">
           <div className="max-w-4xl mx-auto px-4">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-purple-400">
-              {config.headerTitle}
-            </h1>
-            <p className="text-lg text-gray-300">{config.subtitle}</p>
+             {/* Render headerTitle */}
+          <h1
+            className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-shadow-lg"
+            style={{
+              fontSize: "clamp(2rem, 5vw, 4.5rem)",
+            }}
+            dangerouslySetInnerHTML={{
+              __html: config.headerTitle || "Your Amazing Headline",
+            }}
+          />
+
+          {/* Render subtitle */}
+          <p
+            className="text-lg md:text-xl lg:text-2xl mb-8"
+            style={{
+              lineHeight: "1.8",
+            }}
+            dangerouslySetInnerHTML={{
+              __html: config.subtitle || "Your Subheadline Goes Here",
+            }}
+          />
           </div>
         </section>
 
@@ -274,38 +291,30 @@ const handleSpinEnd = async (result: SpinResult) => {
                 disabled={!!spinResult}
               />
             </div>
-            {/* Spin Result */}
+          
+            {/* Bonus Code Display */}
+  {spinResult && (
+            <div className="mt-90 text-center ">
+              <div className="inline-block bg-purple-900/20 rounded-lg p-4">
+                <p className="text-xl text-gray-300">Bonus Code:</p>
+                <p className="text-xl font-bold text-purple-400">{spinResult?.prize.bonusCode}</p>
+                <p className="text-sm text-gray-300 mt-2">Expiring In:</p>
+                <CountdownTimer   expiryTimestamp={new Date(spinResult?.prize.expirationDate).getTime()} />
+              </div>
+            </div>
+  )}
             {spinResult && (
-              <div className="mt-20 text-center">
+              <div className="mt-10 text-center">
                 <div className="bg-purple-900/20 rounded-lg p-6 inline-block">
                   <h3 className="text-xl font-bold mb-4">
-                    Congratulations! You won: {spinResult.prize.text}
+                    Congratulations! You won: {" "}
+                    <span
+                    dangerouslySetInnerHTML={{
+                      __html: spinResult.prize.text || "Your Prize!",
+                    }}
+                  />
                   </h3>
-                  <button
-                    onClick={handleClaim}
-                    className="px-6 py-2 bg-purple-600 text-white rounded-full hover:bg-purple-700 transition-colors"
-                    >
-                    Claim Offer!
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        </section>
-          {/* Bonus Code Display */}
-{spinResult && (
-          <div className="mt-90 text-center">
-            <div className="inline-block bg-purple-900/20 rounded-lg p-4">
-              <p className="text-xl text-gray-300">Bonus Code:</p>
-              <p className="text-xl font-bold text-purple-400">{spinResult?.prize.bonusCode}</p>
-              <p className="text-sm text-gray-300 mt-2">Expiring In:</p>
-              <CountdownTimer   expiryTimestamp={new Date(spinResult?.prize.expirationDate).getTime()} />
-            </div>
-          </div>
-)}
-        {/*Final CTA Section*/}
-
-        <div className="flex justify-center mt-4">
+                  <div className="flex justify-center mt-4">
         <a
           href={config.finalCta?.link || '#'}
           target="_blank"
@@ -340,22 +349,41 @@ const handleSpinEnd = async (result: SpinResult) => {
               config.finalCta?.backgroundColor || '#4CAF50')
           }
         >
-          {config.finalCta?.text || 'Click Me'}
+          {config.finalCta?.text || 'Claim Offer'}
         </a>
       </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+        {/*Final CTA Section*/}
+
+        
        
+            
+     
         {/* Footer Section */}
         <footer className="text-gray-400 py-8 mt-8">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div
-                className="text-center text-sm md:text-base space-y-4 leading-relaxed"
-                dangerouslySetInnerHTML={{
-                  __html: config.footer || "<p>Preview will appear here...</p>",
+                
+        <div className="max-w-7xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+              <div dangerouslySetInnerHTML={{
+                  __html: config.footer || "<p>Footer Preview will appear here...</p>",
+                
                 }}
               />
-              <div className="mt-4 border-t border-gray-700 pt-4 text-center text-xs text-gray-500">
-                © {new Date().getFullYear()} Your Company Name. All Rights Reserved.
-              </div>
+            </div>
+
+
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+             
+              <div className="mt-4 border-t border-gray-700 pt-4 text-center text-xs text-gray-500"
+             
+             dangerouslySetInnerHTML={{
+               __html: config.lowerFooter || "<p>Preview will appear here...</p>",
+            
+                }}
+              />
             </div>
           </footer>
       </div>

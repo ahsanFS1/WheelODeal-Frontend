@@ -1,8 +1,9 @@
 import React from 'react';
 import { LandingPageConfig } from '../../../types';
-import { TextInput } from '../shared/TextInput';
 import { Button } from '../../ui/button';
 import { Plus, Trash } from 'lucide-react';
+import  TiptapEditor  from '../shared/TiptapEditor'; // Ensure this path is correct
+import { TextInput } from '../shared/TextInput';
 
 interface Props {
   data: LandingPageConfig['benefits'];
@@ -30,27 +31,38 @@ export const BenefitsEditor: React.FC<Props> = ({ data, onChange }) => {
 
   return (
     <div className="space-y-6">
-      <TextInput
-        label="Section Title"
-        value={data.title}
-        onChange={(value) => onChange({ ...data, title: value })}
-      />
+      {/* Section Title with TiptapEditor */}
+      <div>
+        <h3 className="text-sm font-medium text-[#D3D3DF] mb-2">Section Title</h3>
+        <TiptapEditor
+          content={data.title}
+          onContentChange={(content) => onChange({ ...data, title: content })}
+        />
+      </div>
 
-      <TextInput
-        label="Description"
-        value={data.description}
-        onChange={(value) => onChange({ ...data, description: value })}
-        textArea
-      />
+      {/* Description with TiptapEditor */}
+      <div>
+        <h3 className="text-sm font-medium text-[#D3D3DF] mb-2">Description</h3>
+        <TiptapEditor
+          content={data.description}
+          onContentChange={(content) => onChange({ ...data, description: content })}
+        />
+      </div>
 
+      {/* Benefits List */}
       <div className="space-y-4">
         {data.items.map((benefit, index) => (
           <div key={index} className="flex items-center gap-4">
-            <TextInput
-              label={`Benefit ${index + 1}`}
-              value={benefit}
-              onChange={(value) => updateBenefit(index, value)}
-            />
+            <div className="flex-1">
+              <h3 className="text-sm font-medium text-[#D3D3DF] mb-2">
+                Benefit {index + 1}
+              </h3>
+              <TextInput
+               label="Benefits"
+               value={benefit}
+               onChange={(value) => updateBenefit(index,value)}
+              />
+            </div>
             <Button
               variant="destructive"
               size="sm"

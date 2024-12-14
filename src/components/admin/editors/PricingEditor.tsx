@@ -4,7 +4,7 @@ import { TextInput } from '../shared/TextInput';
 import { Button } from '../../ui/button';
 import { Plus, Trash } from 'lucide-react';
 import { ColorPicker } from '../shared/ColorPicker';
-
+import TiptapEditor from '../shared/TiptapEditor';
 interface Props {
   data: LandingPageConfig['pricing'];
   onChange: (data: LandingPageConfig['pricing']) => void;
@@ -44,11 +44,10 @@ export const PricingEditor: React.FC<Props> = ({ data, onChange }) => {
 
   return (
     <div className="space-y-6">
-      <TextInput
-        label="Section Title"
-        value={data.title}
-        onChange={(value) => onChange({ ...data, title: value })}
-      />
+       <TiptapEditor
+          content={data.title}
+          onContentChange={(content) => onChange({ ...data, title: content })}
+        />
 
       <div className="space-y-8">
         {data.plans.map((plan) => (

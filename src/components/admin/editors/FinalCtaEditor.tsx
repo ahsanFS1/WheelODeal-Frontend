@@ -2,7 +2,7 @@ import React from 'react';
 import { LandingPageConfig } from '../../../types';
 import { TextInput } from '../shared/TextInput';
 import { ColorPicker } from '../shared/ColorPicker';
-
+import TiptapEditor from '../shared/TiptapEditor';
 interface Props {
   data: LandingPageConfig['finalCta'];
   onChange: (data: LandingPageConfig['finalCta']) => void;
@@ -15,11 +15,10 @@ export const FinalCtaEditor: React.FC<Props> = ({ data, onChange }) => {
 
   return (
     <div className="space-y-6">
-      <TextInput
-        label="Title"
-        value={data.title}
-        onChange={(value) => updateField('title', value)}
-      />
+     <TiptapEditor
+          content={data.title}
+          onContentChange={(content) => onChange({ ...data, title: content })}
+        />
 
       <TextInput
         label="Button Text"

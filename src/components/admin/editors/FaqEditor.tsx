@@ -3,7 +3,7 @@ import { LandingPageConfig } from '../../../types';
 import { TextInput } from '../shared/TextInput';
 import { Button } from '../../ui/button';
 import { Plus, Trash } from 'lucide-react';
-
+import TiptapEditor from '../shared/TiptapEditor';
 interface Props {
   data: LandingPageConfig['faq'];
   onChange: (data: LandingPageConfig['faq']) => void;
@@ -39,11 +39,10 @@ export const FaqEditor: React.FC<Props> = ({ data, onChange }) => {
 
   return (
     <div className="space-y-6">
-      <TextInput
-        label="Section Title"
-        value={data.title}
-        onChange={(value) => onChange({ ...data, title: value })}
-      />
+     <TiptapEditor
+          content={data.title}
+          onContentChange={(content) => onChange({ ...data, title: content })}
+        />
 
       <div className="space-y-4">
         {data.items.map((faq) => (
