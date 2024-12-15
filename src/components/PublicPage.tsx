@@ -316,7 +316,7 @@ const handleSpinEnd = async (result: SpinResult) => {
                   </h3>
                   <div className="flex justify-center mt-4">
         <a
-          href={config.finalCta?.link || '#'}
+          href={spinResult.prize?.redirectUrl || '#'}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-block rounded-lg transition-all duration-200"

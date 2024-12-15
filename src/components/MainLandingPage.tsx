@@ -78,9 +78,10 @@ export const MainLandingPage: React.FC = () => {
     </div>
   )};
   return (
+
     <div className="min-h-screen bg-[#121218] text-white">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-4">
         {landingPage.hero.backgroundImage && (
           <div
             className="absolute inset-0 bg-cover bg-center"
@@ -91,53 +92,46 @@ export const MainLandingPage: React.FC = () => {
           />
         )}
 
-        {landingPage.hero.logo && (
-          <img
-            src={landingPage.hero.logo}
-            alt="Logo"
-            className="absolute top-8 left-1/2 transform -translate-x-1/2 h-24 object-contain drop-shadow-lg"
-          />
+{landingPage.hero.logo && (
+          <div className="absolute top-8 flex justify-center w-full z-10">
+            <img
+              src={landingPage.hero.logo}
+              alt="Logo"
+              className="object-contain drop-shadow-lg"
+              style={{
+                maxWidth: 'clamp(100px, 15vw, 180px)',
+                height: 'auto',
+              }}
+            />
+          </div>
         )}
 
-        
         <motion.div
-          className="relative z-10 container mx-auto px-4 text-center"
+          className="relative z-10 container mx-auto text-center"
           initial="initial"
           animate="animate"
-          variants={{
-            initial: { opacity: 0, y: 20 },
-            animate: { opacity: 1, y: 0 },
-            transition: { duration: 0.6 },
-          }}
+          variants={fadeIn}
         >
-         {/* Headline */}
-         <h1
-          className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-shadow-lg bg-clip-text text-transparent bg-gradient-to-r from-white to-purple-200"
-          style={{
-            fontSize: 'clamp(2rem, 5vw, 4.5rem)', // Responsive scaling
-          }}
-          dangerouslySetInnerHTML={{ __html: landingPage.hero.headline }}
+          <h1
+            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-shadow-lg bg-clip-text text-transparent bg-gradient-to-r from-white to-purple-200 break-words"
+            style={{
+              fontSize: 'clamp(2rem, 5vw, 4.5rem)',
+              overflowWrap: 'break-word',
+              lineHeight: '1.1',
+            }}
+            dangerouslySetInnerHTML={{ __html: landingPage.hero.headline }}
           />
+          <p
+            className="text-sm sm:text-lg md:text-xl lg:text-2xl mb-8 text-gray-200 break-words"
+            style={{
+              fontSize: 'clamp(1rem, 2.5vw, 1.25rem)',
+              lineHeight: '1.4',
+              overflowWrap: 'break-word',
+            }}
+          >
+            <span dangerouslySetInnerHTML={{ __html: landingPage.hero.subheadline }} />
+          </p>
 
-      {/* Subheadline */}
-      <p
-        className="text-lg md:text-xl lg:text-2xl mb-8 text-gray-200 text-shadow-lg"
-        style={{
-          lineHeight: '1.8',
-        }}
-      >
-        <span
-          dangerouslySetInnerHTML={{ __html: landingPage.hero.subheadline }}
-          style={{
-            fontFamily: 'inherit', // Respect TiptapEditor font-family
-            fontSize: 'inherit',   // Keep Tiptap font-size intact
-            color: 'inherit',      // Respect the color set by TiptapEditor
-          }}
-        ></span>
-      </p>
-
-
-          {/* Call-to-Action Button */}
           <Button
             onClick={() =>
               document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' })
@@ -146,66 +140,65 @@ export const MainLandingPage: React.FC = () => {
               backgroundColor: landingPage.hero.ctaButton.color,
               color: landingPage.hero.ctaButton.textColor,
             }}
-            className="text-lg px-8 py-4 rounded-full transform hover:scale-105 transition-all shadow-lg hover:shadow-purple-500/50"
+            className="text-xs sm:text-sm md:text-lg px-6 py-3 sm:px-8 sm:py-4 rounded-full transform hover:scale-105 transition-all shadow-lg hover:shadow-purple-500/50"
           >
             {landingPage.hero.ctaButton.text}
           </Button>
         </motion.div>
-
       </section>
 
 
-
-      {/* Demo Section */}
-      <section id="demo" className="py-20 bg-[#1B1B21]">
-        <motion.div
-          className="container mx-auto px-4"
-          initial="initial"
-          whileInView="animate"
-          variants={fadeIn}
-          viewport={{ once: true }}
-        >
+       {/* Demo Section */}
+    <section id="demo" className="py-16 sm:py-20 bg-[#1B1B21]">
+      <motion.div
+        className="container mx-auto px-4"
+        initial="initial"
+        whileInView="animate"
+        variants={{
+          initial: { opacity: 0, y: 20 },
+          animate: { opacity: 1, y: 0 },
+          transition: { duration: 0.6 },
+        }}
+        viewport={{ once: true }}
+      >
         <div className="text-center mb-12">
-  <h2
-    className="text-4xl font-bold mb-4 text-gradient"
-    dangerouslySetInnerHTML={{ __html: landingPage.demo.title }}
-  />
-  <p
-    className="text-xl text-gray-300"
-    dangerouslySetInnerHTML={{ __html: landingPage.demo.caption }}
-  />
-</div>
+          <h2
+            className="text-2xl sm:text-4xl font-bold mb-4 text-gradient"
+            style={{ fontSize: 'clamp(1.75rem, 5vw, 3.5rem)' }}
+            dangerouslySetInnerHTML={{ __html: landingPage.demo.title }}
+          />
+          <p
+            className="text-sm sm:text-lg text-gray-300"
+            style={{ fontSize: 'clamp(0.9rem, 2vw, 1.25rem)' }}
+            dangerouslySetInnerHTML={{ __html: landingPage.demo.caption }}
+          />
+        </div>
 
+        <div className="max-w-3xl mx-auto">
+          <SpinningWheel
+            prizes={landingPage.prizes}
+            onSpinEnd={() => {}}
+            disabled={false}
+          />
+        </div>
 
-          <div className="max-w-3xl mx-auto">
-            
-            <SpinningWheel
-              prizes={landingPage.prizes}
-              onSpinEnd={() => {}}
-              disabled={false}
-            />
-          </div>
-        
-          <div className="text-center mt-12">
-            <Button
-               onClick={() => {
-                // Scroll to the video section
-                document.getElementById('video')?.scrollIntoView({ behavior: 'smooth' });
-                
-                // Open the first video link in a new tab
-                ; // Replace with desired logic for selecting a video
-                const videoUrl = `https://www.youtube.com/watch?v=${landingPage.videoId}`;}}
-              style={{
-                backgroundColor: landingPage.demo.secondaryCta.color,
-                color: landingPage.demo.secondaryCta.textColor,
-              }}
-              className="text-lg px-8 py-4 rounded-full transform hover:scale-105 transition-all shadow-lg hover:shadow-purple-500/50"
-            >
-              {landingPage.demo.secondaryCta.text}
-            </Button>
-          </div>
-        </motion.div>
-      </section>
+        <div className="text-center mt-12">
+          <Button
+            onClick={() => {
+              document.getElementById('video')?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            style={{
+              backgroundColor: landingPage.demo.secondaryCta.color,
+              color: landingPage.demo.secondaryCta.textColor,
+            }}
+            className="text-xs sm:text-lg px-6 py-3 sm:px-8 sm:py-4 rounded-full transform hover:scale-105 transition-all shadow-lg hover:shadow-purple-500/50"
+          >
+            {landingPage.demo.secondaryCta.text}
+          </Button>
+        </div>
+      </motion.div>
+    </section>
+
       
 
       {/*Video Section*/}
@@ -242,46 +235,43 @@ export const MainLandingPage: React.FC = () => {
 
 
 
-      {/* Features Section */}
-      <section className="py-20 bg-[#1B1B21]">
-        <motion.div
-          className="container mx-auto px-4"
-          initial="initial"
-          whileInView="animate"
-          variants={{
-            initial: { opacity: 0, y: 20 },
-            animate: { opacity: 1, y: 0 },
-            transition: { duration: 0.6 },
-          }}
-        >
-          <h2
-            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-8 text-center"
-            dangerouslySetInnerHTML={{ __html: landingPage.features.title }}
-          />
-          <p
-            className="text-lg md:text-xl text-center text-gray-300 mb-12"
-            dangerouslySetInnerHTML={{ __html: landingPage.features.description }}
-          />
+       {/* Features Section */}
+    <section className="py-16 sm:py-20 bg-[#1B1B21]">
+      <motion.div
+        className="container mx-auto px-4"
+        initial="initial"
+        whileInView="animate"
+        variants={{
+          initial: { opacity: 0, y: 20 },
+          animate: { opacity: 1, y: 0 },
+          transition: { duration: 0.6 },
+        }}
+      >
+        <h2
+          className="text-2xl sm:text-4xl lg:text-5xl font-bold mb-8 text-center"
+          dangerouslySetInnerHTML={{ __html: landingPage.features.title }}
+        />
+        <p
+          className="text-sm sm:text-lg text-center text-gray-300 mb-12"
+          dangerouslySetInnerHTML={{ __html: landingPage.features.description }}
+        />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {landingPage.features.items.map((feature, index) => (
-              <div
-                key={index}
-                className="bg-[#1B1B21] p-6 rounded-lg shadow-lg hover:shadow-xl transition-all"
-              >
-
-                  <div className="w-12 h-12 bg-[#C33AFF] rounded-lg flex items-center justify-center mb-4">
-                  {renderIcon(feature.icon)}
-                </div>
-                <h3 className="text-lg font-bold mb-2">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-300">{feature.description}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          {landingPage.features.items.map((feature, index) => (
+            <div
+              key={index}
+              className="bg-[#1B1B21] p-4 sm:p-6 rounded-lg shadow-lg hover:shadow-xl transition-all"
+            >
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#C33AFF] rounded-lg flex items-center justify-center mb-4">
+                {renderIcon(feature.icon)}
               </div>
-            ))}
-          </div>
-        </motion.div>
-      </section>
+              <h3 className="text-sm sm:text-lg font-bold mb-2">{feature.title}</h3>
+              <p className="text-gray-300 text-xs sm:text-sm">{feature.description}</p>
+            </div>
+          ))}
+        </div>
+      </motion.div>
+    </section>
 
 
 
@@ -360,57 +350,62 @@ export const MainLandingPage: React.FC = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-20 bg-[#121218]">
-        <motion.div
-          className="container mx-auto px-4"
-          initial="initial"
-          whileInView="animate"
-          variants={{
-            initial: { opacity: 0, y: 20 },
-            animate: { opacity: 1, y: 0 },
-            transition: { duration: 0.6 },
-          }}
-        >
-          <h2
-            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-8 text-center"
-            dangerouslySetInnerHTML={{ __html: landingPage.testimonials.title }}
-          />
-          <p
-            className="text-lg md:text-xl text-center text-gray-300 mb-12"
-            dangerouslySetInnerHTML={{ __html: landingPage.testimonials.subtitle }}
-          />
+    <section className="py-16 sm:py-20 bg-[#121218]">
+      <motion.div
+        className="container mx-auto px-4"
+        initial="initial"
+        whileInView="animate"
+        variants={{
+          initial: { opacity: 0, y: 20 },
+          animate: { opacity: 1, y: 0 },
+          transition: { duration: 0.6 },
+        }}
+      >
+        <h2
+          className="text-2xl sm:text-4xl lg:text-5xl font-bold mb-8 text-center"
+          dangerouslySetInnerHTML={{ __html: landingPage.testimonials.title }}
+        />
+        <p
+          className="text-sm sm:text-lg text-center text-gray-300 mb-12"
+          dangerouslySetInnerHTML={{ __html: landingPage.testimonials.subtitle }}
+        />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {landingPage.testimonials.items.map((testimonial, index) => (
-              <div
-                key={index}
-                className="bg-[#121218] p-8 rounded-lg shadow-xl hover:shadow-2xl hover:shadow-purple-500/20 transition-all"
-              >
-                <div className="flex items-center mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <span
-                      key={i}
-                      className={`w-5 h-5 ${
-                        i < testimonial.rating
-                          ? "text-yellow-400"
-                          : "text-gray-400"
-                      }`}
-                    >
-                      ★
-                    </span>
-                  ))}
-                </div>
-                <p className="text-gray-300 mb-6 italic">{testimonial.content}</p>
-                <div>
-                  <p className="font-semibold text-white">{testimonial.name}</p>
-                  <p className="text-sm text-gray-400">{testimonial.role}</p>
-                </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          {landingPage.testimonials.items.map((testimonial, index) => (
+            <div
+              key={index}
+              className="bg-[#121218] p-6 rounded-lg shadow-xl hover:shadow-2xl hover:shadow-purple-500/20 transition-all"
+            >
+              <div className="flex items-center mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <span
+                    key={i}
+                    className={`w-4 sm:w-5 h-4 sm:h-5 ${
+                      i < testimonial.rating
+                        ? 'text-yellow-400'
+                        : 'text-gray-400'
+                    }`}
+                  >
+                    ★
+                  </span>
+                ))}
               </div>
-            ))}
-          </div>
-        </motion.div>
-      </section>
-
+              <p className="text-gray-300 mb-6 text-xs sm:text-sm italic">
+                {testimonial.content}
+              </p>
+              <div>
+                <p className="font-semibold text-white text-sm sm:text-base">
+                  {testimonial.name}
+                </p>
+                <p className="text-xs sm:text-sm text-gray-400">
+                  {testimonial.role}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </motion.div>
+    </section>
 
       {/* Pricing Section */}
       <section className="py-20 bg-[#1B1B21]">
@@ -443,7 +438,7 @@ export const MainLandingPage: React.FC = () => {
                   ))}
                 </ul>
                 <Button
-                  onClick={() => navigate(plan.buttonLink)}
+                   onClick={() => window.open(plan.buttonLink, '_blank')}
                   style={{
                     backgroundColor: plan.buttonColor,
                     color: plan.buttonTextColor
@@ -511,7 +506,7 @@ export const MainLandingPage: React.FC = () => {
             dangerouslySetInnerHTML={{ __html: landingPage.finalCta.title }}
           />
           <Button
-            onClick={() => window.location.href = landingPage.finalCta.buttonLink}
+            onClick={() => window.open(landingPage.finalCta.buttonLink, '_blank')}
             style={{
               backgroundColor: landingPage.finalCta.buttonColor,
               color: landingPage.finalCta.buttonTextColor,
@@ -523,6 +518,23 @@ export const MainLandingPage: React.FC = () => {
           <p className="text-gray-300 mt-4">{landingPage.finalCta.guarantee}</p>
         </motion.div>
       </section>
+
+
+       <div className="bg-[#121218]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4 bg-[#121218]">
+             
+      <div
+              className="mt-4 border-t border-gray-700 pt-4 text-center text-xs text-gray-500"
+              dangerouslySetInnerHTML={{
+                __html: (landingPage.footer || "<p>Preview will appear here...</p>").replace(
+                  /<a /g,
+                  '<a target="_blank" rel="noopener noreferrer" '
+                ),
+              }}
+            />
+           </div>
+           </div>
     </div>
+    
   );
 };

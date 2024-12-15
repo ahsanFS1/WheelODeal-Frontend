@@ -100,6 +100,10 @@ export const HeroEditor: React.FC<Props> = ({ data, onChange }) => {
           onUpload={(url) => handleFieldChange("backgroundImage", url)}
         />
       </div>
+
+    
+
+
     </div>
   );
 };

@@ -35,7 +35,13 @@ export const AdminDashboard: React.FC = () => {
   }
 
   if (!isSetup) {
-    return <AdminSetup />;
+    return (
+      <AdminSetup
+        onSetupComplete={() => {
+          setIsSetup(true); // Update the state after setup
+        }}
+      />
+    );
   }
 
   if (!isLoggedIn) {

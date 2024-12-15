@@ -6,7 +6,6 @@ import Color from "@tiptap/extension-color";
 import FontFamily from "./extensions/FontFamily";
 import FontSize from "./extensions/FontSize";
 
-
 interface TiptapEditorProps {
   content: string;
   onContentChange: (content: string) => void;
@@ -19,17 +18,12 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
   customStyles = "",
 }) => {
   const editor = useEditor({
-    extensions: [
-      StarterKit,
-      TextStyle,
-      Color,
-      FontFamily,
-      FontSize,
-    ],
+    extensions: [StarterKit, TextStyle, Color, FontFamily, FontSize],
     content,
     editorProps: {
       attributes: {
-        class: `prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none ${customStyles}`,
+        class: `prose prose-sm sm:prose md:prose-lg lg:prose-xl xl:prose-2xl mx-auto focus:outline-none ${customStyles}`,
+        style: "font-size: clamp(1rem, 2vw, 1.5rem); line-height: 1.2;",
       },
     },
     onUpdate: ({ editor }) => {
@@ -47,11 +41,10 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
   const resetToPlainText = useCallback(() => {
     if (!editor) return;
 
-    // Extract plain text and reset content
-    const plainText = editor.getText(); // Get plain text only
-    editor.commands.clearContent(); // Remove all formatting and content
-    editor.commands.setContent(plainText); // Reapply plain text as content
-    onContentChange(plainText); // Propagate plain text to parent
+    const plainText = editor.getText();
+    editor.commands.clearContent();
+    editor.commands.setContent(plainText);
+    onContentChange(plainText);
   }, [editor, onContentChange]);
 
   const adjustFontSize = useCallback(
@@ -61,7 +54,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
       const currentFontSize = parseInt(
         editor.getAttributes("textStyle").fontSize || "16"
       );
-      const newFontSize = `${Math.max(currentFontSize + adjustment, 8)}px`; // Minimum font size of 8px
+      const newFontSize = `${Math.max(currentFontSize + adjustment, 8)}px`;
 
       editor.chain().focus().setFontSize(newFontSize).run();
     },
@@ -83,8 +76,8 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
   const currentColor = currentStyle.color || "#000000";
 
   return (
-    <div className="tiptap-editor">
-      <div className="flex items-center gap-2 mb-4 bg-[#1B1B21] p-1 rounded-md shadow border border-purple-900/20">
+    <div className="tiptap-editor w-full">
+      <div className="flex flex-wrap items-center gap-2 mb-4 bg-[#1B1B21] p-2 rounded-md shadow border border-purple-900/20">
         {/* Bold Button */}
         <button
           onClick={() => editor.chain().focus().toggleBold().run()}
@@ -112,12 +105,10 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
         {/* Font Family Selector */}
         <select
           onChange={(e) => editor.chain().focus().setFontFamily(e.target.value).run()}
-          className="p-2 text-gray-400 bg-[#232329] border border-purple-900/20 rounded"
+          className="p-2 text-gray-400 bg-[#232329] border border-purple-900/20 rounded w-full sm:w-auto"
           value={currentFont}
         >
-          <option value="ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif">
-            UI Sans Serif (Default)
-          </option>
+          <option value="ui-sans-serif">UI Sans Serif (Default)</option>
           <option value="Arial">Arial</option>
           <option value="Georgia">Georgia</option>
           <option value="Times New Roman">Times New Roman</option>
@@ -125,7 +116,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
         </select>
 
         {/* Font Size Adjust Buttons */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
           <button
             onClick={() => adjustFontSize(-2)}
             className="p-2 rounded bg-[#232329] text-gray-400 hover:bg-purple-800"
@@ -152,16 +143,18 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
 
         {/* Reset to Plain Text Button */}
         <button
-            onClick={resetToPlainText}
-            className="p-3 rounded bg-gradient-to-r from-red-500 via-red-500 to-pink-600 text-white font-bold hover:from-red-500 hover:via-purple-500 hover:to-indigo-500 shadow-lg shadow-pink-500/20 hover:shadow-indigo-500/50 transform transition-all duration-300 hover:scale-110 active:scale-50"
-            title="Reset to Plain Text"
-          >
-            Reset
-          </button>
-
+          onClick={resetToPlainText}
+          className="p-2 rounded bg-red-600 text-white hover:bg-red-700 transition duration-200"
+          title="Reset to Plain Text"
+        >
+          Reset
+        </button>
       </div>
 
-      <div className={`border border-purple-900/20 rounded-md p-4 bg-[#1B1B21] text-gray-200 ${customStyles}`}>
+      <div
+        className={`border border-purple-900/20 rounded-md p-4 bg-[#1B1B21] text-gray-200 w-full`}
+        style={{ fontSize: "clamp(1rem, 2.5vw, 1.25rem)", minHeight: "150px" }}
+      >
         <EditorContent editor={editor} />
       </div>
     </div>

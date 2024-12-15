@@ -186,7 +186,7 @@ export const UserDashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#121218]">
+    <div className="min-h-screen bg-[#121218] overflow-x-hidden">
       <Toaster position="top-center" />
       <header className="bg-[#1B1B21] shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
@@ -277,8 +277,11 @@ export const UserDashboard: React.FC = () => {
 
     
         <Tabs.Root defaultValue="general" className="space-y-8 py-6">
-          <Tabs.List className="flex space-x-4 border-b border-[#C33AFF]/20">
-            <Tabs.Trigger
+         {/* Horizontal Scrolling Tabs */}
+         <Tabs.List
+            className="flex overflow-x-auto space-x-4 pb-4 border-b border-[#C33AFF]/20 scrollbar-thin scrollbar-thumb-[#C33AFF]/20 whitespace-nowrap"
+          >
+          <Tabs.Trigger
               value="general"
               className="px-4 py-2 text-[#D3D3DF] hover:text-[#C33AFF] data-[state=active]:text-[#C33AFF] data-[state=active]:border-b-2 data-[state=active]:border-[#C33AFF] transition-colors"
             >
@@ -753,17 +756,7 @@ export const UserDashboard: React.FC = () => {
       }
     />
 
-    {/* Link URL */}
-    <TextInput
-      label="Link URL"
-      value={selectedPage.finalCta?.link || ''}
-      onChange={(value) =>
-        setSelectedPage({
-          ...selectedPage,
-          finalCta: { ...selectedPage.finalCta, link: value },
-        })
-      }
-    />
+   
 
     {/* Button Size */}
     <Select

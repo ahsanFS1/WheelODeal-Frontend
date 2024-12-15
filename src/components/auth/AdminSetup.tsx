@@ -3,7 +3,8 @@ import { Button } from '../ui/button';
 import { TwoFactorSetup } from './TwoFactorSetup';
 import axios from 'axios';
 import { api_Url } from '../../config';
-export const AdminSetup: React.FC = () => {
+
+export const AdminSetup: React.FC<{ onSetupComplete: () => void }> = ({ onSetupComplete }) => {
   const [step, setStep] = useState<'credentials' | '2fa'>('credentials');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -37,7 +38,7 @@ export const AdminSetup: React.FC = () => {
 
       if (response.data.success) {
         alert('Admin account created successfully!');
-        setStep('credentials');
+        onSetupComplete(); // Notify AdminDashboard to recheck setup status
       } else {
         setError(response.data.message);
       }
@@ -48,18 +49,14 @@ export const AdminSetup: React.FC = () => {
   };
 
   if (step === '2fa') {
-
-    
     return (
       <TwoFactorSetup
         onComplete={handleTwoFactorComplete}
         onCancel={() => setStep('credentials')}
       />
     );
-    
   }
 
- 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#121218] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 bg-[#1B1B21] p-8 rounded-lg shadow-lg">

@@ -14,6 +14,7 @@ import { FaqEditor } from './editors/FaqEditor';
 import { FinalCtaEditor } from './editors/FinalCtaEditor';
 import { api_Url } from '../../config';
 import { VideoEditor } from './editors/VideoEditor';
+import { TextInput } from './shared/TextInput';
 
 export const LandingPageEditor: React.FC = () => {
   const [mlp, setMlp] = useState<any>(null);
@@ -116,7 +117,7 @@ export const LandingPageEditor: React.FC = () => {
       </div>
 
       <Tabs.Root value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <Tabs.List className="flex space-x-2 overflow-x-auto border-b border-purple-900/20">
+        <Tabs.List className="flex space-x-2 overflow-x-auto border-b border-purple-900/20 scrollbar-thin scrollbar-thumb-purple-900/20">
           {[
             { value: 'hero', label: 'Hero' },
             { value: 'demo', label: 'Demo' },
@@ -128,6 +129,7 @@ export const LandingPageEditor: React.FC = () => {
             { value: 'pricing', label: 'Pricing' },
             { value: 'faq', label: 'FAQ' },
             { value: 'finalCta', label: 'Final CTA' },
+            { value: 'footer', label: 'Footer' },
           ].map((tab) => (
             <Tabs.Trigger
               key={tab.value}
@@ -208,6 +210,26 @@ export const LandingPageEditor: React.FC = () => {
               data={mlp.finalCta}
               onChange={(finalCta) => setMlp({ ...mlp, finalCta })}
             />
+          </Tabs.Content>
+
+          <Tabs.Content value="footer" className="text-[#D3D3DF]">
+            <div>
+              <label className="block text-sm font-medium text-white">
+                Footer Text <span className="text-gray-400">(HTML Allowed)</span>
+              </label>
+              <textarea
+                value={mlp.footer || ''} // Ensure a fallback value
+                onChange={(e) =>
+                  setMlp((prev: any) => ({
+                    ...prev,
+                    footer: e.target.value,
+                  }))
+                }
+                className="w-full p-3 rounded-md bg-[#232329] border border-purple-900/20 text-gray-300 focus:ring-purple-900 focus:border-purple-900"
+                rows={4}
+                placeholder="Enter footer text here..."
+              />
+            </div>
           </Tabs.Content>
         </div>
       </Tabs.Root>

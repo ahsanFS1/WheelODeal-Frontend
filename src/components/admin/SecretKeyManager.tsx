@@ -108,92 +108,82 @@ export const SecretKeyManager: React.FC = () => {
     }
   }
 };
-
-  return (
-    <div className="bg-[#1B1B21] rounded-lg shadow-lg p-6">
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold text-[#D3D3DF] mb-6">Generate New Secret Key</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input
-            type="text"
-            placeholder="Project Name"
-            value={projectName}
-            onChange={(e) => setProjectName(e.target.value)}
-            className="px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF] placeholder-[#D3D3DF]/40"
-          />
-          <select
-            value={plan}
-            onChange={(e) => setPlan(e.target.value as 'basic' | 'better' | 'best')}
-            className="px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF]"
-          >
-            <option value="basic">Basic Plan</option>
-            <option value="better">Better Plan</option>
-            <option value="best">Best Plan</option>
-          </select>
-          <input
-            type="date"
-            value={expiryDate}
-            onChange={(e) => setExpiryDate(e.target.value)}
-            className="px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF]"
-          />
-          <Button
-            onClick={generateSecretKey}
-            className="flex items-center gap-2 bg-purple-900 text-white hover:bg-purple-950"
-          >
-            <Key className="w-4 h-4" />
-            Generate Key
-          </Button>
-        </div>
-      </div>
-
-      <div className="space-y-6">
-        <h2 className="text-xl font-semibold text-[#D3D3DF] flex items-center gap-2">
-          <Key className="w-6 h-6" />
-          Active Secret Keys
-        </h2>
-
-        <div className="space-y-4">
-          {secretKeys.map((secretKey) => (
-            <div
-              key={secretKey._id}
-              className="bg-[#121218] border border-[#C33AFF]/20 rounded-lg p-6 flex items-center justify-between"
-            >
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold text-[#D3D3DF]">
-                  {secretKey.projectName}
-                </h3>
-                <div className="space-y-1">
-                  <code className="block bg-[#1B1B21] px-2 py-1 rounded text-sm font-mono text-[#D3D3DF]">
-                    Secret Key: {secretKey.secretKey}
-                  </code>
-                  <code className="block px-2 py-1 rounded text-sm font-mono text-[#D3D3DF]">
-                    Project ID: {secretKey.projectId}
-                  </code>
-                  <p className="text-sm text-[#D3D3DF]/60">
-                    Plan: {secretKey.plan}
-                  </p>
-                  <p className="text-sm text-[#D3D3DF]/60">
-                    Expires: {new Date(secretKey.expiryDate).toLocaleDateString()}
-                  </p>
-                  <p className="text-sm text-[#D3D3DF]/60 ">
-                  Link for the Public Page:
-                  </p>
-                  <code className="block  px-2 py-1 rounded text-sm font-mono text-[#D3D3DF]">
-                  {web_Url}/wheel/{secretKey.projectId}
-                  </code>
-                </div>
-              </div>
-              <Button
-                onClick={() => handleDelete(secretKey._id,secretKey.projectId)}
-                variant="destructive"
-                className="min-w-[100px]"
-              >
-                Revoke
-              </Button>
-            </div>
-          ))}
-        </div>
+return (
+  <div className="bg-[#1B1B21] rounded-lg shadow-lg p-6">
+    <div className="mb-8">
+      <h2 className="text-2xl font-bold text-[#D3D3DF] mb-6">Generate New Secret Key</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <input
+          type="text"
+          placeholder="Project Name"
+          value={projectName}
+          onChange={(e) => setProjectName(e.target.value)}
+          className="px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF] placeholder-[#D3D3DF]/40 w-full"
+        />
+        <select
+          value={plan}
+          onChange={(e) => setPlan(e.target.value as 'basic' | 'better' | 'best')}
+          className="px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF] w-full"
+        >
+          <option value="basic">Basic Plan</option>
+          <option value="better">Better Plan</option>
+          <option value="best">Best Plan</option>
+        </select>
+        <input
+          type="date"
+          value={expiryDate}
+          onChange={(e) => setExpiryDate(e.target.value)}
+          className="px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF] w-full"
+        />
+        <Button
+          onClick={generateSecretKey}
+          className="flex items-center justify-center gap-2 bg-purple-900 text-white hover:bg-purple-950 w-full sm:w-auto"
+        >
+          <Key className="w-4 h-4" />
+          Generate Key
+        </Button>
       </div>
     </div>
-  );
+
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold text-[#D3D3DF] flex items-center gap-2">
+        <Key className="w-6 h-6" />
+        Active Secret Keys
+      </h2>
+
+      <div className="space-y-4">
+        {secretKeys.map((secretKey) => (
+          <div
+            key={secretKey._id}
+            className="bg-[#121218] border border-[#C33AFF]/20 rounded-lg p-4 flex flex-col gap-2 sm:flex-row sm:justify-between"
+          >
+            <div className="space-y-2 w-full">
+              <h3 className="text-lg font-semibold text-[#D3D3DF]">
+                {secretKey.projectName}
+              </h3>
+              <code className="block w-full break-words px-2 py-1 bg-[#1B1B21] rounded text-sm font-mono text-[#D3D3DF]">
+                Secret Key: {secretKey.secretKey}
+              </code>
+              <code className="block w-full break-words text-sm font-mono text-[#D3D3DF]">
+                Project ID: {secretKey.projectId}
+              </code>
+              <p className="text-sm text-[#D3D3DF]/60">Plan: {secretKey.plan}</p>
+              <p className="text-sm text-[#D3D3DF]/60">
+                Expires: {new Date(secretKey.expiryDate).toLocaleDateString()}
+              </p>
+           
+            </div>
+            <Button
+              onClick={() => handleDelete(secretKey._id, secretKey.projectId)}
+              variant="destructive"
+              className="w-full sm:w-[100px]"
+            >
+              Revoke
+            </Button>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
 };

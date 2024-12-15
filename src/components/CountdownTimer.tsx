@@ -9,7 +9,7 @@ export const CountdownTimer: React.FC<Props> = ({ expiryTimestamp }) => {
 
   function calculateTimeLeft() {
     const difference = expiryTimestamp - Date.now();
-    
+
     if (difference <= 0) {
       return { days: 0, hours: 0, minutes: 0, seconds: 0 };
     }
@@ -18,7 +18,7 @@ export const CountdownTimer: React.FC<Props> = ({ expiryTimestamp }) => {
       days: Math.floor(difference / (1000 * 60 * 60 * 24)),
       hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
       minutes: Math.floor((difference / 1000 / 60) % 60),
-      seconds: Math.floor((difference / 1000) % 60)
+      seconds: Math.floor((difference / 1000) % 60),
     };
   }
 
@@ -31,12 +31,15 @@ export const CountdownTimer: React.FC<Props> = ({ expiryTimestamp }) => {
   }, [expiryTimestamp]);
 
   return (
-    <div className="flex gap-2 justify-center">
+    <div className="flex gap-4 justify-center">
       {Object.entries(timeLeft).map(([unit, value]) => (
         <div key={unit} className="text-center">
-          <div className="bg-gray-800 px-2 py-1 rounded-md min-w-[40px]">
+          {/* Timer Value */}
+          <div className="bg-gray-800 px-3 py-2 rounded-md min-w-[50px] text-lg font-bold text-white">
             {String(value).padStart(2, '0')}
           </div>
+          {/* Unit Label */}
+          <div className="mt-1 text-sm text-gray-400 capitalize">{unit}</div>
         </div>
       ))}
     </div>

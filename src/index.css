@@ -27,7 +27,18 @@
   }
 }
 
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #121218; /* Match your landing page background */
+  color: white;
+}
 
+#root, body {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 
 
 .tiptap-editor-content {

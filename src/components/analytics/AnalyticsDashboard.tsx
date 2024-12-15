@@ -68,18 +68,17 @@ export const AnalyticsDashboard: React.FC<Props> = ({ pageId }) => {
         const analyticsResult = await analyticsResponse.json();
 
         if (analyticsResult.success) {
+          console.log(analyticsResult.data.history)
           setMetrics((prevMetrics) => ({
             ...prevMetrics,
-            totalVisitors: analyticsResult.data?.pageVisited || 0,
-            uniqueVisitors: analyticsResult.data?.visitors || 0,
-            spins: analyticsResult.data?.spins || 0,
-            spinConversionRate: analyticsResult.data?.spinConversionRate || 0,
-            history: analyticsResult.data?.history || prevMetrics.history,
-            prizes_claimed: analyticsResult?.data.conversions
-            
-          }
-          
-        ) );
+            totalVisitors: analyticsResult.data.metrics.pageVisited || 0,
+            uniqueVisitors: analyticsResult.data.metrics.visitors || 0,
+            spins: analyticsResult.data.metrics.spins || 0,
+            spinConversionRate: analyticsResult.data.metrics.spinConversionRate || 0,
+            prizes_claimed: analyticsResult.data.metrics.conversions || 0,
+            history: analyticsResult.data.history || prevMetrics.history,
+          }));
+           
         } else {
           console.error('Error fetching metrics:', analyticsResult.message);
         }
@@ -108,28 +107,29 @@ export const AnalyticsDashboard: React.FC<Props> = ({ pageId }) => {
   }, [pageId, dateRange]);
 
   const chartData = {
-    
+    labels: metrics.history.labels || [], // Add this to include x-axis labels
     datasets: [
       {
-        label: 'page_loaded',
-        data: metrics?.history.visitors || [],
+        label: 'Page Visits',
+        data: metrics.history.visitors || [],
         borderColor: 'rgb(75, 192, 192)',
         tension: 0.1,
       },
       {
-        label: 'spin_completed',
-        data: metrics?.history.spins || [],
+        label: 'Spins',
+        data: metrics.history.spins || [],
         borderColor: 'rgb(153, 102, 255)',
         tension: 0.1,
       },
       {
-        label: 'prize_claimed',
-        data: metrics?.history.conversions || [],
+        label: 'Conversions',
+        data: metrics.history.conversions || [],
         borderColor: 'rgb(255, 99, 132)',
         tension: 0.1,
       },
     ],
   };
+  
 
   return (
     <div className="space-y-6">
