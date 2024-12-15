@@ -108,7 +108,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
           className="p-2 text-gray-400 bg-[#232329] border border-purple-900/20 rounded w-full sm:w-auto"
           value={currentFont}
         >
-          <option value="ui-sans-serif">UI Sans Serif (Default)</option>
+          <option value="ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif">UI Sans Serif (Default)</option>
           <option value="Arial">Arial</option>
           <option value="Georgia">Georgia</option>
           <option value="Times New Roman">Times New Roman</option>
