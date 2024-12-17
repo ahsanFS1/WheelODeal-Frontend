@@ -37,7 +37,7 @@ export const HeroEditor: React.FC<Props> = ({ data, onChange }) => {
     <div className="space-y-6 p-6 bg-[#232329] rounded-lg shadow-lg border border-purple-900/20">
       <h3 className="text-lg font-semibold mb-4 text-[#D3D3DF]">Hero Section Settings</h3>
 
-      {/* Headline Editor */}
+    
       <div>
         <label className="block text-md font-medium text-[#D3D3DF] mb-2">Headline</label>
         <TiptapEditor
@@ -48,7 +48,7 @@ export const HeroEditor: React.FC<Props> = ({ data, onChange }) => {
         />
       </div>
 
-      {/* Subheadline Editor */}
+
       <div>
         <label className="block text-md font-medium text-[#D3D3DF] mb-2">Subheadline</label>
         <TiptapEditor

@@ -61,9 +61,14 @@ export const PricingEditor: React.FC<Props> = ({ data, onChange }) => {
                 onChange={(value) => updatePlan(plan.id, 'name', value)}
               />
               <TextInput
-                label="Price"
-                value={plan.price}
-                onChange={(value) => updatePlan(plan.id, 'price', value)}
+                label="Monthly Price"
+                value={plan.monthlyPrice}
+                onChange={(value) => updatePlan(plan.id, 'monthlyPrice', value)}
+              />
+               <TextInput
+                label=" Yearly Price"
+                value={plan.yearlyPrice}
+                onChange={(value) => updatePlan(plan.id, 'yearlyPrice', value)}
               />
               <TextInput
                 label="Button Text"

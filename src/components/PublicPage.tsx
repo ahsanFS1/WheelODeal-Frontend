@@ -289,6 +289,8 @@ const handleSpinEnd = async (result: SpinResult) => {
                 prizes={config.prizes}
                 onSpinEnd={handleSpinEnd}
                 disabled={!!spinResult}
+                music= {config.musicEnabled}
+                button = {config.wheelButton}
               />
             </div>
           
@@ -304,56 +306,68 @@ const handleSpinEnd = async (result: SpinResult) => {
             </div>
   )}
             {spinResult && (
-              <div className="mt-10 text-center">
-                <div className="bg-purple-900/20 rounded-lg p-6 inline-block">
-                  <h3 className="text-xl font-bold mb-4">
-                    Congratulations! You won: {" "}
-                    <span
-                    dangerouslySetInnerHTML={{
-                      __html: spinResult.prize.text || "Your Prize!",
-                    }}
-                  />
-                  </h3>
-                  <div className="flex justify-center mt-4">
-        <a
-          href={spinResult.prize?.redirectUrl || '#'}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block rounded-lg transition-all duration-200"
-          style={{
-            padding:
-              config.finalCta?.size === 'small'
-                ? '8px 16px'
-                : config.finalCta?.size === 'large'
-                ? '14px 28px'
-                : '10px 20px',
-            fontSize:
-              config.finalCta?.size === 'small'
-                ? '12px'
-                : config.finalCta?.size === 'large'
-                ? '18px'
-                : '16px',
-            backgroundColor: config.finalCta?.backgroundColor || '#4CAF50',
-            color: config.finalCta?.textColor || '#ffffff',
-            textAlign: 'center',
-            textDecoration: 'none',
-            width: 'fit-content',
-            cursor: 'pointer',
-          }}
-          onMouseEnter={(e) =>
-            (e.currentTarget.style.backgroundColor =
-              config.finalCta?.hoverColor || '#45a049')
-          }
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.backgroundColor =
-              config.finalCta?.backgroundColor || '#4CAF50')
-          }
-        >
-          {config.finalCta?.text || 'Claim Offer'}
-        </a>
-      </div>
-                </div>
+            <div className="mt-10 text-center">
+            <div className="bg-purple-900/20 rounded-lg p-6 inline-block">
+              <h3 className="text-xl font-bold mb-4">
+                Congratulations! You won:{" "}
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: spinResult.prize.text || "Your Prize!",
+                  }}
+                />
+              </h3>
+              <div className="flex justify-center mt-4">
+                <a
+                  href={spinResult.prize?.redirectUrl || "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block rounded-lg transition-all duration-200"
+                  style={{
+                    padding:
+                      config.finalCta?.size === 'small'
+                        ? '8px 16px'
+                        : config.finalCta?.size === 'large'
+                        ? '14px 28px'
+                        : '10px 20px',
+                    fontSize:
+                      config.finalCta?.size === 'small'
+                        ? '12px'
+                        : config.finalCta?.size === 'large'
+                        ? '18px'
+                        : '16px',
+                            background: config.finalCta?.gradient
+                      ? `linear-gradient(${config.finalCta.gradientStart}, ${config.finalCta.gradientEnd})`
+                      : config.finalCta?.backgroundColor || "#4CAF50",
+                    color: config.finalCta?.textColor || "#ffffff",
+                    textAlign: "center",
+                    textDecoration: "none",
+                    width: "fit-content",
+                    cursor: "pointer",
+                  }}
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    try {
+                      await handleClaim();
+                      window.open(spinResult.prize?.redirectUrl || "#", "_blank");
+                    } catch (error) {
+                      console.error("Error handling claim:", error);
+                      alert("Failed to claim the prize.");
+                    }
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.backgroundColor =
+                      config.finalCta?.hoverColor || "#45a049")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.backgroundColor =
+                      config.finalCta?.backgroundColor || "#4CAF50")
+                  }
+                >
+                  {config.finalCta?.text || "Claim Offer"}
+                </a>
               </div>
+            </div>
+          </div>
             )}
           </div>
         </section>

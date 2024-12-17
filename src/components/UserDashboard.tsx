@@ -197,7 +197,7 @@ export const UserDashboard: React.FC = () => {
           <div className="flex items-center gap-4">
             <Button
               onClick={handleSave}
-              className="flex items-center gap-2 bg-[#1B1B21] text-[#C33AFF] border border-[#C33AFF] hover:bg-[#C33AFF] hover:text-white transition-all duration-200"
+              className="flex items-center gap-2 bg-[#1B1B21] text-[#C33AFF] border border-[#C33AFF] hover:bg-[#C33AFF] hover:text-purple-900 transition-all duration-200"
             >
               Save Changes
             </Button>
@@ -500,151 +500,304 @@ export const UserDashboard: React.FC = () => {
   <div className="bg-[#1B1B21] rounded-lg shadow-lg p-6">
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {/* Wheel Settings */}
-      <div className="space-y-6">
-        <h2 className="text-xl font-semibold text-[#D3D3DF]">Wheel Settings</h2>
-        {selectedPage.prizes.map((prize, index) => (
-          <div
-            key={index}
-            className="bg-[#121218] border border-[#C33AFF]/20 rounded-lg p-4 space-y-4 relative"
-          >
-            {/* Remove Prize Button */}
-            <button
-              onClick={() =>
-                setSelectedPage({
-                  ...selectedPage,
-                  prizes: selectedPage.prizes.filter((_, i) => i !== index),
-                })
-              }
-              className="absolute top-2 right-2 bg-[#FF4D4D] text-white px-2 py-1 rounded-full hover:bg-[#FF3333] transition"
-              title="Remove Prize"
-            >
-              ✕
-            </button>
-            {/* Prize Text */}
-            <TextInput
-          value={prize.text || ''}
-          onChange={(value) =>
+<div className="space-y-6">
+  <h2 className="text-xl font-semibold text-[#D3D3DF]">Wheel Settings</h2>
+  {selectedPage.prizes.map((prize, index) => (
+    <div
+      key={index}
+      className="bg-[#121218] border border-[#C33AFF]/20 rounded-lg p-4 space-y-4 relative"
+    >
+      {/* Remove Prize Button */}
+      <button
+        onClick={() =>
+          setSelectedPage({
+            ...selectedPage,
+            prizes: selectedPage.prizes.filter((_, i) => i !== index),
+          })
+        }
+        className="absolute top-2 right-2 bg-[#FF4D4D] text-white px-2 py-1 rounded-full hover:bg-[#FF3333] transition"
+        title="Remove Prize"
+      >
+        ✕
+      </button>
+
+      {/* Prize Text */}
+      <TextInput
+        label="Prize Text"
+        value={prize.text || ''}
+        onChange={(value) =>
+          setSelectedPage({
+            ...selectedPage,
+            prizes: selectedPage.prizes.map((p, i) =>
+              i === index ? { ...p, text: value } : p
+            ),
+          })
+        }
+      />
+
+      {/* Gradient Toggle */}
+      <div className="flex items-center space-x-4">
+        <label className="text-sm font-medium text-[#D3D3DF]">Enable Gradient</label>
+        <input
+          type="checkbox"
+          checked={prize.gradient || false}
+          onChange={(e) =>
             setSelectedPage({
               ...selectedPage,
               prizes: selectedPage.prizes.map((p, i) =>
-                i === index ? { ...p, text: value } : p
-                  ),
-                })
-              }
-            />
-            {/* Bonus Code */}
-            <TextInput
-              label="Bonus Code"
-              value={prize.bonusCode || ""}
-              onChange={(value) =>
-                setSelectedPage({
-                  ...selectedPage,
-                  prizes: selectedPage.prizes.map((p, i) =>
-                    i === index ? { ...p, bonusCode: value } : p
-                  ),
-                })
-              }
-            />
-            {/* Expiration Date */}
-            <div>
-              <label className="block text-sm font-medium text-[#D3D3DF] mb-1">
-                Set Code Expiration Date
-              </label>
-              <DatePicker
-                selected={new Date(prize.expirationDate || new Date())}
-                onChange={(date) =>
-                  setSelectedPage({
-                    ...selectedPage,
-                    prizes: selectedPage.prizes.map((p, i) =>
-                      i === index ? { ...p, expirationDate: date } : p
-                    ),
-                  })
-                }
-                className="w-full px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF]"
-              />
-            </div>
-            {/* Redirect URL */}
-            <TextInput
-              label="Redirect URL"
-              value={prize.redirectUrl || ""}
-              onChange={(value) =>
-                setSelectedPage({
-                  ...selectedPage,
-                  prizes: selectedPage.prizes.map((p, i) =>
-                    i === index ? { ...p, redirectUrl: value } : p
-                  ),
-                })
-              }
-            />
-            {/* Color and Probability */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-[#D3D3DF] mb-1">
-                  Color
-                </label>
-                <input
-                  type="color"
-                  value={prize.color}
-                  onChange={(e) =>
-                    setSelectedPage({
-                      ...selectedPage,
-                      prizes: selectedPage.prizes.map((p, i) =>
-                        i === index ? { ...p, color: e.target.value } : p
-                      ),
-                    })
-                  }
-                  className="w-full h-10 px-1 py-1 bg-[#121218] border border-[#C33AFF]/20 rounded-lg"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-[#D3D3DF] mb-1">
-                  Probability (0-1)
-                </label>
-                <input
-                  type="number"
-                  min="0"
-                  max="1"
-                  step="0.1"
-                  value={prize.probability}
-                  onChange={(e) =>
-                    setSelectedPage({
-                      ...selectedPage,
-                      prizes: selectedPage.prizes.map((p, i) =>
-                        i === index
-                          ? { ...p, probability: parseFloat(e.target.value) }
-                          : p
-                      ),
-                    })
-                  }
-                  className="w-full px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF]"
-                />
-              </div>
-            </div>
-          </div>
-        ))}
-        {/* Add Prize Button */}
-        <Button
-          onClick={() =>
-            setSelectedPage({
-              ...selectedPage,
-              prizes: [
-                ...selectedPage.prizes,
-                {
-                  text: "",
-                  bonusCode: "",
-                  expirationDate: "",
-                  redirectUrl: "",
-                  color: "#ffffff",
-                  probability: 0,
-                },
-              ],
+                i === index ? { ...p, gradient: e.target.checked } : p
+              ),
             })
           }
-          className="bg-purple-900 hover:bg-purple-950 text-white w-full"
-        >
-          Add Prize
-        </Button>
+          className="w-5 h-5"
+        />
       </div>
+
+      {/* Gradient Colors and Direction */}
+      {prize.gradient && (
+        <>
+          <ColorPicker
+            label="Gradient Start Color"
+            value={prize.gradientStart || '#6C63FF'}
+            onChange={(value) =>
+              setSelectedPage({
+                ...selectedPage,
+                prizes: selectedPage.prizes.map((p, i) =>
+                  i === index ? { ...p, gradientStart: value } : p
+                ),
+              })
+            }
+          />
+          <ColorPicker
+            label="Gradient End Color"
+            value={prize.gradientEnd || '#4B4AC9'}
+            onChange={(value) =>
+              setSelectedPage({
+                ...selectedPage,
+                prizes: selectedPage.prizes.map((p, i) =>
+                  i === index ? { ...p, gradientEnd: value } : p
+                ),
+              })
+            }
+          />
+          <Select
+            label="Gradient Direction"
+            value={prize.gradientDirection || 'to bottom'}
+            onChange={(e) =>
+              setSelectedPage({
+                ...selectedPage,
+                prizes: selectedPage.prizes.map((p, i) =>
+                  i === index ? { ...p, gradientDirection: e.target.value } : p
+                ),
+              })
+            }
+            className="bg-[#1B1B21] text-[#C33AFF] px-4 py-2 rounded-lg"
+          >
+            <SelectItem value="to top">To Top</SelectItem>
+            <SelectItem value="to bottom">To Bottom</SelectItem>
+            <SelectItem value="to left">To Left</SelectItem>
+            <SelectItem value="to right">To Right</SelectItem>
+            <SelectItem value="to top left">To Top Left</SelectItem>
+            <SelectItem value="to top right">To Top Right</SelectItem>
+            <SelectItem value="to bottom left">To Bottom Left</SelectItem>
+            <SelectItem value="to bottom right">To Bottom Right</SelectItem>
+          </Select>
+        </>
+      )}
+
+      {/* Color and Probability */}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-[#D3D3DF] mb-1">Color</label>
+          <input
+            type="color"
+            value={prize.color}
+            onChange={(e) =>
+              setSelectedPage({
+                ...selectedPage,
+                prizes: selectedPage.prizes.map((p, i) =>
+                  i === index ? { ...p, color: e.target.value } : p
+                ),
+              })
+            }
+            className="w-full h-10 px-1 py-1 bg-[#121218] border border-[#C33AFF]/20 rounded-lg"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-[#D3D3DF] mb-1">
+            Probability (0-1)
+          </label>
+          <input
+            type="number"
+            min="0"
+            max="1"
+            step="0.1"
+            value={prize.probability}
+            onChange={(e) =>
+              setSelectedPage({
+                ...selectedPage,
+                prizes: selectedPage.prizes.map((p, i) =>
+                  i === index
+                    ? { ...p, probability: parseFloat(e.target.value) }
+                    : p
+                ),
+              })
+            }
+            className="w-full px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF]"
+          />
+        </div>
+      </div>
+    </div>
+  ))}
+{/* Toggle for Winning Music */}
+<div className="flex items-center space-x-4 mb-6">
+  <label className="text-sm font-medium text-[#D3D3DF]">
+    Enable Winning Music
+  </label>
+  <input
+    type="checkbox"
+    checked={selectedPage.musicEnabled ?? true} // Default to true
+    onChange={(e) =>
+      setSelectedPage({
+        ...selectedPage,
+        musicEnabled: e.target.checked,
+      })
+    }
+    className="w-5 h-5"
+  />
+</div>
+
+
+<h2 className="text-xl font-semibold text-[#D3D3DF]">Wheel Button Settings</h2>
+
+{/* Button Text */}
+<TextInput
+  label="Button Text"
+  value={selectedPage.wheelButton?.text || "SPIN"}
+  onChange={(value) =>
+    setSelectedPage({
+      ...selectedPage,
+      wheelButton: { ...selectedPage.wheelButton, text: value },
+    })
+  }
+/>
+
+{/* Text Color */}
+<ColorPicker
+  label="Text Color"
+  value={selectedPage.wheelButton?.textColor || "#FFFFFF"}
+  onChange={(value) =>
+    setSelectedPage({
+      ...selectedPage,
+      wheelButton: { ...selectedPage.wheelButton, textColor: value },
+    })
+  }
+/>
+
+{/* Background Color */}
+<ColorPicker
+  label="Background Color"
+  value={selectedPage.wheelButton?.backgroundColor || "#8B5CF6"}
+  onChange={(value) =>
+    setSelectedPage({
+      ...selectedPage,
+      wheelButton: { ...selectedPage.wheelButton, backgroundColor: value },
+    })
+  }
+/>
+
+{/* Gradient Toggle */}
+<div className="flex items-center space-x-4">
+  <label className="text-sm font-medium text-[#D3D3DF]">Enable Gradient</label>
+  <input
+    type="checkbox"
+    checked={selectedPage.wheelButton?.gradient || false}
+    onChange={(e) =>
+      setSelectedPage({
+        ...selectedPage,
+        wheelButton: { ...selectedPage.wheelButton, gradient: e.target.checked },
+      })
+    }
+    className="w-5 h-5"
+  />
+</div>
+
+{/* Gradient Colors and Direction */}
+{selectedPage.wheelButton?.gradient && (
+  <>
+    <ColorPicker
+      label="Gradient Start Color"
+      value={selectedPage.wheelButton?.gradientStart || "#6C63FF"}
+      onChange={(value) =>
+        setSelectedPage({
+          ...selectedPage,
+          wheelButton: { ...selectedPage.wheelButton, gradientStart: value },
+        })
+      }
+    />
+    <ColorPicker
+      label="Gradient End Color"
+      value={selectedPage.wheelButton?.gradientEnd || "#4B4AC9"}
+      onChange={(value) =>
+        setSelectedPage({
+          ...selectedPage,
+          wheelButton: { ...selectedPage.wheelButton, gradientEnd: value },
+        })
+      }
+    />
+    <Select
+      label="Gradient Direction"
+      value={selectedPage.wheelButton?.gradientDirection || "to bottom"}
+      onChange={(e) =>
+        setSelectedPage({
+          ...selectedPage,
+          wheelButton: { ...selectedPage.wheelButton, gradientDirection: e.target.value },
+        })
+      }
+      className="bg-[#1B1B21] text-[#C33AFF] px-4 py-2 rounded-lg"
+    >
+      <SelectItem value="to top">To Top</SelectItem>
+      <SelectItem value="to bottom">To Bottom</SelectItem>
+      <SelectItem value="to left">To Left</SelectItem>
+      <SelectItem value="to right">To Right</SelectItem>
+      <SelectItem value="to top left">To Top Left</SelectItem>
+      <SelectItem value="to top right">To Top Right</SelectItem>
+      <SelectItem value="to bottom left">To Bottom Left</SelectItem>
+      <SelectItem value="to bottom right">To Bottom Right</SelectItem>
+    </Select>
+  </>
+)}
+
+
+  {/* Add Prize Button */}
+  <Button
+    onClick={() =>
+      setSelectedPage({
+        ...selectedPage,
+        prizes: [
+          ...selectedPage.prizes,
+          {
+            text: '',
+            gradient: false,
+            gradientStart: '#6C63FF',
+            gradientEnd: '#4B4AC9',
+            gradientDirection: 'to right',
+            color: '#ffffff',
+            probability: 0,
+            redirectUrl: '',
+            glowColor: '#FFFFFF',
+            expirationDate: new Date(),
+            bonusCode: '',
+          },
+        ],
+      })
+    }
+    className="bg-purple-900 hover:bg-purple-950 text-white w-full"
+  >
+    Add Prize
+  </Button>
+</div>
+
       {/* Wheel Preview */}
       <div>
         <div className="flex justify-between items-center mb-6">
@@ -664,6 +817,7 @@ export const UserDashboard: React.FC = () => {
               prizes={selectedPage.prizes}
               onSpinEnd={() => {}}
               disabled={false}
+              button= {selectedPage.wheelButton}
             />
           </div>
         )}
@@ -756,8 +910,6 @@ export const UserDashboard: React.FC = () => {
       }
     />
 
-   
-
     {/* Button Size */}
     <Select
       value={selectedPage.finalCta?.size || 'medium'}
@@ -810,11 +962,71 @@ export const UserDashboard: React.FC = () => {
       }
     />
 
+    {/* Gradient Toggle */}
+    <div className="flex items-center space-x-4">
+      <label className="text-sm font-medium text-[#D3D3DF]">Enable Gradient</label>
+      <input
+        type="checkbox"
+        checked={selectedPage.finalCta?.gradient || false}
+        onChange={(e) =>
+          setSelectedPage({
+            ...selectedPage,
+            finalCta: { ...selectedPage.finalCta, gradient: e.target.checked },
+          })
+        }
+        className="w-5 h-5"
+      />
+    </div>
+
+    {/* Gradient Colors */}
+    {selectedPage.finalCta?.gradient && (
+      <>
+        <ColorPicker
+          label="Gradient Start Color"
+          value={selectedPage.finalCta?.gradientStart || '#6C63FF'}
+          onChange={(value) =>
+            setSelectedPage({
+              ...selectedPage,
+              finalCta: { ...selectedPage.finalCta, gradientStart: value },
+            })
+          }
+        />
+        <ColorPicker
+          label="Gradient End Color"
+          value={selectedPage.finalCta?.gradientEnd || '#4B4AC9'}
+          onChange={(value) =>
+            setSelectedPage({
+              ...selectedPage,
+              finalCta: { ...selectedPage.finalCta, gradientEnd: value },
+            })
+          }
+        />
+       <Select
+        label="Gradient Direction"
+        value={selectedPage.finalCta?.gradientDirection || 'to bottom'}
+        onChange={(e) =>
+          setSelectedPage({
+            ...selectedPage,
+            finalCta: { ...selectedPage.finalCta, gradientDirection: e.target.value },
+          })
+        }
+        className="bg-[#1B1B21] text-[#C33AFF] px-4 py-2 rounded-lg"
+      >
+        <SelectItem value="to top">To Top</SelectItem>
+        <SelectItem value="to bottom">To Bottom</SelectItem>
+        <SelectItem value="to left">To Left</SelectItem>
+        <SelectItem value="to right">To Right</SelectItem>
+        <SelectItem value="to top left">To Top Left</SelectItem>
+        <SelectItem value="to top right">To Top Right</SelectItem>
+        <SelectItem value="to bottom left">To Bottom Left</SelectItem>
+        <SelectItem value="to bottom right">To Bottom Right</SelectItem>
+      </Select>
+      </>
+    )}
+
     {/* Preview */}
     <div className="pt-6">
-      <h3 className="text-lg font-semibold text-[#D3D3DF] text-center">
-        Preview
-      </h3>
+      <h3 className="text-lg font-semibold text-[#D3D3DF] text-center">Preview</h3>
       <div className="flex justify-center mt-4">
         <a
           href={selectedPage.finalCta?.link || '#'}
@@ -834,7 +1046,9 @@ export const UserDashboard: React.FC = () => {
                 : selectedPage.finalCta?.size === 'large'
                 ? '18px'
                 : '16px',
-            backgroundColor: selectedPage.finalCta?.backgroundColor || '#4CAF50',
+            background: selectedPage.finalCta?.gradient
+              ? `linear-gradient(${selectedPage.finalCta.gradientDirection}, ${selectedPage.finalCta.gradientStart}, ${selectedPage.finalCta.gradientEnd})`
+              : selectedPage.finalCta?.backgroundColor || '#4CAF50',
             color: selectedPage.finalCta?.textColor || '#ffffff',
             textAlign: 'center',
             textDecoration: 'none',
@@ -842,12 +1056,14 @@ export const UserDashboard: React.FC = () => {
             cursor: 'pointer',
           }}
           onMouseEnter={(e) =>
-            (e.currentTarget.style.backgroundColor =
-              selectedPage.finalCta?.hoverColor || '#45a049')
+            (e.currentTarget.style.background = selectedPage.finalCta?.gradient
+              ? `linear-gradient(${selectedPage.finalCta.gradientDirection}, ${selectedPage.finalCta.gradientStart}, ${selectedPage.finalCta.gradientEnd})`
+              : selectedPage.finalCta?.hoverColor || '#45a049')
           }
           onMouseLeave={(e) =>
-            (e.currentTarget.style.backgroundColor =
-              selectedPage.finalCta?.backgroundColor || '#4CAF50')
+            (e.currentTarget.style.background = selectedPage.finalCta?.gradient
+              ? `linear-gradient(${selectedPage.finalCta.gradientDirection}, ${selectedPage.finalCta.gradientStart}, ${selectedPage.finalCta.gradientEnd})`
+              : selectedPage.finalCta?.backgroundColor || '#4CAF50')
           }
         >
           {selectedPage.finalCta?.text || 'Click Me'}
@@ -856,6 +1072,7 @@ export const UserDashboard: React.FC = () => {
     </div>
   </div>
 </Tabs.Content>
+
 
 
 

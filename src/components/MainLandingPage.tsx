@@ -7,6 +7,7 @@ import * as Accordion from '@radix-ui/react-accordion';
 import * as Icons from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useConStore } from '../store/configStore';
+import PricingSection from './PricingSection';
 
 export const MainLandingPage: React.FC = () => {
   const { fetchMLP, mlp: landingPage } = useConStore() as {
@@ -25,12 +26,12 @@ export const MainLandingPage: React.FC = () => {
         setIsLoading(false);
         clearInterval(retryInterval);
       }
-    }, 500); // Retry every 3 seconds
+    }, 500); // Retry every 055 seconds
 
     return () => clearInterval(retryInterval); // Cleanup on unmount
   }, [fetchMLP, landingPage.hero]);
 
-  const navigate = useNavigate();
+  
 
   const fadeIn = {
     initial: { opacity: 0, y: 20 },
@@ -81,7 +82,7 @@ export const MainLandingPage: React.FC = () => {
 
     <div className="min-h-screen bg-[#121218] text-white">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-4">
+      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-visible px-4">
         {landingPage.hero.backgroundImage && (
           <div
             className="absolute inset-0 bg-cover bg-center"
@@ -113,16 +114,16 @@ export const MainLandingPage: React.FC = () => {
           variants={fadeIn}
         >
           <h1
-            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-shadow-lg bg-clip-text text-transparent bg-gradient-to-r from-white to-purple-200 break-words"
+            className="inline-block text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-shadow-lg bg-clip-text text-transparent bg-gradient-to-r from-white to-purple-200 break-words"
             style={{
               fontSize: 'clamp(2rem, 5vw, 4.5rem)',
               overflowWrap: 'break-word',
-              lineHeight: '1.1',
+              lineHeight: '1.32',
             }}
             dangerouslySetInnerHTML={{ __html: landingPage.hero.headline }}
           />
           <p
-            className="text-sm sm:text-lg md:text-xl lg:text-2xl mb-8 text-gray-200 break-words"
+            className=" text-sm sm:text-lg md:text-xl lg:text-2xl mb-8 text-gray-200 break-words"
             style={{
               fontSize: 'clamp(1rem, 2.5vw, 1.25rem)',
               lineHeight: '1.4',
@@ -149,7 +150,7 @@ export const MainLandingPage: React.FC = () => {
 
 
        {/* Demo Section */}
-    <section id="demo" className="py-16 sm:py-20 bg-[#1B1B21]">
+    <section id="demo" className="py-16 sm:py-20 bg-[#1B1B21] overflow-visible;">
       <motion.div
         className="container mx-auto px-4"
         initial="initial"
@@ -161,17 +162,25 @@ export const MainLandingPage: React.FC = () => {
         }}
         viewport={{ once: true }}
       >
-        <div className="text-center mb-12">
-          <h2
-            className="text-2xl sm:text-4xl font-bold mb-4 text-gradient"
-            style={{ fontSize: 'clamp(1.75rem, 5vw, 3.5rem)' }}
-            dangerouslySetInnerHTML={{ __html: landingPage.demo.title }}
-          />
-          <p
-            className="text-sm sm:text-lg text-gray-300"
-            style={{ fontSize: 'clamp(0.9rem, 2vw, 1.25rem)' }}
-            dangerouslySetInnerHTML={{ __html: landingPage.demo.caption }}
-          />
+        <div className="text-center mb-12 ">
+        <h2
+              className="text-2xl sm:text-4xl font-bold mb-4 text-gradient"
+              style={{
+                fontSize: 'clamp(1.75rem, 5vw, 3.5rem)',
+                lineHeight: '1.2',
+                display: 'inline-block',
+              }}
+              dangerouslySetInnerHTML={{ __html: landingPage.demo.title }}
+            />
+            <p
+              className="text-sm sm:text-lg text-gray-300"
+              style={{
+                fontSize: 'clamp(0.9rem, 2vw, 1.25rem)',
+                lineHeight: '1.5',
+              }}
+              dangerouslySetInnerHTML={{ __html: landingPage.demo.caption }}
+            />
+
         </div>
 
         <div className="max-w-3xl mx-auto">
@@ -211,7 +220,7 @@ export const MainLandingPage: React.FC = () => {
         variants={fadeIn}
         viewport={{ once: true }}
       >
-        <h1 className="text-4xl font-bold mb-12 text-center text-gradient">Tutorial</h1>
+        <h2 className="text-4xl font-bold mb-12 text-center text-gradient">Tutorial</h2>
 
         <div className="max-w-4xl mx-auto">
           {/* Embed a random YouTube video */}
@@ -409,48 +418,7 @@ export const MainLandingPage: React.FC = () => {
 
       {/* Pricing Section */}
       <section className="py-20 bg-[#1B1B21]">
-        <motion.div 
-          className="container mx-auto px-4"
-          initial="initial"
-          whileInView="animate"
-          variants={fadeIn}
-          viewport={{ once: true }}
-        >
-         <h2
-            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-8 text-center"
-            dangerouslySetInnerHTML={{ __html: landingPage.pricing.title }}
-          />
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {landingPage.pricing.plans.map((plan) => (
-              <div 
-                key={plan.id}
-                className="bg-[#1B1B21] p-8 rounded-lg shadow-xl hover:shadow-2xl hover:shadow-purple-500/20 transition-all"
-              >
-                <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-                <p className="text-4xl font-bold mb-6 text-[#C33AFF]">{plan.price}</p>
-                <ul className="space-y-4 mb-8">
-                  {plan.features.map((feature, index) => (
-                    <li key={index} className="flex items-center space-x-2">
-                      <Icons.Check className="w-5 h-5 text-[#C33AFF]" />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Button
-                   onClick={() => window.open(plan.buttonLink, '_blank')}
-                  style={{
-                    backgroundColor: plan.buttonColor,
-                    color: plan.buttonTextColor
-                  }}
-                  className="w-full py-3 rounded-lg transform hover:scale-105 transition-all shadow-lg hover:shadow-purple-500/50"
-                >
-                  {plan.buttonText}
-                </Button>
-              </div>
-            ))}
-          </div>
-        </motion.div>
+       <PricingSection pricing={landingPage.pricing}/>
       </section>
 
       {/* FAQ Section */}

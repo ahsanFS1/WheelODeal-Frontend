@@ -1,95 +1,105 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { gsap } from 'gsap';
-import { Howl } from 'howler';
-import confetti from 'canvas-confetti';
-import { Prize, SpinResult } from '../types';
-import { ArrowUp } from 'lucide-react';
-import { cn } from '../lib/utils';
-
-
+import React, { useRef, useEffect, useState } from "react";
+import { gsap } from "gsap";
+import { Howl } from "howler";
+import confetti from "canvas-confetti";
+import { Prize, SpinResult } from "../types";
+import { cn } from "../lib/utils";
 
 interface Props {
   prizes: Prize[]; // Flexible array of prizes
   onSpinEnd: (result: SpinResult) => void;
   disabled?: boolean;
+  music: boolean; // Toggle to play winning sound
+  button: any,
 }
 
+export const SpinningWheel: React.FC<Props> = ({
+  prizes = [],
+  onSpinEnd,
+  disabled,
+  music = true,
+  button = {
+    text: "SPIN",
+    textColor: "#FFFFFF" ,
+    backgroundColor: "#6C63FF",
+    gradient: true,
+    gradientStart: "#C084FC", // Start color for gradient
+    gradientEnd:  "#7C3AED", // End color for gradient
+    gradientDirection: "to top",
 
-
-export const SpinningWheel: React.FC<Props> = ({ prizes = [], onSpinEnd, disabled }) => {
+  }
+}) => {
   const wheelRef = useRef<HTMLCanvasElement>(null);
   const [isSpinning, setIsSpinning] = useState(false);
   const [winningPrize, setWinningPrize] = useState<Prize | null>(null);
   const ctx = useRef<CanvasRenderingContext2D | null>(null);
   const currentRotation = useRef(0);
 
-  
   // Sound effects
   const sounds = useRef({
     spin: new Howl({
-      src: ['https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3'],
+      src: ["https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3"],
       loop: true,
-      volume: 0.0,
-    }),
-    tick: new Howl({
-      src: ['https://assets.mixkit.co/active_storage/sfx/146/146-preview.mp3'],
-      volume: 0.0,
+      volume: 0.5,
     }),
     win: new Howl({
-      src: ['/assets/prize_won.mp3'],
+      src: ["/assets/prize_won.mp3"],
       volume: 0.7,
     }),
   });
 
-  const getRandomPrize = () => {
-    const random = Math.random();
-    let probabilitySum = 0;
-
-    for (const prize of prizes) {
-      probabilitySum += prize.probability;
-      if (random <= probabilitySum) {
-        return prize;
-      }
-    }
-
-    return prizes[prizes.length - 1];
-  };
-
+  // Function to draw the wheel
   const drawWheel = () => {
     if (!wheelRef.current || !ctx.current || !prizes || prizes.length === 0) {
-      console.warn('No prizes available to draw the wheel.');
+      console.warn("No prizes available to draw the wheel.");
       return;
     }
-
+  
     const canvas = wheelRef.current;
     const context = ctx.current;
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
     const radius = canvas.width * 0.45; // Adjusted wheel size
-
+  
     // Clear canvas
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.save();
     context.translate(centerX, centerY);
     context.rotate(currentRotation.current);
-
+  
     // Draw wheel sections
     const sliceAngle = (2 * Math.PI) / prizes.length;
     prizes.forEach((prize, i) => {
       const startAngle = i * sliceAngle;
       const endAngle = startAngle + sliceAngle;
-
-      // Draw slice
+  
+      // Draw slice with gradient or solid color
       context.beginPath();
       context.moveTo(0, 0);
       context.arc(0, 0, radius, startAngle, endAngle);
       context.closePath();
-      context.fillStyle = prize.color;
+  
+      if (prize.gradient) {
+        // Create gradient fill
+        const gradient = context.createLinearGradient(
+          Math.cos(startAngle) * radius,
+          Math.sin(startAngle) * radius,
+          Math.cos(endAngle) * radius,
+          Math.sin(endAngle) * radius
+        );
+        gradient.addColorStop(0, prize.gradientStart || "#FFFFFF");
+        gradient.addColorStop(1, prize.gradientEnd || "#000000");
+        context.fillStyle = gradient;
+      } else {
+        context.fillStyle = prize.color || "#FF5733"; // Fallback solid color
+      }
       context.fill();
-      context.strokeStyle = '#8B5CF6';
+  
+      // Draw slice border
+      context.strokeStyle = "#8B5CF6";
       context.lineWidth = 2;
       context.stroke();
-
+  
       // Highlight winning prize
       if (winningPrize && prize.id === winningPrize.id) {
         context.save();
@@ -97,91 +107,104 @@ export const SpinningWheel: React.FC<Props> = ({ prizes = [], onSpinEnd, disable
         context.moveTo(0, 0);
         context.arc(0, 0, radius, startAngle, endAngle);
         context.closePath();
-        context.strokeStyle = prize.glowColor || '#FFFFFF';
+        context.strokeStyle = prize.glowColor || "#FFFFFF";
         context.lineWidth = 8;
-        context.shadowColor = prize.glowColor || '#FFFFFF';
+        context.shadowColor = prize.glowColor || "#FFFFFF";
         context.shadowBlur = 30;
         context.stroke();
         context.restore();
       }
-
+  
       // Draw text
       context.save();
       context.rotate(startAngle + sliceAngle / 2);
-      context.textAlign = 'right';
-      context.fillStyle = '#FFFFFF';
-      context.font = 'bold 24px Arial';
-      context.shadowColor = 'rgba(0, 0, 0, 0.5)';
+      context.textAlign = "right";
+      context.fillStyle = "#FFFFFF";
+      context.font = "bold 24px Arial";
+      context.shadowColor = "rgba(0, 0, 0, 0.5)";
       context.shadowBlur = 4;
       context.shadowOffsetX = 2;
       context.shadowOffsetY = 2;
-      context.fillText(prize.text, radius - 30, 0);
+  
+      // Dynamic text adjustment for better alignment
+      const textOffset = radius - 30;
+      context.fillText(prize.text, textOffset, 0);
       context.restore();
     });
-
+  
     // Draw outer ring
     context.beginPath();
     context.arc(0, 0, radius + 2, 0, 2 * Math.PI);
-    context.strokeStyle = '#8B5CF6';
+    context.strokeStyle = "#8B5CF6";
     context.lineWidth = 6;
     context.stroke();
-
+  
     context.restore();
   };
+  
+  // Get random prize
+  const getRandomPrize = () => {
+    const random = Math.random();
+    let probabilitySum = 0;
+    for (const prize of prizes) {
+      probabilitySum += prize.probability;
+      if (random <= probabilitySum) return prize;
+    }
+    return prizes[prizes.length - 1];
+  };
 
-  const triggerWinAnimation = (prize: Prize) => {
-    setWinningPrize(prize);
-
-    // Trigger confetti
+  // Trigger confetti
+  const triggerConfetti = () => {
     confetti({
       particleCount: 100,
       spread: 70,
       origin: { y: 0.6 },
     });
-
-    // Play winning sound
-    sounds.current.win.play();
   };
 
   const spin = () => {
-    if (isSpinning || disabled || prizes.length === 0) {
-      console.warn('Cannot spin: wheel is disabled or no prizes available.');
-      return;
-    }
-  
+    if (isSpinning || disabled || !prizes.length) return;
+
     setIsSpinning(true);
     const prize = getRandomPrize();
     const prizeIndex = prizes.findIndex((p) => p.id === prize.id);
-  
-    // Calculate rotation
+
+    // Calculate spin rotation
     const sliceAngle = (2 * Math.PI) / prizes.length;
     const targetRotation =
       currentRotation.current +
-      Math.PI * 16 + // Increased number of full rotations for a longer spin
-      (-((prizeIndex * sliceAngle) + sliceAngle / 2) - Math.PI / 2); // Align prize with top
-  
-    // Start spin sound
+      Math.PI * 10 + // Full spins
+      (-((prizeIndex * sliceAngle) + sliceAngle / 2) - Math.PI / 2);
+
     sounds.current.spin.play();
-  
+
     gsap.to(currentRotation, {
       current: targetRotation,
-      duration: 9, // Increased duration to 8 seconds
-      ease: 'power4.out',
+      duration: 6,
+      ease: "power4.out",
       onUpdate: drawWheel,
       onComplete: () => {
         setIsSpinning(false);
         sounds.current.spin.stop();
-        triggerWinAnimation(prize);
+        console.log(music)
+        // Conditional music playback
+        if (music) {
+          
+          console.log("Playing Music",sounds.current.win.play());
+          sounds.current.win.play()};
+
+        triggerConfetti(); // Fire confetti
+        setWinningPrize(prize);
         onSpinEnd({ prize, rotation: targetRotation });
       },
     });
   };
+
   useEffect(() => {
     if (!wheelRef.current) return;
-    ctx.current = wheelRef.current.getContext('2d');
+    ctx.current = wheelRef.current.getContext("2d");
     drawWheel();
 
-    // Cleanup sounds
     return () => {
       Object.values(sounds.current).forEach((sound) => sound.unload());
     };
@@ -195,28 +218,53 @@ export const SpinningWheel: React.FC<Props> = ({ prizes = [], onSpinEnd, disable
         height={800}
         className="w-full h-full"
       />
-
-<button
+    <button
   onClick={spin}
   disabled={disabled || isSpinning}
   className={cn(
-    'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
-    'w-24 h-24 rounded-full',
-    'bg-gradient-to-r from-[#C084FC] via-[#8B5CF6] to-[#7C3AED]',
-    'text-white font-bold text-2xl', // Increased font size for the icon
-    'shadow-lg hover:scale-105 transition-all duration-300',
-    'disabled:opacity-50 disabled:cursor-not-allowed',
-    'border-4 border-[#C084FC]',
-    'flex flex-col items-center justify-center gap-1'
+    "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
+    "rounded-full flex flex-col items-center justify-center gap-1",
+    "shadow-lg hover:scale-105 transition-transform duration-300",
+    "disabled:opacity-50 disabled:cursor-not-allowed border-4",
+    "text-white font-extrabold tracking-wide"
   )}
   style={{
-    boxShadow:
-      '0 4px 6px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.5)',
+    width: "clamp(5rem, 12vw, 6.5rem)", // Smaller, responsive width
+    height: "clamp(5rem, 12vw, 6.5rem)", // Smaller, responsive height
+    background: button?.gradient
+      ? `linear-gradient(${button.gradientDirection}, ${button.gradientStart}, ${button.gradientEnd})`
+      : button?.backgroundColor || "#8B5CF6",
+    color: button?.textColor || "#FFFFFF",
+    fontSize: "clamp(1rem, 2.5vw, 1.25rem)", // Text size dynamically adjusts
+    textShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
+    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.2)",
+    borderColor: button?.gradientStart || button?.backgroundColor || "#6C63FF",
   }}
 >
-  <span className= {"text-4xl"} style={{ fontFamily: 'Arial, sans-serif', fontWeight: 'bold' }}>⮝</span>
-  <span>SPIN</span>
+  {/* Up Arrow */}
+  <span
+    style={{
+      fontSize: "clamp(1.5rem, 3vw, 1.5rem)", // Arrow size adjusts with screen
+      lineHeight: "1",
+    }}
+  >
+    &#11165;
+  </span>
+
+  {/* Button Text */}
+  <span
+    style={{
+      fontSize: "clamp(1.5rem, 3vw, 1.5rem)", // Slightly smaller responsive text
+      lineHeight: "1.2",
+      textAlign: "center",
+    }}
+  >
+    {button.text || "SPIN"}
+  </span>
 </button>
+
+
+
     </div>
   );
 };

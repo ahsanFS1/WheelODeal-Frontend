@@ -15,6 +15,10 @@ import { FinalCtaEditor } from './editors/FinalCtaEditor';
 import { api_Url } from '../../config';
 import { VideoEditor } from './editors/VideoEditor';
 import { TextInput } from './shared/TextInput';
+import WheelEditor from './editors/WheelEditor';
+
+
+
 
 export const LandingPageEditor: React.FC = () => {
   const [mlp, setMlp] = useState<any>(null);
@@ -121,6 +125,7 @@ export const LandingPageEditor: React.FC = () => {
           {[
             { value: 'hero', label: 'Hero' },
             { value: 'demo', label: 'Demo' },
+            {value: 'wheel-settings', label: 'Wheel Settings'},
             { value: 'video', label: 'Video' },
             { value: 'features', label: 'Features' },
             { value: 'benefits', label: 'Benefits' },
@@ -155,6 +160,21 @@ export const LandingPageEditor: React.FC = () => {
               onChange={(demo) => setMlp({ ...mlp, demo })}
             />
           </Tabs.Content>
+          
+          <Tabs.Content value="wheel-settings" className="space-y-8">
+          <div className="bg-[#1B1B21] rounded-lg shadow-lg p-6">
+            <h2 className="text-xl font-semibold text-[#D3D3DF]">Wheel Settings</h2>
+            <WheelEditor
+              prizes={mlp?.prizes || []} // Pass the current prizes to WheelEditor
+              onChange={(updatedPrizes) => {
+                setMlp((prev) => ({
+                  ...prev,
+                  prizes: updatedPrizes,
+                }));
+              }}
+            />
+          </div>
+        </Tabs.Content>
 
           <Tabs.Content value="video" className="text-[#D3D3DF]">
             <VideoEditor

@@ -5,6 +5,9 @@ import TextStyle from "@tiptap/extension-text-style";
 import Color from "@tiptap/extension-color";
 import FontFamily from "./extensions/FontFamily";
 import FontSize from "./extensions/FontSize";
+import Heading from "@tiptap/extension-heading";
+
+
 
 interface TiptapEditorProps {
   content: string;
@@ -18,7 +21,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
   customStyles = "",
 }) => {
   const editor = useEditor({
-    extensions: [StarterKit, TextStyle, Color, FontFamily, FontSize],
+    extensions: [StarterKit, TextStyle, Color, FontFamily, FontSize,Heading.configure({ levels: [1, 2, 3, 4, 5, 6] }),],
     content,
     editorProps: {
       attributes: {
@@ -132,6 +135,50 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
             A+
           </button>
         </div>
+       
+        <div className="flex items-center gap-2">
+        <select
+              onChange={(e) => {
+                const value = e.target.value;
+                if (!editor) return;
+
+                editor.chain().focus(); // Focus editor to apply changes
+
+                if (value === "paragraph") {
+                  editor.chain().setParagraph().run();
+                } else if (value.startsWith("heading")) {
+                  const level = parseInt(value.split("-")[1], 10);
+                  editor.chain().setHeading({ level }).run();
+                }
+              }}
+              className="p-2 text-gray-400 bg-[#232329] border border-purple-900/20 rounded w-full sm:w-auto"
+              value={
+                editor.isActive("heading", { level: 1 })
+                  ? "heading-1"
+                  : editor.isActive("heading", { level: 2 })
+                  ? "heading-2"
+                  : editor.isActive("heading", { level: 3 })
+                  ? "heading-3"
+                  : editor.isActive("heading", { level: 4 })
+                  ? "heading-4"
+                  : editor.isActive("heading", { level: 5 })
+                  ? "heading-5"
+                  : editor.isActive("heading", { level: 6 })
+                  ? "heading-6"
+                  : "paragraph"
+              }
+            >
+              <option value="paragraph">Paragraph</option>
+              <option value="heading-1">H1</option>
+              <option value="heading-2">H2</option>
+              <option value="heading-3">H3</option>
+              <option value="heading-4">H4</option>
+              <option value="heading-5">H5</option>
+              <option value="heading-6">H6</option>
+            </select>
+
+          </div>
+
 
         {/* Color Picker */}
         <input
