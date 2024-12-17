@@ -38,7 +38,7 @@ export const SpinningWheel: React.FC<Props> = ({
   // Sound effects
   const sounds = useRef({
     spin: new Howl({
-      src: ["https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3"],
+      src: [""],
       loop: true,
       volume: 0.5,
     }),
@@ -176,7 +176,7 @@ export const SpinningWheel: React.FC<Props> = ({
       Math.PI * 10 + // Full spins
       (-((prizeIndex * sliceAngle) + sliceAngle / 2) - Math.PI / 2);
 
-    sounds.current.spin.play();
+    
 
     gsap.to(currentRotation, {
       current: targetRotation,
