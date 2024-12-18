@@ -190,6 +190,7 @@ export const PricingEditor: React.FC<Props> = ({ data, onChange }) => {
                     {/* Features Management */}
 <div className="space-y-4">
   <h4 className="text-md font-medium text-[#D3D3DF]">Features</h4>
+  
   {plan.features.map((feature, index) => (
     <div key={index} className="flex items-center gap-4">
       <TextInput
