@@ -44,10 +44,44 @@ export const PricingEditor: React.FC<Props> = ({ data, onChange }) => {
 
   return (
     <div className="space-y-6">
-       <TiptapEditor
-          content={data.title}
-          onContentChange={(content) => onChange({ ...data, title: content })}
+      <TiptapEditor
+        content={data.title}
+        onContentChange={(content) => onChange({ ...data, title: content })}
+      />
+
+      {/* Text Inputs for Plan Texts */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <TextInput
+          label="Monthly Plan Text"
+          value={data.plans[0]?.monthlyplanText || ''}
+          onChange={(value) => {
+            const updatedPlan = { ...data.plans[0], monthlyplanText: value };
+            const newPlans = [...data.plans];
+            newPlans[0] = updatedPlan;
+            onChange({ ...data, plans: newPlans });
+          }}
         />
+        <TextInput
+          label="Yearly Plan Text"
+          value={data.plans[0]?.yearlyPlanText || ''}
+          onChange={(value) => {
+            const updatedPlan = { ...data.plans[0], yearlyPlanText: value };
+            const newPlans = [...data.plans];
+            newPlans[0] = updatedPlan;
+            onChange({ ...data, plans: newPlans });
+          }}
+        />
+        <TextInput
+          label="Yearly Promo Message"
+          value={data.plans[0]?.planText || ''}
+          onChange={(value) => {
+            const updatedPlan = { ...data.plans[0], planText: value };
+            const newPlans = [...data.plans];
+            newPlans[0] = updatedPlan;
+            onChange({ ...data, plans: newPlans });
+          }}
+        />
+      </div>
 
       <div className="space-y-8">
         {data.plans.map((plan) => (
@@ -65,8 +99,8 @@ export const PricingEditor: React.FC<Props> = ({ data, onChange }) => {
                 value={plan.monthlyPrice}
                 onChange={(value) => updatePlan(plan.id, 'monthlyPrice', value)}
               />
-               <TextInput
-                label=" Yearly Price"
+              <TextInput
+                label="Yearly Price"
                 value={plan.yearlyPrice}
                 onChange={(value) => updatePlan(plan.id, 'yearlyPrice', value)}
               />
@@ -90,6 +124,46 @@ export const PricingEditor: React.FC<Props> = ({ data, onChange }) => {
                 value={plan.buttonTextColor}
                 onChange={(value) => updatePlan(plan.id, 'buttonTextColor', value)}
               />
+              <ColorPicker
+                label="Glow Color"
+                value={plan.glowColor}
+                onChange={(value) => updatePlan(plan.id, 'glowColor', value)}
+              />
+              <div className="col-span-2">
+                <label className="block text-md font-medium text-[#D3D3DF] mb-2">Enable Gradient</label>
+                <input
+                  type="checkbox"
+                  checked={plan.isGradient}
+                  onChange={(e) => updatePlan(plan.id, 'isGradient', e.target.checked)}
+                />
+              </div>
+              {plan.isGradient && (
+                <>
+                  <ColorPicker
+                    label="Gradient Start Color"
+                    value={plan.gradientStart}
+                    onChange={(value) => updatePlan(plan.id, 'gradientStart', value)}
+                  />
+                  <ColorPicker
+                    label="Gradient End Color"
+                    value={plan.gradientEnd}
+                    onChange={(value) => updatePlan(plan.id, 'gradientEnd', value)}
+                  />
+                  <div>
+                    <label className="block text-md font-medium text-[#D3D3DF] mb-2">Gradient Direction</label>
+                    <select
+                      className="bg-[#232329] text-white p-2 rounded-lg w-full"
+                      value={plan.gradientDirection || 'to right'}
+                      onChange={(e) => updatePlan(plan.id, 'gradientDirection', e.target.value)}
+                    >
+                      <option value="to right">To Right</option>
+                      <option value="to left">To Left</option>
+                      <option value="to top">To Top</option>
+                      <option value="to bottom">To Bottom</option>
+                    </select>
+                  </div>
+                </>
+              )}
             </div>
 
             <div className="space-y-4">

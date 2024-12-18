@@ -294,17 +294,32 @@ const handleSpinEnd = async (result: SpinResult) => {
               />
             </div>
           
-            {/* Bonus Code Display */}
-  {spinResult && (
-            <div className="mt-90 text-center ">
-              <div className="inline-block bg-purple-900/20 rounded-lg p-4">
-                <p className="text-xl text-gray-300">Bonus Code:</p>
-                <p className="text-xl font-bold text-purple-400">{spinResult?.prize.bonusCode}</p>
-                <p className="text-sm text-gray-300 mt-2">Expiring In:</p>
-                <CountdownTimer   expiryTimestamp={new Date(spinResult?.prize.expirationDate).getTime()} />
-              </div>
-            </div>
-  )}
+          {/* Bonus Code Display */}
+{spinResult && (
+  <div className="mt-12 text-center">
+    <div className="inline-block bg-purple-900/20 rounded-lg p-6 shadow-md shadow-purple-500/30 transition-transform hover:scale-105">
+      <p className="text-xl text-gray-300">🎉 Bonus Code 🎉</p>
+      <p className="text-3xl font-bold text-purple-400 mt-2 tracking-widest animate-pulse">
+        {spinResult?.prize.bonusCode}
+      </p>
+      
+      <p className="text-sm text-gray-300 italic mt-2">
+        Use this code to claim your reward!
+      </p>
+
+      <div className="mt-6 border-t border-purple-500/30 pt-4">
+        <p className="text-sm text-gray-300">Expiring In:</p>
+        <br></br>
+        <p className="text-lg font-semibold text-white">
+          <CountdownTimer expiryTimestamp={new Date(spinResult?.prize.expirationDate).getTime()} />
+        </p>
+      </div>
+
+      {/* Decorative Glow */}
+        </div>
+  </div>
+)}
+
             {spinResult && (
             <div className="mt-10 text-center">
             <div className="bg-purple-900/20 rounded-lg p-6 inline-block">

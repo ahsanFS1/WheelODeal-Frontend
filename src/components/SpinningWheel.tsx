@@ -17,7 +17,7 @@ export const SpinningWheel: React.FC<Props> = ({
   prizes = [],
   onSpinEnd,
   disabled,
-  music = true,
+  music = false,
   button = {
     text: "SPIN",
     textColor: "#FFFFFF" ,

@@ -158,6 +158,7 @@ export const AnalyticsDashboard: React.FC<Props> = ({ pageId }) => {
 
       <div className="bg-[#1B1B21] p-6 rounded-lg">
         <h3 className="text-lg font-semibold text-[#D3D3DF] mb-4">Performance Over Time</h3>
+  
         <div className="h-[400px]">
           <Line
             data={chartData}
@@ -182,6 +183,8 @@ export const AnalyticsDashboard: React.FC<Props> = ({ pageId }) => {
             }}
           />
         </div>
+        <br></br>
+        <footer className='text-xs text-white text-opacity-50 text-italic'>* Please note that conversions, spin statistics, unique visitors, and other data may take 24-48 hours to be fully updated. *</footer>
       </div>
     </div>
   );

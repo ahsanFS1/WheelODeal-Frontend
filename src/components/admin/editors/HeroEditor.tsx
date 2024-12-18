@@ -58,32 +58,90 @@ export const HeroEditor: React.FC<Props> = ({ data, onChange }) => {
         />
       </div>
 
-      {/* Call-to-Action Button Settings */}
-      <div className="border-t border-purple-900/20 pt-4 mt-4">
-        <h4 className="text-md font-medium mb-3 text-[#D3D3DF]">Call-to-Action Button</h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <TextInput
-            label="Button Text"
-            value={data.ctaButton.text}
-            onChange={(value) => handleButtonChange("text", value)}
+   {/* Call-to-Action Button Settings */}
+    <div className="border-t border-purple-900/20 pt-4 mt-4">
+      <h4 className="text-md font-medium mb-3 text-[#D3D3DF]">Call-to-Action Button</h4>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <TextInput
+          label="Button Text"
+          value={data.ctaButton.text}
+          onChange={(value) => handleButtonChange("text", value)}
+        />
+        <TextInput
+          label="Button Link"
+          value={data.ctaButton.link}
+          onChange={(value) => handleButtonChange("link", value)}
+        />
+        <ColorPicker
+          label="Button Color"
+          value={data.ctaButton.color}
+          onChange={(value) => handleButtonChange("color", value)}
+        />
+        <ColorPicker
+          label="Text Color"
+          value={data.ctaButton.textColor}
+          onChange={(value) => handleButtonChange("textColor", value)}
+        />
+
+        {/* Gradient Checkbox */}
+        <div className="flex items-center space-x-2 mt-2">
+          <input
+            type="checkbox"
+            id="isGradient"
+            checked={data.ctaButton.isGradient}
+            onChange={(e) => handleButtonChange("isGradient", e.target.checked)}
+            className="form-checkbox h-5 w-5 text-[#C33AFF] rounded"
           />
-          <TextInput
-            label="Button Link"
-            value={data.ctaButton.link}
-            onChange={(value) => handleButtonChange("link", value)}
-          />
-          <ColorPicker
-            label="Button Color"
-            value={data.ctaButton.color}
-            onChange={(value) => handleButtonChange("color", value)}
-          />
-          <ColorPicker
-            label="Text Color"
-            value={data.ctaButton.textColor}
-            onChange={(value) => handleButtonChange("textColor", value)}
-          />
+          <label htmlFor="isGradient" className="text-sm text-[#D3D3DF] font-medium">
+            Enable Gradient
+          </label>
         </div>
+
+        {/* Gradient Options */}
+        {data.ctaButton.isGradient && (
+          <>
+            <ColorPicker
+              label="Gradient Start Color"
+              value={data.ctaButton.gradientStart}
+              onChange={(value) => handleButtonChange("gradientStart", value)}
+            />
+            <ColorPicker
+              label="Gradient End Color"
+              value={data.ctaButton.gradientEnd}
+              onChange={(value) => handleButtonChange("gradientEnd", value)}
+            />
+            <div>
+              <label className="block text-sm font-medium text-[#D3D3DF] mb-1">
+                Gradient Direction
+              </label>
+              <select
+                value={data.ctaButton.gradientDirection}
+                onChange={(e) => handleButtonChange("gradientDirection", e.target.value)}
+                className="w-full p-2 bg-[#2A2A32] text-white border border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
+              >
+                <option value="to right">To Right</option>
+                <option value="to left">To Left</option>
+                <option value="to bottom">To Bottom</option>
+                <option value="to top">To Top</option>
+                <option value="to top right">To Top Right</option>
+                <option value="to top left">To Top Left</option>
+                <option value="to bottom right">To Bottom Right</option>
+                <option value="to bottom left">To Bottom Left</option>
+              </select>
+            </div>
+          </>
+        )}
+
+        {/* Glow Color */}
+        <ColorPicker
+          label="Glow Color"
+          value={data.ctaButton.glowColor}
+          onChange={(value) => handleButtonChange("glowColor", value)}
+        />
       </div>
+    </div>
+
+
 
       {/* Image Upload Section */}
       <div className="border-t border-purple-900/20 pt-4 mt-4">

@@ -117,9 +117,20 @@ export const AdminLogin: React.FC<Props> = ({ onLogin }) => {
 
           {error && <div className="text-red-500 text-center text-sm">{error}</div>}
 
-          <Button type="submit" className="w-full bg-purple-700 text-white hover:bg-purple-700/70">
-            Sign In
-          </Button>
+          <div className="flex justify-center">
+          <Button
+  type="submit"
+  className="bg-purple-700 text-white hover:bg-purple-700/70 px-4 py-2 text-sm rounded-full"
+  style={{
+    display: "block",
+    margin: "0 auto", // Explicitly center the button horizontally
+  }}
+>
+  Sign In
+</Button>
+
+</div>
+
         </form>
       </div>
     </div>

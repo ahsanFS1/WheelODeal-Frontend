@@ -137,14 +137,24 @@ export const MainLandingPage: React.FC = () => {
             onClick={() =>
               document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' })
             }
+            className="text-xs sm:text-sm md:text-lg px-6 py-3 sm:px-8 sm:py-4 rounded-full transform hover:scale-105 transition-all shadow-lg"
             style={{
-              backgroundColor: landingPage.hero.ctaButton.color,
+              background: landingPage.hero.ctaButton.isGradient
+                ? `linear-gradient(${landingPage.hero.ctaButton.gradientDirection}, ${landingPage.hero.ctaButton.gradientStart}, ${landingPage.hero.ctaButton.gradientEnd})`
+                : landingPage.hero.ctaButton.color,
               color: landingPage.hero.ctaButton.textColor,
-            }}
-            className="text-xs sm:text-sm md:text-lg px-6 py-3 sm:px-8 sm:py-4 rounded-full transform hover:scale-105 transition-all shadow-lg hover:shadow-purple-500/50"
+              transition: 'box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out',
+             }}
+            onMouseEnter={(e) =>
+              e.currentTarget.style.boxShadow = `0 4px 20px ${landingPage.hero.ctaButton.glowColor || "transparent"}`
+            }
+            onMouseLeave={(e) =>
+              e.currentTarget.style.boxShadow = "none"
+            }
           >
             {landingPage.hero.ctaButton.text}
           </Button>
+
         </motion.div>
       </section>
 
@@ -192,18 +202,29 @@ export const MainLandingPage: React.FC = () => {
         </div>
 
         <div className="text-center mt-12">
-          <Button
-            onClick={() => {
-              document.getElementById('video')?.scrollIntoView({ behavior: 'smooth' });
-            }}
-            style={{
-              backgroundColor: landingPage.demo.secondaryCta.color,
-              color: landingPage.demo.secondaryCta.textColor,
-            }}
-            className="text-xs sm:text-lg px-6 py-3 sm:px-8 sm:py-4 rounded-full transform hover:scale-105 transition-all shadow-lg hover:shadow-purple-500/50"
-          >
-            {landingPage.demo.secondaryCta.text}
-          </Button>
+        <Button
+          onClick={() => {
+            document.getElementById('video')?.scrollIntoView({ behavior: 'smooth' });
+          }}
+          className="text-xs sm:text-lg px-6 py-3 sm:px-8 sm:py-4 rounded-full transform hover:scale-105 transition-all shadow-lg"
+          style={{
+            background: landingPage.demo.secondaryCta.isGradient
+              ? `linear-gradient(${landingPage.demo.secondaryCta.gradientDirection}, ${landingPage.demo.secondaryCta.gradientStart}, ${landingPage.demo.secondaryCta.gradientEnd})`
+              : landingPage.demo.secondaryCta.color,
+            color: landingPage.demo.secondaryCta.textColor,
+            transition: 'box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out',
+          }}
+          onMouseEnter={(e) =>
+            e.currentTarget.style.boxShadow = `0 4px 20px ${landingPage.demo.secondaryCta.glowColor || "transparent"}`
+          }
+          onMouseLeave={(e) =>
+            e.currentTarget.style.boxShadow = "none"
+          }
+        >
+          {landingPage.demo.secondaryCta.text}
+        </Button>
+
+
         </div>
       </motion.div>
     </section>
@@ -473,16 +494,30 @@ export const MainLandingPage: React.FC = () => {
             className="text-3xl md:text-4xl lg:text-5xl font-bold mb-8"
             dangerouslySetInnerHTML={{ __html: landingPage.finalCta.title }}
           />
-          <Button
-            onClick={() => window.open(landingPage.finalCta.buttonLink, '_blank')}
-            style={{
-              backgroundColor: landingPage.finalCta.buttonColor,
-              color: landingPage.finalCta.buttonTextColor,
-            }}
-            className="text-lg px-8 py-4 rounded-full transform hover:scale-105 transition-all shadow-lg hover:shadow-purple-500/50"
-          >
-            {landingPage.finalCta.buttonText}
-          </Button>
+              <Button
+              onClick={() =>
+                window.open(landingPage.finalCta.buttonLink, '_blank')
+              }
+              className="text-lg px-8 py-4 rounded-full transform hover:scale-105 transition-all shadow-lg"
+              style={{
+                background: landingPage.finalCta.isGradient
+                  ? `linear-gradient(${landingPage.finalCta.gradientDirection}, ${landingPage.finalCta.gradientStart}, ${landingPage.finalCta.gradientEnd})`
+                  : landingPage.finalCta.buttonColor,
+                color: landingPage.finalCta.buttonTextColor,
+                transition: 'box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out',
+              }}
+              onMouseEnter={(e) =>
+                e.currentTarget.style.boxShadow = `0 4px 20px ${landingPage.finalCta.glowColor || "transparent"}`
+              }
+              onMouseLeave={(e) =>
+                e.currentTarget.style.boxShadow = "none"
+              }
+            >
+              {landingPage.finalCta.buttonText}
+            </Button>
+
+
+
           <p className="text-gray-300 mt-4">{landingPage.finalCta.guarantee}</p>
         </motion.div>
       </section>

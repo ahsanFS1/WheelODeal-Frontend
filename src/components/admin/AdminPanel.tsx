@@ -6,15 +6,16 @@ import { Settings, Key, LogOut } from 'lucide-react';
 import { SecretKeyManager } from './SecretKeyManager';
 import { LandingPageEditor } from './LandingPageEditor';
 import { toast } from 'sonner';
-
+import { AdminLogin } from '../auth/AdminLogin';
+import { useNavigate } from 'react-router-dom';
 export const AdminPanel: React.FC = () => {
   const logout = useAuthStore((state) => state.logout);
   const [activeTab, setActiveTab] = useState('keys');
-
+  const navigate = useNavigate()
   const handleLogout = () => {
     if (window.confirm('Are you sure you want to log out?')) {
       logout();
-      toast.success('Logged out successfully');
+      navigate('/');
     }
   };
 

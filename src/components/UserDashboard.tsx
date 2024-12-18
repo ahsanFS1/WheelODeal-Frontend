@@ -503,152 +503,201 @@ export const UserDashboard: React.FC = () => {
 <div className="space-y-6">
   <h2 className="text-xl font-semibold text-[#D3D3DF]">Wheel Settings</h2>
   {selectedPage.prizes.map((prize, index) => (
-    <div
-      key={index}
-      className="bg-[#121218] border border-[#C33AFF]/20 rounded-lg p-4 space-y-4 relative"
+  <div
+    key={index}
+    className="bg-[#121218] border border-[#C33AFF]/20 rounded-lg p-4 space-y-4 relative"
+  >
+    {/* Remove Prize Button */}
+    <button
+      onClick={() =>
+        setSelectedPage({
+          ...selectedPage,
+          prizes: selectedPage.prizes.filter((_, i) => i !== index),
+        })
+      }
+      className="absolute top-2 right-2 bg-[#FF4D4D] text-white px-2 py-1 rounded-full hover:bg-[#FF3333] transition"
+      title="Remove Prize"
     >
-      {/* Remove Prize Button */}
-      <button
-        onClick={() =>
-          setSelectedPage({
-            ...selectedPage,
-            prizes: selectedPage.prizes.filter((_, i) => i !== index),
-          })
-        }
-        className="absolute top-2 right-2 bg-[#FF4D4D] text-white px-2 py-1 rounded-full hover:bg-[#FF3333] transition"
-        title="Remove Prize"
-      >
-        ✕
-      </button>
+      ✕
+    </button>
 
-      {/* Prize Text */}
-      <TextInput
-        label="Prize Text"
-        value={prize.text || ''}
-        onChange={(value) =>
+    {/* Prize Text */}
+    <TextInput
+      label="Prize Text"
+      value={prize.text || ''}
+      onChange={(value) =>
+        setSelectedPage({
+          ...selectedPage,
+          prizes: selectedPage.prizes.map((p, i) =>
+            i === index ? { ...p, text: value } : p
+          ),
+        })
+      }
+    />
+
+    {/* Bonus Code */}
+    <TextInput
+      label="Bonus Code"
+      value={prize.bonusCode || ''}
+      onChange={(value) =>
+        setSelectedPage({
+          ...selectedPage,
+          prizes: selectedPage.prizes.map((p, i) =>
+            i === index ? { ...p, bonusCode: value } : p
+          ),
+        })
+      }
+    />
+
+    {/* Expiration Date */}
+    <div>
+      <label className="block text-sm font-medium text-[#D3D3DF] mb-1">
+        Expiration Date
+      </label>
+      <input
+        type="date"
+        value={prize.expirationDate ? new Date(prize.expirationDate).toISOString().split('T')[0] : ''}
+        onChange={(e) =>
           setSelectedPage({
             ...selectedPage,
             prizes: selectedPage.prizes.map((p, i) =>
-              i === index ? { ...p, text: value } : p
+              i === index ? { ...p, expirationDate: e.target.value } : p
             ),
           })
         }
+        className="w-full px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF]"
       />
+    </div>
 
-      {/* Gradient Toggle */}
-      <div className="flex items-center space-x-4">
-        <label className="text-sm font-medium text-[#D3D3DF]">Enable Gradient</label>
-        <input
-          type="checkbox"
-          checked={prize.gradient || false}
+    {/* Redirect URL */}
+    <TextInput
+      label="Redirect URL"
+      value={prize.redirectUrl || ''}
+      onChange={(value) =>
+        setSelectedPage({
+          ...selectedPage,
+          prizes: selectedPage.prizes.map((p, i) =>
+            i === index ? { ...p, redirectUrl: value } : p
+          ),
+        })
+      }
+    />
+
+    {/* Gradient Toggle */}
+    <div className="flex items-center space-x-4">
+      <label className="text-sm font-medium text-[#D3D3DF]">Enable Gradient</label>
+      <input
+        type="checkbox"
+        checked={prize.gradient || false}
+        onChange={(e) =>
+          setSelectedPage({
+            ...selectedPage,
+            prizes: selectedPage.prizes.map((p, i) =>
+              i === index ? { ...p, gradient: e.target.checked } : p
+            ),
+          })
+        }
+        className="w-5 h-5"
+      />
+    </div>
+
+    {/* Gradient Colors and Direction */}
+    {prize.gradient && (
+      <>
+        <ColorPicker
+          label="Gradient Start Color"
+          value={prize.gradientStart || '#6C63FF'}
+          onChange={(value) =>
+            setSelectedPage({
+              ...selectedPage,
+              prizes: selectedPage.prizes.map((p, i) =>
+                i === index ? { ...p, gradientStart: value } : p
+              ),
+            })
+          }
+        />
+        <ColorPicker
+          label="Gradient End Color"
+          value={prize.gradientEnd || '#4B4AC9'}
+          onChange={(value) =>
+            setSelectedPage({
+              ...selectedPage,
+              prizes: selectedPage.prizes.map((p, i) =>
+                i === index ? { ...p, gradientEnd: value } : p
+              ),
+            })
+          }
+        />
+        <Select
+          label="Gradient Direction"
+          value={prize.gradientDirection || 'to bottom'}
           onChange={(e) =>
             setSelectedPage({
               ...selectedPage,
               prizes: selectedPage.prizes.map((p, i) =>
-                i === index ? { ...p, gradient: e.target.checked } : p
+                i === index ? { ...p, gradientDirection: e.target.value } : p
               ),
             })
           }
-          className="w-5 h-5"
+          className="bg-[#1B1B21] text-[#C33AFF] px-4 py-2 rounded-lg"
+        >
+          <SelectItem value="to top">To Top</SelectItem>
+          <SelectItem value="to bottom">To Bottom</SelectItem>
+          <SelectItem value="to left">To Left</SelectItem>
+          <SelectItem value="to right">To Right</SelectItem>
+          <SelectItem value="to top left">To Top Left</SelectItem>
+          <SelectItem value="to top right">To Top Right</SelectItem>
+          <SelectItem value="to bottom left">To Bottom Left</SelectItem>
+          <SelectItem value="to bottom right">To Bottom Right</SelectItem>
+        </Select>
+      </>
+    )}
+
+    {/* Color and Probability */}
+    <div className="grid grid-cols-2 gap-4">
+      <div>
+        <label className="block text-sm font-medium text-[#D3D3DF] mb-1">Color</label>
+        <input
+          type="color"
+          value={prize.color}
+          onChange={(e) =>
+            setSelectedPage({
+              ...selectedPage,
+              prizes: selectedPage.prizes.map((p, i) =>
+                i === index ? { ...p, color: e.target.value } : p
+              ),
+            })
+          }
+          className="w-full h-10 px-1 py-1 bg-[#121218] border border-[#C33AFF]/20 rounded-lg"
         />
       </div>
-
-      {/* Gradient Colors and Direction */}
-      {prize.gradient && (
-        <>
-          <ColorPicker
-            label="Gradient Start Color"
-            value={prize.gradientStart || '#6C63FF'}
-            onChange={(value) =>
-              setSelectedPage({
-                ...selectedPage,
-                prizes: selectedPage.prizes.map((p, i) =>
-                  i === index ? { ...p, gradientStart: value } : p
-                ),
-              })
-            }
-          />
-          <ColorPicker
-            label="Gradient End Color"
-            value={prize.gradientEnd || '#4B4AC9'}
-            onChange={(value) =>
-              setSelectedPage({
-                ...selectedPage,
-                prizes: selectedPage.prizes.map((p, i) =>
-                  i === index ? { ...p, gradientEnd: value } : p
-                ),
-              })
-            }
-          />
-          <Select
-            label="Gradient Direction"
-            value={prize.gradientDirection || 'to bottom'}
-            onChange={(e) =>
-              setSelectedPage({
-                ...selectedPage,
-                prizes: selectedPage.prizes.map((p, i) =>
-                  i === index ? { ...p, gradientDirection: e.target.value } : p
-                ),
-              })
-            }
-            className="bg-[#1B1B21] text-[#C33AFF] px-4 py-2 rounded-lg"
-          >
-            <SelectItem value="to top">To Top</SelectItem>
-            <SelectItem value="to bottom">To Bottom</SelectItem>
-            <SelectItem value="to left">To Left</SelectItem>
-            <SelectItem value="to right">To Right</SelectItem>
-            <SelectItem value="to top left">To Top Left</SelectItem>
-            <SelectItem value="to top right">To Top Right</SelectItem>
-            <SelectItem value="to bottom left">To Bottom Left</SelectItem>
-            <SelectItem value="to bottom right">To Bottom Right</SelectItem>
-          </Select>
-        </>
-      )}
-
-      {/* Color and Probability */}
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-[#D3D3DF] mb-1">Color</label>
-          <input
-            type="color"
-            value={prize.color}
-            onChange={(e) =>
-              setSelectedPage({
-                ...selectedPage,
-                prizes: selectedPage.prizes.map((p, i) =>
-                  i === index ? { ...p, color: e.target.value } : p
-                ),
-              })
-            }
-            className="w-full h-10 px-1 py-1 bg-[#121218] border border-[#C33AFF]/20 rounded-lg"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-[#D3D3DF] mb-1">
-            Probability (0-1)
-          </label>
-          <input
-            type="number"
-            min="0"
-            max="1"
-            step="0.1"
-            value={prize.probability}
-            onChange={(e) =>
-              setSelectedPage({
-                ...selectedPage,
-                prizes: selectedPage.prizes.map((p, i) =>
-                  i === index
-                    ? { ...p, probability: parseFloat(e.target.value) }
-                    : p
-                ),
-              })
-            }
-            className="w-full px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF]"
-          />
-        </div>
+      <div>
+        <label className="block text-sm font-medium text-[#D3D3DF] mb-1">
+          Probability (0-1)
+        </label>
+        <input
+          type="number"
+          min="0"
+          max="1"
+          step="0.1"
+          value={prize.probability}
+          onChange={(e) =>
+            setSelectedPage({
+              ...selectedPage,
+              prizes: selectedPage.prizes.map((p, i) =>
+                i === index
+                  ? { ...p, probability: parseFloat(e.target.value) }
+                  : p
+              ),
+            })
+          }
+          className="w-full px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF]"
+        />
       </div>
     </div>
-  ))}
+  </div>
+))}
+
 {/* Toggle for Winning Music */}
 <div className="flex items-center space-x-4 mb-6">
   <label className="text-sm font-medium text-[#D3D3DF]">
@@ -767,6 +816,8 @@ export const UserDashboard: React.FC = () => {
     </Select>
   </>
 )}
+
+
 
 
   {/* Add Prize Button */}
