@@ -7,7 +7,7 @@ import { api_Url } from '../../config';
 export const AdminDashboard: React.FC = () => {
   const [isSetup, setIsSetup] = useState<boolean | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  const [isLoggedOut, setIsLoggedOut] = useState(true);
   // Check if the admin is already set up
   useEffect(() => {
     const checkAdminSetup = async () => {
@@ -44,12 +44,13 @@ export const AdminDashboard: React.FC = () => {
     );
   }
 
-  if (!isLoggedIn) {
+  if (!isLoggedIn||isLoggedOut) {
     return (
       <AdminLogin
         onLogin={() => {
           console.log('Admin logged in');
           setIsLoggedIn(true);
+          setIsLoggedOut(false);
         }}
       />
     );
@@ -58,7 +59,11 @@ export const AdminDashboard: React.FC = () => {
   return (
     <>
       <Toaster position="top-center" />
-      <AdminPanel />
+      <AdminPanel 
+      onLogout={() => {
+        console.log('Admin logged out');
+        setIsLoggedOut(true);
+      }} />
     </>
   );
 };

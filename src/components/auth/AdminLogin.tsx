@@ -84,7 +84,7 @@ export const AdminLogin: React.FC<Props> = ({ onLogin }) => {
               <Button onClick={() => setStep('credentials')} className="w-full bg-purple-900 text-white hover:bg-purple-950">
                 Back
               </Button>
-              <Button type="submit" className="w-full bg-purple-900 text-white hover:bg-950" disabled={twoFactorToken.length !== 6}>
+              <Button type="submit" className="w-full bg-purple-900 text-white hover:bg-purple-950" disabled={twoFactorToken.length !== 6}>
                 Verify
               </Button>
             </div>

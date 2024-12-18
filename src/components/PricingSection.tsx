@@ -68,7 +68,7 @@ const PricingSection: React.FC<{ pricing: any }> = ({ pricing }) => {
 
   {/* Save 33% Badge */}
   <span
-    className="bg-[#9D50FF] text-white text-xs font-bold px-2 py-1 rounded-lg shadow-md"
+    className="bg-[#9D50FF] text-white text-xs font-bold px-2 py-1 rounded-lg shadow-md bg-gradient-to-r from-purple-700 to-purple-400  to-slate-300"
   >
     {pricing.plans[0].planText || "Save 33%"}
   </span>

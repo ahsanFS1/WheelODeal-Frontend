@@ -96,7 +96,7 @@ export const LoginForm: React.FC = () => {
           <div className='flex justify-center'>
             <Button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-[#C33AFF] text-[#D3D3DF] bg-[#1B1B21] hover:bg-[#C33AFF] hover:text-white transition-all duration-200 text-sm font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#C33AFF]"
+              className="group relative w-full flex justify-center py-2 px-4 border border-[#C33AFF] text-white bg-purple-900 hover:bg-purple-950 hover:text-white transition-all duration-200 text-sm font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#C33AFF]"
             >
               Access Dashboard
             </Button>

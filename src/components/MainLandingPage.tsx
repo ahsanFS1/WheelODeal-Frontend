@@ -290,7 +290,7 @@ export const MainLandingPage: React.FC = () => {
           {landingPage.features.items.map((feature, index) => (
             <div
               key={index}
-              className="bg-[#1B1B21] p-4 sm:p-6 rounded-lg shadow-lg hover:shadow-xl transition-all"
+              className="bg-[#1B1B21] p-4 sm:p-6 rounded-lg shadow-lg hover:shadow-lg hover:shadow-purple-500/20 transition-all"
             >
               <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#C33AFF] rounded-lg flex items-center justify-center mb-4">
                 {renderIcon(feature.icon)}
