@@ -189,28 +189,30 @@ export const UserDashboard: React.FC = () => {
     <div className="min-h-screen bg-[#121218] overflow-x-hidden">
       <Toaster position="top-center" />
       <header className="bg-[#1B1B21] shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-[#D3D3DF] flex items-center gap-2">
-            <Settings className="w-8 h-8 text-[#C33AFF]" />
-            Project Configuration
-          </h1>
-          <div className="flex items-center gap-4">
-            <Button
-              onClick={handleSave}
-              className="flex items-center gap-2 bg-[#1B1B21] text-[#C33AFF] border border-[#C33AFF] hover:bg-[#C33AFF] hover:text-purple-900 transition-all duration-200"
-            >
-              Save Changes
-            </Button>
-            <Button
-              onClick={handleLogout}
-              variant="outline"
-              className="flex items-center gap-2 bg-[#1B1B21] border-[#C33AFF] text-[#C33AFF] hover:bg-[#C33AFF] hover:text-white"
-            >
-              Logout
-            </Button>
-          </div>
-        </div>
-      </header>
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap justify-between items-center gap-4">
+    <h1 className="text-3xl font-bold text-[#D3D3DF] flex items-center gap-2">
+      <Settings className="w-8 h-8 text-[#C33AFF]" />
+      Project Configuration
+    </h1>
+    <div className="flex flex-wrap items-center gap-4">
+      <Button
+        onClick={handleSave}
+        className="flex items-center gap-2 bg-[#1B1B21] text-[#C33AFF] border border-[#C33AFF] hover:bg-[#C33AFF] hover:text-purple-900 transition-all duration-200"
+      >
+        Save Changes
+      </Button>
+      <Button
+        onClick={handleLogout}
+        variant="outline"
+        className="flex items-center gap-2 bg-[#1B1B21] border-[#C33AFF] text-[#C33AFF] hover:bg-[#C33AFF] hover:text-white"
+      >
+        <LogOut className="w-4 h-4" />
+        Logout
+      </Button>
+    </div>
+  </div>
+</header>
+
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-4 mb-6">
@@ -436,37 +438,30 @@ export const UserDashboard: React.FC = () => {
                       format: 'JPG, PNG',
                     }}
                   />
-                  <div className="grid grid-cols-2 gap-4">
-                    {selectedPage.carouselImages.map((image: {url: string, alt: string}, index: number) => (
-                      <a
-                        
-                       
-                        key={index}
-                        className="relative"
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {selectedPage.carouselImages.map((image: { url: string; alt: string }, index: number) => (
+                    <div key={index} className="relative group">
+                      <img
+                        src={image.url}
+                        alt={`Carousel ${index + 1}`}
+                        className="w-full aspect-video object-cover rounded-lg"
+                      />
+                      <button
+                        onClick={() =>
+                          setSelectedPage({
+                            ...selectedPage,
+                            carouselImages: selectedPage.carouselImages.filter((_, i) => i !== index),
+                          })
+                        }
+                        className="absolute top-2 right-2 px-2 py-1 bg-red-600 text-white text-sm rounded-lg shadow-lg opacity-90 "
+                        title="Remove"
                       >
-                        <img
-                          src={image.url}
-                          alt={`Carousel ${index + 1}`}
-                          className="w-full aspect-video object-cover rounded-lg"
-                        />
-                        <Button
-                          onClick={() =>
-                            setSelectedPage({
-                              ...selectedPage,
-                              carouselImages: selectedPage.carouselImages.filter(
-                                (_, i) => i !== index
-                              ),
-                            })
-                          }
-                          variant="destructive"
-                          size="sm"
-                          className="absolute top-2 right-2"
-                        >
-                          Remove
-                        </Button>
-                      </a>
-                    ))}
-                  </div>
+                        Remove
+                      </button>
+                    </div>
+                  ))}
+                </div>
+
                 </div>
                 <div>
                   <h2 className="text-xl font-semibold mb-6 text-[#D3D3DF]">Preview</h2>
