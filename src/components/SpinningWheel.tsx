@@ -39,12 +39,12 @@ export const SpinningWheel: React.FC<Props> = ({
   const sounds = useRef({
     spin: new Howl({
       src: ["/assets/spin_sound.mp3"],
-      loop: true,
-      volume: 0.5,
+      loop: false,
+      volume: 0.3,
     }),
     win: new Howl({
       src: ["/assets/prize_won.mp3"],
-      volume: 0.5,
+      volume: 0.3,
     }),
   });
 
@@ -183,7 +183,7 @@ export const SpinningWheel: React.FC<Props> = ({
     gsap.to(currentRotation, {
       current: targetRotation,
       
-      duration: 13,
+      duration: 11,
       ease: "power4.out",
       onUpdate: drawWheel,
       onComplete: () => {
