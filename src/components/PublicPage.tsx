@@ -13,10 +13,24 @@ export const PublicPage: React.FC = () => {
   const [config, setConfig] = useState<any>(null);
   const [isFetching, setIsFetching] = useState(false);
   const [spinResult, setSpinResult] = useState<SpinResult | null>(null);
+  const [isMobile, setIsMobile] = useState(false); // State to track if the device is mobile
   
  
   const measurementId = 'G-28B7K98MKT'; // Replace with your GA4 Measurement ID
 
+
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth <= 768); // 768px breakpoint for mobile
+    };
+    
+    checkIfMobile(); // Initial check
+    window.addEventListener('resize', checkIfMobile); // Update on resize
+    
+    return () => {
+      window.removeEventListener('resize', checkIfMobile); // Clean up on component unmount
+    };
+  }, []);
   // Load gtag.js dynamically
   useEffect(() => {
     const loadGtag = () => {
@@ -184,16 +198,16 @@ const handleSpinEnd = async (result: SpinResult) => {
   return (
     <div className="min-h-screen bg-[#121218] text-white relative">
       {/* Background Image */}
-      {config.backgroundImage && (
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: `url(${config.backgroundImage})`,
-            filter: 'blur(2px) brightness(0.7)',
-            zIndex: 0, // Background layer
-          }}
-        ></div>
-      )}
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage: `url(${isMobile && config.mobileBackgroundImage ? config.mobileBackgroundImage : config.backgroundImage})`,
+          zIndex: 0, // Background layer
+          backgroundAttachment: 'fixed',  // Keep background fixed
+          backgroundSize: 'cover',  // Ensure it covers the whole screen
+          backgroundPosition: 'center',  // Center the image
+        }}
+      ></div>
   
       {/* Main Content */}
       <div className="relative z-10">
@@ -211,36 +225,26 @@ const handleSpinEnd = async (result: SpinResult) => {
         {/* Hero Section */}
         <section className="py-8 text-center">
           <div className="max-w-4xl mx-auto px-4">
-             {/* Render headerTitle */}
-          <h1
-            className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-shadow-lg"
-            style={{
-              fontSize: "clamp(2rem, 5vw, 4.5rem)",
-            }}
-            dangerouslySetInnerHTML={{
-              __html: config.headerTitle || "Your Amazing Headline",
-            }}
-          />
-
-          {/* Render subtitle */}
-          <p
-            className="text-lg md:text-xl lg:text-2xl mb-8"
-            style={{
-              lineHeight: "1.8",
-            }}
-            dangerouslySetInnerHTML={{
-              __html: config.subtitle || "Your Subheadline Goes Here",
-            }}
-          />
+            <h1
+              className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-shadow-lg"
+              style={{
+                fontSize: "clamp(2rem, 5vw, 4.5rem)",
+              }}
+              dangerouslySetInnerHTML={{
+                __html: config.headerTitle || "Your Amazing Headline",
+              }}
+            />
+            <p
+              className="text-lg md:text-xl lg:text-2xl mb-8"
+              style={{
+                lineHeight: "1.8",
+              }}
+              dangerouslySetInnerHTML={{
+                __html: config.subtitle || "Your Subheadline Goes Here",
+              }}
+            />
           </div>
         </section>
-
-
-
-
-
-
-
   
         {/* Product Carousel Section */}
         {config.carouselImages && config.carouselImages.length > 0 && (
@@ -251,36 +255,31 @@ const handleSpinEnd = async (result: SpinResult) => {
           </section>
         )}
   
-
-
-    {config.videoId && (
-        <section id='video' className="py-8">
-      <motion.div
-        className="px-auto py-20 container mx-auto px-4"
-        initial="initial"
-        whileInView="animate"
-        variants={fadeIn}
-        viewport={{ once: true }}
-      >
-        
-
-        <div className="max-w-4xl mx-auto">
-          {/* Embed a random YouTube video */}
-          <iframe
-            width="100%"
-            height="500"
-            src={`https://www.youtube.com/embed/${config.videoId}`}
-            title="Random YouTube Video"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            className="rounded-lg shadow-xl"
-          ></iframe>
-        </div>
-      </motion.div>
-    </section>
-    )}
-        
+        {config.videoId && (
+          <section id="video" className="py-8">
+            <motion.div
+              className="px-auto py-20 container mx-auto px-4"
+              initial="initial"
+              whileInView="animate"
+              variants={fadeIn}
+              viewport={{ once: true }}
+            >
+              <div className="max-w-4xl mx-auto">
+                <iframe
+                  width="100%"
+                  height="500"
+                  src={`https://www.youtube.com/embed/${config.videoId}`}
+                  title="Random YouTube Video"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="rounded-lg shadow-xl"
+                ></iframe>
+              </div>
+            </motion.div>
+          </section>
+        )}
+  
         {/* Wheel Section */}
         <section className="py-8">
           <div className="max-w-4xl mx-auto px-4">
@@ -289,133 +288,122 @@ const handleSpinEnd = async (result: SpinResult) => {
                 prizes={config.prizes}
                 onSpinEnd={handleSpinEnd}
                 disabled={!!spinResult}
-                music= {config.musicEnabled}
-                button = {config.wheelButton}
+                music={config.musicEnabled}
+                button={config.wheelButton}
               />
             </div>
-          
-          {/* Bonus Code Display */}
-{spinResult && (
-  <div className="mt-12 text-center">
-    <div className="inline-block bg-purple-900/20 rounded-lg p-6 shadow-md shadow-purple-500/30 transition-transform hover:scale-105">
-      <p className="text-xl text-gray-300">🎉 Bonus Code 🎉</p>
-      <p className="text-3xl font-bold text-purple-400 mt-2 tracking-widest animate-pulse">
-        {spinResult?.prize.bonusCode}
-      </p>
-      
-      <p className="text-sm text-gray-300 italic mt-2">
-        Use this code to claim your reward!
-      </p>
-
-      <div className="mt-6 border-t border-purple-500/30 pt-4">
-        <p className="text-sm text-gray-300">Expiring In:</p>
-        <br></br>
-        <p className="text-lg font-semibold text-white">
-          <CountdownTimer expiryTimestamp={new Date(spinResult?.prize.expirationDate).getTime()} />
-        </p>
-      </div>
-
-      {/* Decorative Glow */}
-        </div>
-  </div>
-)}
-
+  
+            {/* Bonus Code Display */}
             {spinResult && (
-            <div className="mt-10 text-center">
-            <div className="bg-purple-900/20 rounded-lg p-6 inline-block">
-              <h3 className="text-xl font-bold mb-4">
-                Congratulations! You won:{" "}
-                <span
-                  dangerouslySetInnerHTML={{
-                    __html: spinResult.prize.text || "Your Prize!",
-                  }}
-                />
-              </h3>
-              <div className="flex justify-center mt-4">
-                <a
-                  href={spinResult.prize?.redirectUrl || "#"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block rounded-lg transition-all duration-200"
-                  style={{
-                    padding:
-                      config.finalCta?.size === 'small'
-                        ? '8px 16px'
-                        : config.finalCta?.size === 'large'
-                        ? '14px 28px'
-                        : '10px 20px',
-                    fontSize:
-                      config.finalCta?.size === 'small'
-                        ? '12px'
-                        : config.finalCta?.size === 'large'
-                        ? '18px'
-                        : '16px',
-                            background: config.finalCta?.gradient
-                      ? `linear-gradient(${config.finalCta.gradientStart}, ${config.finalCta.gradientEnd})`
-                      : config.finalCta?.backgroundColor || "#4CAF50",
-                    color: config.finalCta?.textColor || "#ffffff",
-                    textAlign: "center",
-                    textDecoration: "none",
-                    width: "fit-content",
-                    cursor: "pointer",
-                  }}
-                  onClick={async (e) => {
-                    e.preventDefault();
-                    try {
-                      await handleClaim();
-                      window.open(spinResult.prize?.redirectUrl || "#", "_blank");
-                    } catch (error) {
-                      console.error("Error handling claim:", error);
-                      alert("Failed to claim the prize.");
-                    }
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.backgroundColor =
-                      config.finalCta?.hoverColor || "#45a049")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.backgroundColor =
-                      config.finalCta?.backgroundColor || "#4CAF50")
-                  }
-                >
-                  {config.finalCta?.text || "Claim Offer"}
-                </a>
+              <div className="mt-12 text-center">
+                <div className="inline-block bg-purple-900/20 rounded-lg p-6 shadow-md shadow-purple-500/30 transition-transform hover:scale-105">
+                  <p className="text-xl text-gray-300">🎉 Bonus Code 🎉</p>
+                  <p className="text-3xl font-bold text-purple-400 mt-2 tracking-widest animate-pulse">
+                    {spinResult?.prize.bonusCode}
+                  </p>
+                  <p className="text-sm text-gray-300 italic mt-2">
+                    Use this code to claim your reward!
+                  </p>
+                  <div className="mt-6 border-t border-purple-500/30 pt-4">
+                    <p className="text-sm text-gray-300">Expiring In:</p>
+                    <br />
+                    <p className="text-lg font-semibold text-white">
+                      <CountdownTimer
+                        expiryTimestamp={new Date(spinResult?.prize.expirationDate).getTime()}
+                      />
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+            )}
+  
+            {spinResult && (
+              <div className="mt-10 text-center">
+                <div className="bg-purple-900/20 rounded-lg p-6 inline-block">
+                  <h3 className="text-xl font-bold mb-4">
+                    Congratulations! You won:{" "}
+                    <span
+                      dangerouslySetInnerHTML={{
+                        __html: spinResult.prize.text || "Your Prize!",
+                      }}
+                    />
+                  </h3>
+                  <div className="flex justify-center mt-4">
+                    <a
+                      href={spinResult.prize?.redirectUrl || "#"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block rounded-lg transition-all duration-200"
+                      style={{
+                        padding:
+                          config.finalCta?.size === "small"
+                            ? "8px 16px"
+                            : config.finalCta?.size === "large"
+                            ? "14px 28px"
+                            : "10px 20px",
+                        fontSize:
+                          config.finalCta?.size === "small"
+                            ? "12px"
+                            : config.finalCta?.size === "large"
+                            ? "18px"
+                            : "16px",
+                        background: config.finalCta?.gradient
+                          ? `linear-gradient(${config.finalCta.gradientStart}, ${config.finalCta.gradientEnd})`
+                          : config.finalCta?.backgroundColor || "#4CAF50",
+                        color: config.finalCta?.textColor || "#ffffff",
+                        textAlign: "center",
+                        textDecoration: "none",
+                        width: "fit-content",
+                        cursor: "pointer",
+                      }}
+                      onClick={async (e) => {
+                        e.preventDefault();
+                        try {
+                          await handleClaim();
+                          window.open(spinResult.prize?.redirectUrl || "#", "_blank");
+                        } catch (error) {
+                          console.error("Error handling claim:", error);
+                          alert("Failed to claim the prize.");
+                        }
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.backgroundColor =
+                          config.finalCta?.hoverColor || "#45a049")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.backgroundColor =
+                          config.finalCta?.backgroundColor || "#4CAF50")
+                      }
+                    >
+                      {config.finalCta?.text || "Claim Offer"}
+                    </a>
+                  </div>
+                </div>
+              </div>
             )}
           </div>
         </section>
-        {/*Final CTA Section*/}
-
-        
-       
-            
-     
+  
         {/* Footer Section */}
         <footer className="text-gray-400 py-8 mt-8">
-                
-        <div className="max-w-7xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-              <div dangerouslySetInnerHTML={{
-                  __html: config.footer || "<p>Footer Preview will appear here...</p>",
-                
-                }}
-              />
-            </div>
-
-
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-             
-              <div className="mt-4 border-t border-gray-700 pt-4 text-center text-xs text-gray-500"
-             
-             dangerouslySetInnerHTML={{
-               __html: config.lowerFooter || "<p>Preview will appear here...</p>",
-            
-                }}
-              />
-            </div>
-          </footer>
+          <div className="max-w-7xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+            <div
+              dangerouslySetInnerHTML={{
+                __html: config.footer || "<p>Footer Preview will appear here...</p>",
+              }}
+            />
+          </div>
+  
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div
+              className="mt-4 border-t border-gray-700 pt-4 text-center text-xs text-white"
+              dangerouslySetInnerHTML={{
+                __html: config.lowerFooter || "<p>Preview will appear here...</p>",
+              }}
+            />
+          </div>
+        </footer>
       </div>
     </div>
   );
-};
+};  

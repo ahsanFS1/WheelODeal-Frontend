@@ -38,13 +38,13 @@ export const SpinningWheel: React.FC<Props> = ({
   // Sound effects
   const sounds = useRef({
     spin: new Howl({
-      src: [""],
+      src: ["/assets/spin_sound.mp3"],
       loop: true,
       volume: 0.5,
     }),
     win: new Howl({
       src: ["/assets/prize_won.mp3"],
-      volume: 0.7,
+      volume: 0.5,
     }),
   });
 
@@ -96,7 +96,7 @@ export const SpinningWheel: React.FC<Props> = ({
       context.fill();
   
       // Draw slice border
-      context.strokeStyle = "#8B5CF6";
+      context.strokeStyle = "#d8a63d";
       context.lineWidth = 2;
       context.stroke();
   
@@ -135,7 +135,7 @@ export const SpinningWheel: React.FC<Props> = ({
     // Draw outer ring
     context.beginPath();
     context.arc(0, 0, radius + 2, 0, 2 * Math.PI);
-    context.strokeStyle = "#8B5CF6";
+    context.strokeStyle = "#d8a63d";
     context.lineWidth = 6;
     context.stroke();
   
@@ -163,8 +163,10 @@ export const SpinningWheel: React.FC<Props> = ({
   };
 
   const spin = () => {
+    
     if (isSpinning || disabled || !prizes.length) return;
-
+    console.log("Playing: ",sounds.current.spin.play())
+    {sounds.current.spin.play()};
     setIsSpinning(true);
     const prize = getRandomPrize();
     const prizeIndex = prizes.findIndex((p) => p.id === prize.id);
@@ -173,14 +175,15 @@ export const SpinningWheel: React.FC<Props> = ({
     const sliceAngle = (2 * Math.PI) / prizes.length;
     const targetRotation =
       currentRotation.current +
-      Math.PI * 10 + // Full spins
+      Math.PI * 20 + // Full spins
       (-((prizeIndex * sliceAngle) + sliceAngle / 2) - Math.PI / 2);
 
     
 
     gsap.to(currentRotation, {
       current: targetRotation,
-      duration: 6,
+      
+      duration: 13,
       ease: "power4.out",
       onUpdate: drawWheel,
       onComplete: () => {

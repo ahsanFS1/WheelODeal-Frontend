@@ -34,6 +34,7 @@ export const UserDashboard: React.FC = () => {
   const [isFetching, setIsFetching] = useState(false);
   const [planDetails, setPlanDetails] = useState(null);
   const [remainingPages, setRemainingPages] = useState(0);
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false); // State to control the confirmation dialog
   const [newPageName, setNewPageName] = useState('');
   const [showPreview, setShowPreview] = useState(null);
   useEffect(() => {
@@ -100,6 +101,7 @@ export const UserDashboard: React.FC = () => {
         setRemainingPages(remainingPages - 1);
         setSelectedPage(data.data);
         setNewPageName('');
+        window.location.reload();
       } else {
         toast.error('Failed to create a public page.');
       }
@@ -184,6 +186,27 @@ export const UserDashboard: React.FC = () => {
   if (isFetching) {
     return <div className="min-h-screen flex items-center justify-center text-white">Loading...</div>;
   }
+
+  const handleDeletePage = async () => {
+    if (!selectedPage.publicPageId) return;
+
+    try {
+      const response = await fetch(`${api_Url}/api/public-page/${selectedPage.publicPageId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        // Remove the deleted page from the state
+        setPublicPages(publicPages.filter((page) => page.publicPageId !== selectedPage.publicPageId));
+        setSelectedPage({ publicPageId: '', publicPageName: '' }); // Clear selected page
+        window.location.reload();
+      } else {
+        alert('Failed to delete page');
+      }
+    } catch (error) {
+      alert('Error deleting page');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#121218] overflow-x-hidden">
@@ -276,7 +299,49 @@ export const UserDashboard: React.FC = () => {
             Create New Public Page
           </Button>
         </div>
+          <br></br>
+        <h2 className="text-xl font-semibold text-[#D3D3DF]">Rename Project</h2>
+        <div className="space-y-4">
+        <TextInput
+          label=""
+          value={selectedPage.publicPageName || ''}
+          onChange={(value) =>
+            setSelectedPage({
+              ...selectedPage,
+              publicPageName: value, // Directly assign the string value
+            })
+          }
+        />
+         <Button
+          onClick={() => setIsConfirmingDelete(true)} // Trigger the confirmation dialog
+          className=" bg-red-600 text-white hover:bg-red-500"
+        >
+          Delete Page
+        </Button>
 
+        {isConfirmingDelete && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-70 z-10">
+          <div className="bg-gray-800 p-6 rounded-lg shadow-lg text-center">
+            <h3 className="text-xl font-semibold mb-4">Are you sure you want to delete this page? All the Data from this Page will be lost!</h3>
+            <Button
+              onClick={handleDeletePage}
+              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-500"
+            >
+              Yes, Delete
+            </Button>
+            <Button
+              onClick={() => setIsConfirmingDelete(false)} // Close the dialog without deleting
+              className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 ml-4"
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
+      )}
+
+
+
+       </div>
     
         <Tabs.Root defaultValue="general" className="space-y-8 py-6">
          {/* Horizontal Scrolling Tabs */}
@@ -364,6 +429,17 @@ export const UserDashboard: React.FC = () => {
                       recommendations={{
                         maxSize: 1,
                         dimensions: '1920x1080px',
+                        format: 'JPG, PNG',
+                      }}
+                    />
+                     <ImageUpload
+                      label="Mobile Background Image"
+                      type="publicpage"
+                      currentImage={selectedPage.mobileBackgroundImage}
+                      onUpload={(url) => setSelectedPage({ ...selectedPage, mobileBackgroundImage: url })}
+                      recommendations={{
+                        maxSize: 1,
+                        dimensions: '1080x1920px', // Mobile resolution recommendations
                         format: 'JPG, PNG',
                       }}
                     />
@@ -545,24 +621,50 @@ export const UserDashboard: React.FC = () => {
     />
 
     {/* Expiration Date */}
-    <div>
-      <label className="block text-sm font-medium text-[#D3D3DF] mb-1">
-        Expiration Date
-      </label>
-      <input
-        type="date"
-        value={prize.expirationDate ? new Date(prize.expirationDate).toISOString().split('T')[0] : ''}
-        onChange={(e) =>
-          setSelectedPage({
-            ...selectedPage,
-            prizes: selectedPage.prizes.map((p, i) =>
-              i === index ? { ...p, expirationDate: e.target.value } : p
-            ),
-          })
-        }
-        className="w-full px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF]"
-      />
-    </div>
+  {/* Expiration Date */}
+{/* Expiration Date */}
+{/* Expiration Date */}
+<div>
+  <label className="block text-sm font-medium text-[#D3D3DF] mb-1">
+    Expiration Date
+  </label>
+  <input
+    type="date"
+    min={new Date().toISOString().split('T')[0]} // Set today's date as the minimum
+    value={prize.expirationDate ? new Date(prize.expirationDate).toISOString().split('T')[0] : ''}
+    onChange={(e) => {
+      const selectedDate = e.target.value; // Raw value in YYYY-MM-DD format
+      const today = new Date().toISOString().split('T')[0]; // Today's date in YYYY-MM-DD format
+
+      if (selectedDate < today) {
+        // Set the error message in the state
+        setSelectedPage({
+          ...selectedPage,
+          prizes: selectedPage.prizes.map((p, i) =>
+            i === index ? { ...p, error: 'Expiration date cannot be in the past.' } : p
+          ),
+        });
+      } else {
+        // Clear the error message and update the date
+        setSelectedPage({
+          ...selectedPage,
+          prizes: selectedPage.prizes.map((p, i) =>
+            i === index ? { ...p, expirationDate: selectedDate, error: '' } : p
+          ),
+        });
+      }
+    }}
+    className="w-full px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF]"
+  />
+  {/* Display error message */}
+  {prize.error && (
+    <p className="text-sm text-red-500 mt-1">
+      {prize.error}
+    </p>
+  )}
+</div>
+
+
 
     {/* Redirect URL */}
     <TextInput
@@ -676,19 +778,28 @@ export const UserDashboard: React.FC = () => {
           max="1"
           step="0.1"
           value={prize.probability}
-          onChange={(e) =>
-            setSelectedPage({
-              ...selectedPage,
-              prizes: selectedPage.prizes.map((p, i) =>
-                i === index
-                  ? { ...p, probability: parseFloat(e.target.value) }
-                  : p
-              ),
-            })
-          }
+          onChange={(e) => {
+            const inputValue = parseFloat(e.target.value);
+
+            if (!isNaN(inputValue) && inputValue >= 0 && inputValue <= 1) {
+              // Valid input: Update probability
+              setSelectedPage({
+                ...selectedPage,
+                prizes: selectedPage.prizes.map((p, i) =>
+                  i === index ? { ...p, probability: inputValue } : p
+                ),
+              });
+              e.target.setCustomValidity(''); // Clear error message
+            } else {
+              // Invalid input: Set error message
+              e.target.setCustomValidity('Probability must be between 0 and 1.');
+              e.target.reportValidity(); // Trigger browser to show the message
+            }
+          }}
           className="w-full px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF]"
         />
       </div>
+
     </div>
   </div>
 ))}

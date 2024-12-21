@@ -7,6 +7,8 @@ import { LoginForm } from './components/auth/LoginForm';
 import { UserDashboard } from './components/UserDashboard';
 
 import { AnalyticsDashboard } from './components/analytics/AnalyticsDashboard';
+import WheelEditor from './components/admin/editors/WheelEditor';
+import { AdminPanel } from './components/admin/AdminPanel';
 
 // Protected Route component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -39,6 +41,7 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+       
         <Route
           path="/analytics"
           element={

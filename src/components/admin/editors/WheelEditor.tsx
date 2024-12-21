@@ -77,17 +77,37 @@ const WheelEditor: React.FC<WheelEditorProps> = ({ prizes, onChange }) => {
           />
 
           {/* Probability */}
-          <TextInput
-            label="Probability (0-1)"
-            value={prize.probability.toString()}
+          <div>
+          <label className="block text-sm font-medium text-[#D3D3DF] mb-1">
+            Probability (0-1)
+          </label>
+          <input
             type="number"
+            value={prize.probability}
             step="0.01"
             min="0"
             max="1"
-            onChange={(value) =>
-              handlePrizeChange(index, 'probability', parseFloat(value) || 0)
-            }
+            onChange={(e) => {
+              const inputValue = parseFloat(e.target.value);
+
+              if (!isNaN(inputValue) && inputValue >= 0 && inputValue <= 1) {
+                // Valid input, update prize probability
+                handlePrizeChange(index, 'probability', inputValue);
+                e.target.setCustomValidity(''); // Clear error message
+              } else if (inputValue < 0 || inputValue > 1) {
+                // Out of range, show graceful error message
+                e.target.setCustomValidity('Probability must be between 0 and 1.');
+                e.target.reportValidity(); // Show the message
+              } else {
+                // Clear invalid input (e.g., empty)
+                handlePrizeChange(index, 'probability', 0);
+                e.target.setCustomValidity('');
+              }
+            }}
+            className="w-full px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF]"
           />
+        </div>
+
 
           {/* Glow Color */}
           <ColorPicker
