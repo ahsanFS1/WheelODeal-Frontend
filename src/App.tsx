@@ -5,10 +5,8 @@ import { MainLandingPage } from './components/MainLandingPage';
 import { AdminDashboard } from './components/admin/AdminDashboard';
 import { LoginForm } from './components/auth/LoginForm';
 import { UserDashboard } from './components/UserDashboard';
-
 import { AnalyticsDashboard } from './components/analytics/AnalyticsDashboard';
-import WheelEditor from './components/admin/editors/WheelEditor';
-import { AdminPanel } from './components/admin/AdminPanel';
+import { CookieConsentManager } from './components/CookieConsent/CookieConsentManager';
 
 // Protected Route component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -23,7 +21,11 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<MainLandingPage />} />
-        <Route path="/wheel/:publicPageId" element={<PublicPage />} />
+        <Route path="/wheel/:publicPageId" element={  
+   
+      <PublicPage />
+  
+      } />
         <Route path="/user001z" element={<LoginForm />} />
         <Route 
           path="/admin_d01z" 
@@ -51,6 +53,7 @@ export default function App() {
           }
         />
       </Routes>
+      <CookieConsentManager/>
     </BrowserRouter>
   );
 }

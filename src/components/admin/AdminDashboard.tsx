@@ -4,6 +4,7 @@ import { AdminLogin } from '../auth/AdminLogin';
 import { AdminPanel } from './AdminPanel';
 import { Toaster } from 'sonner';
 import { api_Url } from '../../config';
+import { Helmet } from 'react-helmet-async';
 export const AdminDashboard: React.FC = () => {
   const [isSetup, setIsSetup] = useState<boolean | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -58,6 +59,11 @@ export const AdminDashboard: React.FC = () => {
 
   return (
     <>
+      <Helmet prioritizeSeoTags>
+            <meta name="robots" content="noindex, nofollow" />
+            <meta name="googlebot" content="noindex, nofollow" />
+            <meta httpEquiv="X-Robots-Tag" content="noindex, nofollow" />
+          </Helmet>
       <Toaster position="top-center" />
       <AdminPanel 
       onLogout={() => {

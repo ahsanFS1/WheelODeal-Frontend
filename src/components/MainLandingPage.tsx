@@ -8,6 +8,7 @@ import * as Icons from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useConStore } from '../store/configStore';
 import PricingSection from './PricingSection';
+import { AccessibilityMenu } from './AccessibilityMenu';
 
 export const MainLandingPage: React.FC = () => {
   const { fetchMLP, mlp: landingPage } = useConStore() as {
@@ -81,6 +82,7 @@ export const MainLandingPage: React.FC = () => {
   return (
 
     <div className="min-h-screen bg-[#121218] text-white">
+      <AccessibilityMenu/>
       {/* Hero Section */}
       <section className="relative min-h-screen flex flex-col items-center justify-center overflow-visible px-4">
         {landingPage.hero.backgroundImage && (

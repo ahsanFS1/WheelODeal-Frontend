@@ -27,8 +27,8 @@ const PricingSection: React.FC<{ pricing: any }> = ({ pricing }) => {
 
       {/* Toggle Button */}
   <div
-  className="flex justify-center items-center gap-6 mb-10"
-  onClick={() => setIsYearly((prev) => !prev)} // Switch on click anywhere
+   className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 mb-10"
+   onClick={() => setIsYearly((prev) => !prev)} // Switch on click anywhere
 >
   {/* Billed Monthly Label */}
   <span

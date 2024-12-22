@@ -7,6 +7,11 @@ import { CountdownTimer } from './CountdownTimer';
 import confetti from 'canvas-confetti';
 import { motion } from 'framer-motion';
 import { api_Url } from '../config';
+import { AccessibilityMenu } from './AccessibilityMenu';
+import { Helmet } from 'react-helmet-async';
+
+
+
 export const PublicPage: React.FC = () => {
   const { publicPageId } = useParams(); // Extract publicPageId from URL
   console.log(publicPageId)
@@ -196,55 +201,71 @@ const handleSpinEnd = async (result: SpinResult) => {
   };
 
   return (
+<>
+        <Helmet prioritizeSeoTags>
+        <meta name="robots" content="noindex, nofollow" />
+        <meta name="googlebot" content="noindex, nofollow" />
+        <meta httpEquiv="X-Robots-Tag" content="noindex, nofollow" />
+      </Helmet>
     <div className="min-h-screen bg-[#121218] text-white relative">
-      {/* Background Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
+
+    {config.accessibilityOn && (
+    <AccessibilityMenu />)}
+     {/* Header Section */}
+     <header
+        className="border-b border-purple-900/20 p-4 z-20 relative"
         style={{
-          backgroundImage: `url(${isMobile && config.mobileBackgroundImage ? config.mobileBackgroundImage : config.backgroundImage})`,
-          zIndex: 0, // Background layer
-          backgroundAttachment: 'fixed',  // Keep background fixed
-          backgroundSize: 'cover',  // Ensure it covers the whole screen
-          backgroundPosition: 'center',  // Center the image
+          backgroundColor: 'rgba(18, 18, 24, 0.85)', // Adds a transparent background
+          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.6)', // Subtle shadow effect
         }}
-      ></div>
-  
-      {/* Main Content */}
-      <div className="relative z-10">
-        {/* Header Section */}
-        <header className="border-b border-purple-900/20 p-4">
-          <div className="max-w-4xl mx-auto flex items-center justify-center">
-            <img
-              src={config.logo || '/logo.png'}
-              alt="Logo"
-              className="h-16 object-contain"
-            />
-          </div>
-        </header>
-  
-        {/* Hero Section */}
-        <section className="py-8 text-center">
-          <div className="max-w-4xl mx-auto px-4">
-            <h1
-              className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-shadow-lg"
-              style={{
-                fontSize: "clamp(2rem, 5vw, 4.5rem)",
-              }}
-              dangerouslySetInnerHTML={{
-                __html: config.headerTitle || "Your Amazing Headline",
-              }}
-            />
-            <p
-              className="text-lg md:text-xl lg:text-2xl mb-8"
-              style={{
-                lineHeight: "1.8",
-              }}
-              dangerouslySetInnerHTML={{
-                __html: config.subtitle || "Your Subheadline Goes Here",
-              }}
-            />
-          </div>
-        </section>
+      >
+        <div className="max-w-4xl mx-auto flex items-center justify-center">
+          <img
+            src={config.logo || '/logo.png'}
+            alt="Logo"
+            className="h-16 object-contain"
+          />
+        </div>
+      </header>
+        
+
+      {/* Main Content with Background */}
+      <div
+      className="relative"
+      style={{
+        backgroundImage: `url(${isMobile && config.mobileBackgroundImage ? config.mobileBackgroundImage : config.backgroundImage})`,
+        backgroundAttachment: 'fixed',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      {/* Hero Section */}
+      <section className="py-8 text-center">
+        <div className="max-w-4xl mx-auto px-4">
+          <h1
+            className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-shadow-lg"
+            style={{
+              fontSize: 'clamp(2rem, 5vw, 4.5rem)',
+            }}
+            dangerouslySetInnerHTML={{
+              __html: config.headerTitle || 'Your Amazing Headline',
+            }}
+          />
+          <p
+            className="text-lg md:text-xl lg:text-2xl mb-8"
+            style={{
+              lineHeight: '1.8',
+            }}
+            dangerouslySetInnerHTML={{
+              __html: config.subtitle || 'Your Subheadline Goes Here',
+            }}
+          />
+        </div>
+      </section>
+
+      {/* Add other sections like Wheel, Carousel, etc. here */}
+    
+
   
         {/* Wheel Section */}
         <section className="py-8">
@@ -264,7 +285,7 @@ const handleSpinEnd = async (result: SpinResult) => {
   
   {spinResult && (
   <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div className="bg-purple-900/20 rounded-lg p-6 shadow-md shadow-purple-500/30 transition-transform transform scale-110">
+    <div className="bg-gray-900/90 rounded-lg p-6 shadow-md shadow-purple-500/30 transition-transform transform scale-110">
       <p className="text-xl text-gray-300">🎉 Bonus Code 🎉</p>
       <p className="text-3xl font-bold text-purple-400 mt-2 tracking-widest animate-pulse">
         {spinResult?.prize.bonusCode}
@@ -382,27 +403,32 @@ const handleSpinEnd = async (result: SpinResult) => {
             </motion.div>
           </section>
         )}
-  
+  </div>
         {/* Footer Section */}
-        <footer className="text-gray-400 py-8 mt-8">
-          <div className="max-w-7xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-            <div
-              dangerouslySetInnerHTML={{
-                __html: config.footer || "<p>Footer Preview will appear here...</p>",
-              }}
-            />
-          </div>
-  
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div
-              className="mt-4 border-t border-gray-700 pt-4 text-center text-xs text-white"
-              dangerouslySetInnerHTML={{
-                __html: config.lowerFooter || "<p>Preview will appear here...</p>",
-              }}
-            />
-          </div>
-        </footer>
+        <footer
+  className="text-gray-400 py-4"
+  style={{
+    backgroundColor: 'rgba(18, 18, 24, 0.85)', // Transparent background
+    boxShadow: '0 -1px 7px rgba(0, 0, 0, 0.5)', // Subtle shadow
+  }}
+>
+  <div className="max-w-4xl mx-auto text-center text-sm px-4 sm:px-6 lg:px-8">
+    <div
+      dangerouslySetInnerHTML={{
+        __html: config.footer || "<p>Footer Preview</p>",
+      }}
+    />
+  </div>
+  <div className="border-t border-gray-700 mt-2 pt-2 text-center text-xs text-white">
+    <div
+      dangerouslySetInnerHTML={{
+        __html: config.lowerFooter || "<p>&copy; 2024 Your Company</p>",
+      }}
+    />
+  </div>
+</footer>
+
       </div>
-    </div>
+      </>
   );
 };  

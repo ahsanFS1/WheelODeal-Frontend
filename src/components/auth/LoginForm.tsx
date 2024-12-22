@@ -5,7 +5,7 @@ import { Key } from 'lucide-react';
 import { toast } from 'sonner';
 import { UserDashboard } from '../UserDashboard';
 import { api_Url } from '../../config';
-
+import { Helmet } from 'react-helmet-async';
 
 
 
@@ -59,6 +59,13 @@ export const LoginForm: React.FC = () => {
   };
 
   return (
+
+    <>
+      <Helmet prioritizeSeoTags>
+        <meta name="robots" content="noindex, nofollow" />
+        <meta name="googlebot" content="noindex, nofollow" />
+        <meta httpEquiv="X-Robots-Tag" content="noindex, nofollow" />
+      </Helmet>
     <div className="min-h-screen flex items-center justify-center bg-[#121218] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
@@ -104,6 +111,7 @@ export const LoginForm: React.FC = () => {
         </form>
       </div>
     </div>
+    </>
   );
 };
 

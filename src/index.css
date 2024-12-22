@@ -53,9 +53,37 @@ html, body {
 
 
 
+/* Accessibility Classes */
+html.grayscale {
+  filter: grayscale(100%) !important;
+}
 
+html.high-contrast {
+  filter: contrast(150%) !important;
+}
 
+html.negative-contrast {
+  filter: invert(100%) !important;
+}
 
+html.light-background {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+html.light-background .bg-\[\#121218\] {
+  background-color: #ffffff !important;
+}
+
+.links-underlined a {
+  text-decoration: underline !important;
+}
+
+.readable-font {
+  font-family: Arial, sans-serif !important;
+  line-height: 1.6 !important;
+  letter-spacing: 0.05em !important;
+}
 @layer utilities {
   .text-shadow {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);

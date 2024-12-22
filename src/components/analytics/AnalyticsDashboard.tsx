@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import { api_Url } from '../../config';
+import { Helmet } from 'react-helmet-async';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -132,6 +133,13 @@ export const AnalyticsDashboard: React.FC<Props> = ({ pageId }) => {
   
 
   return (
+
+    <>
+      <Helmet prioritizeSeoTags>
+        <meta name="robots" content="noindex, nofollow" />
+        <meta name="googlebot" content="noindex, nofollow" />
+        <meta httpEquiv="X-Robots-Tag" content="noindex, nofollow" />
+      </Helmet>
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="bg-[#2B2B33] p-4 rounded-lg text-center">
@@ -187,5 +195,6 @@ export const AnalyticsDashboard: React.FC<Props> = ({ pageId }) => {
         <footer className='text-xs text-white text-opacity-50 text-italic'>* Please note that conversions, spin statistics, unique visitors, and other data may take 24-48 hours to be fully updated. *</footer>
       </div>
     </div>
+    </>
   );
 };

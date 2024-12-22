@@ -5,6 +5,7 @@ import confetti from "canvas-confetti";
 import { Prize, SpinResult } from "../types";
 import { cn } from "../lib/utils";
 
+
 interface Props {
   prizes: Prize[]; // Flexible array of prizes
   onSpinEnd: (result: SpinResult) => void;
@@ -214,60 +215,57 @@ export const SpinningWheel: React.FC<Props> = ({
   }, [prizes]);
 
   return (
-    <div className="relative max-w-2xl mx-auto">
+    <div className="relative max-w-[90%] mx-auto" style={{ maxWidth: "35rem" }}>
       <canvas
         ref={wheelRef}
-        width={800}
-        height={800}
+        width={750} // Increased from 700 to 750
+        height={750} // Increased from 700 to 750
         className="w-full h-full"
       />
-    <button
-  onClick={spin}
-  disabled={disabled || isSpinning}
-  className={cn(
-    "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
-    "rounded-full flex flex-col items-center justify-center gap-1",
-    "shadow-lg hover:scale-105 transition-transform duration-300",
-    "disabled:opacity-50 disabled:cursor-not-allowed border-4",
-    "text-white font-extrabold tracking-wide"
-  )}
-  style={{
-    width: "clamp(5rem, 12vw, 6.5rem)", // Smaller, responsive width
-    height: "clamp(5rem, 12vw, 6.5rem)", // Smaller, responsive height
-    background: button?.gradient
-      ? `linear-gradient(${button.gradientDirection}, ${button.gradientStart}, ${button.gradientEnd})`
-      : button?.backgroundColor || "#8B5CF6",
-    color: button?.textColor || "#FFFFFF",
-    fontSize: "clamp(1rem, 2.5vw, 1.25rem)", // Text size dynamically adjusts
-    textShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
-    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.2)",
-    borderColor: button?.gradientStart || button?.backgroundColor || "#6C63FF",
-  }}
->
-  {/* Up Arrow */}
-  <span
-    style={{
-      fontSize: "clamp(1.5rem, 3vw, 1.5rem)", // Arrow size adjusts with screen
-      lineHeight: "1",
-    }}
-  >
-    &#11165;
-  </span>
-
-  {/* Button Text */}
-  <span
-    style={{
-      fontSize: "clamp(1.5rem, 3vw, 1.5rem)", // Slightly smaller responsive text
-      lineHeight: "1.2",
-      textAlign: "center",
-    }}
-  >
-    {button.text || "SPIN"}
-  </span>
-</button>
-
-
-
+      <button
+        onClick={spin}
+        disabled={disabled || isSpinning}
+        className={cn(
+          "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
+          "rounded-full flex flex-col items-center justify-center gap-1",
+          "shadow-lg hover:scale-105 transition-transform duration-300",
+          "disabled:opacity-50 disabled:cursor-not-allowed border-4",
+          "text-white font-extrabold tracking-wide"
+        )}
+        style={{
+          width: "clamp(6rem, 14vw, 7.5rem)", // Slightly larger button size
+          height: "clamp(6rem, 14vw, 7.5rem)", // Slightly larger button size
+          background: button?.gradient
+            ? `linear-gradient(${button.gradientDirection}, ${button.gradientStart}, ${button.gradientEnd})`
+            : button?.backgroundColor || "#8B5CF6",
+          color: button?.textColor || "#FFFFFF",
+          fontSize: "clamp(1.2rem, 2.8vw, 1.5rem)", // Adjusted text size for balance
+          textShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
+          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.2)",
+          borderColor: button?.gradientStart || button?.backgroundColor || "#6C63FF",
+        }}
+      >
+        {/* Up Arrow */}
+        <img
+          src="../../assets/wheelArrow.png" // Adjust path as necessary
+          alt="Arrow"
+          style={{
+            width: "clamp(1.7rem, 3vw, 2rem)", // Slightly larger icon size
+            height: "clamp(1.7rem, 3vw, 2rem)", // Slightly larger icon size
+          }}
+        />
+        {/* Button Text */}
+        <span
+          style={{
+            fontSize: "clamp(1.3rem, 3vw, 1.6rem)", // Slightly larger text
+            lineHeight: "1.2",
+            textAlign: "center",
+          }}
+        >
+          {button.text || "SPIN"}
+        </span>
+      </button>
     </div>
   );
-};
+  
+};  

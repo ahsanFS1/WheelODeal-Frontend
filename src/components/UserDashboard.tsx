@@ -17,7 +17,8 @@ import { VideoEditor } from './admin/editors/VideoEditor';
 import { Select, SelectItem } from './ui/select'; // Example dropdown component
 import { ColorPicker } from './admin/shared/ColorPicker';
 import TiptapEditor from './admin/shared/TiptapEditor';
-
+import { Helmet } from 'react-helmet-async';
+import { AccessibilityMenu } from './AccessibilityMenu';
 
 export const UserDashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -209,7 +210,15 @@ export const UserDashboard: React.FC = () => {
   };
 
   return (
+
+      <>
+      <Helmet prioritizeSeoTags>
+            <meta name="robots" content="noindex, nofollow" />
+            <meta name="googlebot" content="noindex, nofollow" />
+            <meta httpEquiv="X-Robots-Tag" content="noindex, nofollow" />
+          </Helmet>
     <div className="min-h-screen bg-[#121218] overflow-x-hidden">
+      <AccessibilityMenu/>
       <Toaster position="top-center" />
       <header className="bg-[#1B1B21] shadow-lg">
   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap justify-between items-center gap-4">
@@ -312,12 +321,14 @@ export const UserDashboard: React.FC = () => {
             })
           }
         />
-         <Button
-          onClick={() => setIsConfirmingDelete(true)} // Trigger the confirmation dialog
-          className=" bg-red-600 text-white hover:bg-red-500"
+       <button
+          onClick={() => setIsConfirmingDelete(true)}
+          className="bg-red-600 text-white hover:bg-red-500 text-sm py-1 px-2 rounded"
         >
           Delete Page
-        </Button>
+        </button>
+
+        
 
         {isConfirmingDelete && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-70 z-10">
@@ -339,7 +350,7 @@ export const UserDashboard: React.FC = () => {
         </div>
       )}
 
-
+      
 
        </div>
     
@@ -397,6 +408,22 @@ export const UserDashboard: React.FC = () => {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div className="space-y-6">
                   <h2 className="text-xl font-semibold text-[#D3D3DF]">Page Settings</h2>
+                  <div className="flex items-center space-x-4 mb-6">
+              <label className="text-sm font-medium text-[#D3D3DF]">
+                Accessibility Settings
+              </label>
+              <input
+                type="checkbox"
+                checked={selectedPage.accessibilityOn ?? true} // Default to true
+                onChange={(e) =>
+                  setSelectedPage({
+                    ...selectedPage,
+                    accessibilityOn: e.target.checked,
+                  })
+                }
+                className="w-5 h-5"
+              />
+            </div>
                   <TiptapEditor
                       content={selectedPage.headerTitle || ''}
                       onContentChange={(content) =>
@@ -1242,5 +1269,6 @@ export const UserDashboard: React.FC = () => {
         </Tabs.Root>
       </main>
     </div>
+    </>
   );
 };

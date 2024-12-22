@@ -20,6 +20,7 @@ export const SecretKeyManager: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [newExpiryDate, setNewExpiryDate] = useState(''); // State for extended expiry date
   const [newPlan, setNewPlan] = useState<'basic' | 'better' | 'best' | null>(null);
+  const [newPlans, setNewPlans] = useState<Record<string, 'basic' | 'better' | 'best' | null>>({}); // Updated state to store plan by key ID
 
   // Fetch keys from the database
   const fetchSecretKeys = async () => {
@@ -152,8 +153,7 @@ export const SecretKeyManager: React.FC = () => {
   };
 
   // Update plan for a secret key
-  const handleUpdatePlan = async (id: string, newPlan: 'basic' | 'better' | 'best',projectId:string) => {
-   
+  const handleUpdatePlan = async (id: string, newPlan: 'basic' | 'better' | 'best', projectId: string) => {
     try {
       const response = await fetch(`${api_Url}/api/admin/keys/plan/${id}`, {
         method: 'PUT',
@@ -161,10 +161,9 @@ export const SecretKeyManager: React.FC = () => {
         body: JSON.stringify({
           plan: newPlan,
           projectId,
-          
         }),
       });
-
+  
       const data = await response.json();
       if (data.success) {
         setSecretKeys((prev) =>
@@ -172,13 +171,24 @@ export const SecretKeyManager: React.FC = () => {
             key._id === id ? { ...key, plan: newPlan } : key
           )
         );
-        setNewPlan(null); // Reset the newPlan state after the update
+        setNewPlans((prev) => {
+          const updatedPlans = { ...prev };
+          delete updatedPlans[id]; // Reset the plan for this specific key after the update
+          return updatedPlans;
+        });
       } else {
         alert('Failed to update plan');
       }
     } catch (error) {
       console.error('Error updating plan:', error.message);
     }
+  };
+
+  const handlePlanChange = (id: string, plan: 'basic' | 'better' | 'best') => {
+    setNewPlans((prev) => ({
+      ...prev,
+      [id]: plan, // Update the plan for the specific key
+    }));
   };
 
   return (
@@ -263,25 +273,25 @@ export const SecretKeyManager: React.FC = () => {
 
                 {/* Plan dropdown for editing */}
                 <div className="flex gap-2 items-center">
-                <select
-                  value={newPlan || secretKey.plan} // Ensure this defaults to the current plan
-                  onChange={(e) => setNewPlan(e.target.value as 'basic' | 'better' | 'best')} // Type assertion
-                  className="px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF] w-full"
-                >
-                  <option value="basic">Basic Plan</option>
-                  <option value="better">Better Plan</option>
-                  <option value="best">Best Plan</option>
-                </select>
-                  <Button
-                    onClick={() => handleUpdatePlan(secretKey._id, newPlan || secretKey.plan,secretKey.projectId)}
-                    className="w-full sm:w-auto"
-                  >
-                    Change Plan
-                  </Button>
-                </div>
+              <select
+                value={newPlans[secretKey._id] || secretKey.plan} // Use the plan from the newPlans state for this specific key
+                onChange={(e) => handlePlanChange(secretKey._id, e.target.value as 'basic' | 'better' | 'best')}
+                className="px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF] w-full"
+              >
+                <option value="basic">Basic Plan</option>
+                <option value="better">Better Plan</option>
+                <option value="best">Best Plan</option>
+              </select>
+              <Button
+                onClick={() => handleUpdatePlan(secretKey._id, newPlans[secretKey._id] || secretKey.plan, secretKey.projectId)}
+                className="w-full sm:w-[150px] md:w-[180px] lg:w-[200px]"
+              >
+                Change Plan
+              </Button>
+            </div>
 
                 {/* Add Extend Expiry Date input and button */}
-                <div className="flex gap-2 items-center">
+                <div className="flex flex-col sm:flex-row gap-2 items-center">
                   <input
                     type="date"
                     min={new Date().toISOString().split('T')[0]}
@@ -291,7 +301,7 @@ export const SecretKeyManager: React.FC = () => {
                   />
                   <Button
                     onClick={() => handleExtendExpiryDate(secretKey._id)}
-                    className="w-full sm:w-auto"
+                    className="w-full sm:w-[150px] md:w-[180px] lg:w-[200px]"
                   >
                     Extend Expiry
                   </Button>

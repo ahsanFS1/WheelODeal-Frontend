@@ -6,6 +6,7 @@ import { Settings, Key, LogOut } from 'lucide-react';
 import { SecretKeyManager } from './SecretKeyManager';
 import { LandingPageEditor } from './LandingPageEditor';
 import { toast } from 'sonner';
+import { AccessibilityMenu } from '../AccessibilityMenu';
 
 
 
@@ -27,6 +28,7 @@ export const AdminPanel: React.FC<Props> = ({onLogout}) => {
 
   return (
     <div className="min-h-screen bg-[#121218]">
+      <AccessibilityMenu/>
       <header className="bg-[#1B1B21] shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <h1 className="text-3xl font-bold text-[#D3D3DF] flex items-center gap-2">
