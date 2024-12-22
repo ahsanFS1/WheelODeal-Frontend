@@ -82,7 +82,7 @@ export const MainLandingPage: React.FC = () => {
   return (
 
     <div className="min-h-screen bg-[#121218] text-white">
-      <AccessibilityMenu/>
+     {landingPage.accessibilityOn &&( <AccessibilityMenu/>)}
       {/* Hero Section */}
       <section className="relative min-h-screen flex flex-col items-center justify-center overflow-visible px-4">
         {landingPage.hero.backgroundImage && (

@@ -120,6 +120,23 @@ export const LandingPageEditor: React.FC = () => {
         </Button>
       </div>
 
+      <div className="flex items-center space-x-4 mb-6">
+              <label className="text-sm font-medium text-[#D3D3DF]">
+                Accessibility Settings
+              </label>
+              <input
+                type="checkbox"
+                checked={mlp.accessibilityOn ?? true} // Default to true
+                onChange={(e) =>
+                  setMlp({
+                    ...mlp,
+                    accessibilityOn: e.target.checked,
+                  })
+                }
+                className="w-5 h-5"
+              />
+            </div>
+
       <Tabs.Root value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <Tabs.List className="flex space-x-2 overflow-x-auto border-b border-purple-900/20 scrollbar-thin scrollbar-thumb-purple-900/20">
           {[
