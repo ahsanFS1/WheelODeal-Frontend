@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { Key } from 'lucide-react';
 import { api_Url } from '../../config';
-import { web_Url } from '../../config';
 
 interface SecretKey {
   _id: string;
@@ -20,6 +19,7 @@ export const SecretKeyManager: React.FC = () => {
   const [secretKeys, setSecretKeys] = useState<SecretKey[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [newExpiryDate, setNewExpiryDate] = useState(''); // State for extended expiry date
+  const [newPlan, setNewPlan] = useState<'basic' | 'better' | 'best' | null>(null);
 
   // Fetch keys from the database
   const fetchSecretKeys = async () => {
@@ -40,7 +40,8 @@ export const SecretKeyManager: React.FC = () => {
 
   // Filter the secret keys based on the search query
   const filteredSecretKeys = secretKeys.filter((key) =>
-    key.projectName.toLowerCase().includes(searchQuery.toLowerCase())
+    key.projectName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    key.secretKey.toLowerCase().includes(searchQuery.toLowerCase()) // Add filtering by secret key
   );
 
   // Create a new key
@@ -150,6 +151,36 @@ export const SecretKeyManager: React.FC = () => {
     }
   };
 
+  // Update plan for a secret key
+  const handleUpdatePlan = async (id: string, newPlan: 'basic' | 'better' | 'best',projectId:string) => {
+   
+    try {
+      const response = await fetch(`${api_Url}/api/admin/keys/plan/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          plan: newPlan,
+          projectId,
+          
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setSecretKeys((prev) =>
+          prev.map((key) =>
+            key._id === id ? { ...key, plan: newPlan } : key
+          )
+        );
+        setNewPlan(null); // Reset the newPlan state after the update
+      } else {
+        alert('Failed to update plan');
+      }
+    } catch (error) {
+      console.error('Error updating plan:', error.message);
+    }
+  };
+
   return (
     <div className="bg-[#1B1B21] rounded-lg shadow-lg p-6">
       <div className="mb-8">
@@ -198,7 +229,7 @@ export const SecretKeyManager: React.FC = () => {
         <div className="mb-6">
           <input
             type="text"
-            placeholder="Search by Project Name"
+            placeholder="Search by Project Name or Secret Key"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="px-4 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF] placeholder-[#D3D3DF]/60 w-full focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-200"
@@ -209,7 +240,7 @@ export const SecretKeyManager: React.FC = () => {
           {filteredSecretKeys.map((secretKey) => (
             <div
               key={secretKey._id}
-              className="bg-[#121218] border border-[#C33AFF]/20 rounded-lg p-4 flex flex-col gap-2 sm:flex-row sm:justify-between"
+              className="bg-[#121218] p-4 flex flex-col gap-2 sm:flex-row sm:justify-between"
             >
               <div className="space-y-2 w-full">
                 <h3
@@ -229,11 +260,31 @@ export const SecretKeyManager: React.FC = () => {
                 <p className="text-sm text-[#D3D3DF]/60">
                   Expires: {new Date(secretKey.expiryDate).toLocaleDateString()}
                 </p>
+
+                {/* Plan dropdown for editing */}
+                <div className="flex gap-2 items-center">
+                <select
+                  value={newPlan || secretKey.plan} // Ensure this defaults to the current plan
+                  onChange={(e) => setNewPlan(e.target.value as 'basic' | 'better' | 'best')} // Type assertion
+                  className="px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF] w-full"
+                >
+                  <option value="basic">Basic Plan</option>
+                  <option value="better">Better Plan</option>
+                  <option value="best">Best Plan</option>
+                </select>
+                  <Button
+                    onClick={() => handleUpdatePlan(secretKey._id, newPlan || secretKey.plan,secretKey.projectId)}
+                    className="w-full sm:w-auto"
+                  >
+                    Change Plan
+                  </Button>
+                </div>
+
                 {/* Add Extend Expiry Date input and button */}
                 <div className="flex gap-2 items-center">
                   <input
                     type="date"
-                    min={new Date().toISOString().split('T')[0]} 
+                    min={new Date().toISOString().split('T')[0]}
                     value={newExpiryDate}
                     onChange={(e) => setNewExpiryDate(e.target.value)}
                     className="px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF] w-full"

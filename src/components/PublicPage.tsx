@@ -246,6 +246,109 @@ const handleSpinEnd = async (result: SpinResult) => {
           </div>
         </section>
   
+        {/* Wheel Section */}
+        <section className="py-8">
+          <div className="max-w-4xl mx-auto px-4">
+            <div className="relative">
+              <SpinningWheel
+                prizes={config.prizes}
+                onSpinEnd={handleSpinEnd}
+                disabled={!!spinResult}
+                music={config.musicEnabled}
+                button={config.wheelButton}
+                className="w-full max-w-3xl mx-auto"  // Added responsive class to make the wheel responsive
+              />
+            </div>
+  
+
+  
+  {spinResult && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="bg-purple-900/20 rounded-lg p-6 shadow-md shadow-purple-500/30 transition-transform transform scale-110">
+      <p className="text-xl text-gray-300">🎉 Bonus Code 🎉</p>
+      <p className="text-3xl font-bold text-purple-400 mt-2 tracking-widest animate-pulse">
+        {spinResult?.prize.bonusCode}
+      </p>
+      <p className="text-sm text-gray-300 italic mt-2">
+        Use this code to claim your reward!
+      </p>
+      <div className="mt-6 border-t border-purple-500/30 pt-4">
+        <p className="text-sm text-gray-300">Expiring In:</p>
+        <br />
+        <p className="text-lg font-semibold text-white">
+          <CountdownTimer
+            expiryTimestamp={new Date(spinResult?.prize.expirationDate).getTime()}
+          />
+        </p>
+      </div>
+
+      {/* Final CTA Button */}
+      <div className="mt-6">
+        <div className="flex justify-center mt-4">
+          <a
+            href={spinResult.prize?.redirectUrl || "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block rounded-lg transition-all duration-200"
+            style={{
+              padding:
+                config.finalCta?.size === "small"
+                  ? "8px 16px"
+                  : config.finalCta?.size === "large"
+                  ? "14px 28px"
+                  : "10px 20px",
+              fontSize:
+                config.finalCta?.size === "small"
+                  ? "12px"
+                  : config.finalCta?.size === "large"
+                  ? "18px"
+                  : "16px",
+              background: config.finalCta?.gradient
+                ? `linear-gradient(${config.finalCta.gradientStart}, ${config.finalCta.gradientEnd})`
+                : config.finalCta?.backgroundColor || "#4CAF50",
+              color: config.finalCta?.textColor || "#ffffff",
+              textAlign: "center",
+              textDecoration: "none",
+              width: "fit-content",
+              cursor: "pointer",
+            }}
+            onClick={async (e) => {
+              e.preventDefault();
+              try {
+                await handleClaim();
+                window.open(spinResult.prize?.redirectUrl || "#", "_blank");
+              } catch (error) {
+                console.error("Error handling claim:", error);
+                alert("Failed to claim the prize.");
+              }
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor =
+                config.finalCta?.hoverColor || "#45a049")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor =
+                config.finalCta?.backgroundColor || "#4CAF50")
+            }
+          >
+            {config.finalCta?.text || "Claim Offer"}
+          </a>
+        </div>
+      </div>
+
+      {/* Close Button */}
+      <button
+        onClick={() => setSpinResult(null)} // Close the modal
+        className="mt-4 bg-red-600 text-white py-2 px-6 rounded-md hover:bg-red-700 flex justify-center mx-auto "
+      >
+        Close
+      </button>
+    </div>
+  </div>
+)}
+          </div>
+        </section>
+  
         {/* Product Carousel Section */}
         {config.carouselImages && config.carouselImages.length > 0 && (
           <section className="py-8">
@@ -279,110 +382,6 @@ const handleSpinEnd = async (result: SpinResult) => {
             </motion.div>
           </section>
         )}
-  
-        {/* Wheel Section */}
-        <section className="py-8">
-          <div className="max-w-4xl mx-auto px-4">
-            <div className="relative">
-              <SpinningWheel
-                prizes={config.prizes}
-                onSpinEnd={handleSpinEnd}
-                disabled={!!spinResult}
-                music={config.musicEnabled}
-                button={config.wheelButton}
-              />
-            </div>
-  
-            {/* Bonus Code Display */}
-            {spinResult && (
-              <div className="mt-12 text-center">
-                <div className="inline-block bg-purple-900/20 rounded-lg p-6 shadow-md shadow-purple-500/30 transition-transform hover:scale-105">
-                  <p className="text-xl text-gray-300">🎉 Bonus Code 🎉</p>
-                  <p className="text-3xl font-bold text-purple-400 mt-2 tracking-widest animate-pulse">
-                    {spinResult?.prize.bonusCode}
-                  </p>
-                  <p className="text-sm text-gray-300 italic mt-2">
-                    Use this code to claim your reward!
-                  </p>
-                  <div className="mt-6 border-t border-purple-500/30 pt-4">
-                    <p className="text-sm text-gray-300">Expiring In:</p>
-                    <br />
-                    <p className="text-lg font-semibold text-white">
-                      <CountdownTimer
-                        expiryTimestamp={new Date(spinResult?.prize.expirationDate).getTime()}
-                      />
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-  
-            {spinResult && (
-              <div className="mt-10 text-center">
-                <div className="bg-purple-900/20 rounded-lg p-6 inline-block">
-                  <h3 className="text-xl font-bold mb-4">
-                    Congratulations! You won:{" "}
-                    <span
-                      dangerouslySetInnerHTML={{
-                        __html: spinResult.prize.text || "Your Prize!",
-                      }}
-                    />
-                  </h3>
-                  <div className="flex justify-center mt-4">
-                    <a
-                      href={spinResult.prize?.redirectUrl || "#"}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block rounded-lg transition-all duration-200"
-                      style={{
-                        padding:
-                          config.finalCta?.size === "small"
-                            ? "8px 16px"
-                            : config.finalCta?.size === "large"
-                            ? "14px 28px"
-                            : "10px 20px",
-                        fontSize:
-                          config.finalCta?.size === "small"
-                            ? "12px"
-                            : config.finalCta?.size === "large"
-                            ? "18px"
-                            : "16px",
-                        background: config.finalCta?.gradient
-                          ? `linear-gradient(${config.finalCta.gradientStart}, ${config.finalCta.gradientEnd})`
-                          : config.finalCta?.backgroundColor || "#4CAF50",
-                        color: config.finalCta?.textColor || "#ffffff",
-                        textAlign: "center",
-                        textDecoration: "none",
-                        width: "fit-content",
-                        cursor: "pointer",
-                      }}
-                      onClick={async (e) => {
-                        e.preventDefault();
-                        try {
-                          await handleClaim();
-                          window.open(spinResult.prize?.redirectUrl || "#", "_blank");
-                        } catch (error) {
-                          console.error("Error handling claim:", error);
-                          alert("Failed to claim the prize.");
-                        }
-                      }}
-                      onMouseEnter={(e) =>
-                        (e.currentTarget.style.backgroundColor =
-                          config.finalCta?.hoverColor || "#45a049")
-                      }
-                      onMouseLeave={(e) =>
-                        (e.currentTarget.style.backgroundColor =
-                          config.finalCta?.backgroundColor || "#4CAF50")
-                      }
-                    >
-                      {config.finalCta?.text || "Claim Offer"}
-                    </a>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </section>
   
         {/* Footer Section */}
         <footer className="text-gray-400 py-8 mt-8">
