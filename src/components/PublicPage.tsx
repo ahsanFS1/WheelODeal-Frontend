@@ -199,7 +199,7 @@ const handleSpinEnd = async (result: SpinResult) => {
     animate: { opacity: 1, y: 0 },
     transition: { duration: 0.6 },
   };
-
+  console.log(config.mobileBackgroundImage);
   return (
 <>
         <Helmet prioritizeSeoTags>
@@ -234,7 +234,7 @@ const handleSpinEnd = async (result: SpinResult) => {
       className="relative"
       style={{
         backgroundImage: `url(${isMobile && config.mobileBackgroundImage ? config.mobileBackgroundImage : config.backgroundImage})`,
-        backgroundAttachment: 'fixed',
+        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
