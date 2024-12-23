@@ -602,11 +602,10 @@ export const UserDashboard: React.FC = () => {
                       }}
                     />
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {selectedPage.carouselImages.map(
-                        (
-                          image: { url: string; alt: string },
-                          index: number
-                        ) => (
+                      {selectedPage &&
+                      selectedPage.carouselImages &&
+                      selectedPage.carouselImages.length > 0 ? (
+                        selectedPage.carouselImages.map((image, index) => (
                           <div key={index} className="relative group">
                             <img
                               src={image.url}
@@ -615,21 +614,22 @@ export const UserDashboard: React.FC = () => {
                             />
                             <button
                               onClick={() =>
-                                setSelectedPage({
-                                  ...selectedPage,
-                                  carouselImages:
-                                    selectedPage.carouselImages.filter(
-                                      (_, i) => i !== index
-                                    ),
-                                })
+                                setSelectedPage((prev) => ({
+                                  ...prev,
+                                  carouselImages: prev.carouselImages.filter(
+                                    (_, i) => i !== index
+                                  ),
+                                }))
                               }
-                              className="absolute top-2 right-2 px-2 py-1 bg-red-600 text-white text-sm rounded-lg shadow-lg opacity-90 "
+                              className="absolute top-2 right-2 px-2 py-1 bg-red-600 text-white text-sm rounded-lg shadow-lg opacity-90"
                               title="Remove"
                             >
                               Remove
                             </button>
                           </div>
-                        )
+                        ))
+                      ) : (
+                        <p>No images available</p>
                       )}
                     </div>
                   </div>
