@@ -102,7 +102,7 @@ export const MainLandingPage: React.FC = () => {
               alt="Logo"
               className="object-contain drop-shadow-lg"
               style={{
-                maxWidth: 'clamp(100px, 15vw, 180px)',
+                maxWidth: 'clamp(150px, 20vw, 300px)',
                 height: 'auto',
               }}
             />

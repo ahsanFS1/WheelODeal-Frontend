@@ -213,20 +213,23 @@ const handleSpinEnd = async (result: SpinResult) => {
     <AccessibilityMenu />)}
      {/* Header Section */}
      <header
-        className="border-b border-purple-900/20 p-4 z-20 relative"
-        style={{
-          backgroundColor: 'rgba(18, 18, 24, 0.85)', // Adds a transparent background
-          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.6)', // Subtle shadow effect
-        }}
-      >
-        <div className="max-w-4xl mx-auto flex items-center justify-center">
-          <img
-            src={config.logo || '/logo.png'}
-            alt="Logo"
-            className="h-16 object-contain"
-          />
-        </div>
-      </header>
+  className="border-b border-purple-900/20 p-4 z-20 relative"
+  style={{
+    backgroundColor: 'rgba(18, 18, 24, 0.85)', // Keeps the transparent background
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.6)', // Keeps the shadow effect
+  }}
+>
+  <div className="max-w-6xl mx-auto flex items-center justify-center">
+    <img
+      src={config.logo || '/logo.png'}
+      alt="Logo"
+      className="object-contain"
+      style={{
+        height: 'clamp(64px,9vw, 120px)', // Adjusts size range for larger logo
+      }}
+    />
+  </div>
+</header>
         
 
       {/* Main Content with Background */}
