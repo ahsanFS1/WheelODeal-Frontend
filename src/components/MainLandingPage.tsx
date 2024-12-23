@@ -90,7 +90,7 @@ export const MainLandingPage: React.FC = () => {
             className="absolute inset-0 bg-cover bg-center"
             style={{
               backgroundImage: `url(${landingPage.hero.backgroundImage})`,
-              filter: 'blur(2px) brightness(0.7)',
+              filter: ' brightness(0.7)',
             }}
           />
         )}
