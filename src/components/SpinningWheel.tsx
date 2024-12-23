@@ -185,7 +185,7 @@ export const SpinningWheel: React.FC<Props> = ({
       current: targetRotation,
       
       duration: 13,
-      ease: "power4.out",
+      ease: "expo.out",
       onUpdate: drawWheel,
       onComplete: () => {
         setIsSpinning(false);
