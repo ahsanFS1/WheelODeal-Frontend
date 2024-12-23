@@ -113,7 +113,7 @@ export const LandingPageEditor: React.FC = () => {
         <h2 className="text-2xl font-bold text-[#D3D3DF]">Landing Page Editor</h2>
         <button
           onClick={handleSave}
-          className=" flex items-center w-[140px] gap-2 px-4  bg-white text-black border border-[#C33AFF] text-sm rounded-lg hover:bg-gray-300 hover:text-black transition-all duration-200"
+          className=" flex items-center w-[px] gap-2 px-4 py-3 bg-white text-black border border-[#C33AFF] text-sm rounded-lg hover:bg-gray-300 hover:text-black transition-all duration-200"
             
         >
           <Save className="w-4 h-4" />

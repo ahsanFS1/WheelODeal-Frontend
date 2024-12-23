@@ -9,6 +9,7 @@ import { AnalyticsDashboard } from './components/analytics/AnalyticsDashboard';
 import { CookieConsentManager } from './components/CookieConsent/CookieConsentManager';
 import { SecretKeyManager } from './components/admin/SecretKeyManager';
 import { AdminPanel } from './components/admin/AdminPanel';
+import { LandingPageEditor } from './components/admin/LandingPageEditor';
 // Protected Route component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const token = sessionStorage.getItem('userToken'); // Check token in session storage
