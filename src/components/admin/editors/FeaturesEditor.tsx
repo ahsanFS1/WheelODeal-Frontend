@@ -58,13 +58,15 @@ export const FeaturesEditor: React.FC<Props> = ({ data, onChange }) => {
               <h3 className="text-lg font-semibold text-[#D3D3DF]">
                 Feature {index + 1}
               </h3>
-              <Button
+              <button
                 variant="destructive"
                 size="sm"
                 onClick={() => removeFeature(index)}
+                className=" items-center  gap-2 px-4 py-4 bg-red-700  text-black  text-sm rounded-lg hover:bg-red-700/60 hover:text-black transition-all duration-200"
+            
               >
                 <Trash className="w-4 h-4" />
-              </Button>
+              </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

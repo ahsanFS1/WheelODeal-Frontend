@@ -49,13 +49,14 @@ export const FaqEditor: React.FC<Props> = ({ data, onChange }) => {
           <div key={faq.id} className="bg-[#121218] border border-[#C33AFF]/20 rounded-lg p-4 space-y-4">
             <div className="flex justify-between items-center">
               <h3 className="text-lg font-semibold text-[#D3D3DF]">FAQ Item</h3>
-              <Button
+              <button
                 variant="destructive"
                 size="sm"
                 onClick={() => removeFaq(faq.id)}
+                className=" items-center flex px-4 py-4 bg-red-700  text-black  text-sm rounded-lg hover:bg-red-700/60 hover:text-black transition-all duration-200"
               >
                 <Trash className="w-4 h-4" />
-              </Button>
+              </button>
             </div>
 
             <div className="space-y-4">

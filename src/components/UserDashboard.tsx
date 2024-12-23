@@ -227,20 +227,20 @@ export const UserDashboard: React.FC = () => {
       Project Configuration
     </h1>
     <div className="flex flex-wrap items-center gap-4">
-      <Button
+      <button
         onClick={handleSave}
-        className="flex items-center gap-2 bg-[#1B1B21] text-[#C33AFF] border border-[#C33AFF] hover:bg-[#C33AFF] hover:text-purple-900 transition-all duration-200"
+        className="flex items-center gap-2 px-3 py-2 bg-gray-100 text-black border border-[#C33AFF] text-sm rounded-lg hover:bg-[#C33AFF] hover:text-purple-900 transition-all duration-200"
       >
         Save Changes
-      </Button>
-      <Button
+      </button>
+      <button
         onClick={handleLogout}
         variant="outline"
-        className="flex items-center gap-2 bg-[#1B1B21] border-[#C33AFF] text-[#C33AFF] hover:bg-[#C33AFF] hover:text-white"
+        className="flex items-center gap-2 px-3 py-2 bg-[#1B1B21] text-[#C33AFF] border border-[#C33AFF] text-sm rounded-lg hover:bg-[#C33AFF] hover:text-purple-900 transition-all duration-200"
       >
         <LogOut className="w-4 h-4" />
         Logout
-      </Button>
+      </button>
     </div>
   </div>
 </header>
@@ -648,9 +648,7 @@ export const UserDashboard: React.FC = () => {
     />
 
     {/* Expiration Date */}
-  {/* Expiration Date */}
-{/* Expiration Date */}
-{/* Expiration Date */}
+  
 <div>
   <label className="block text-sm font-medium text-[#D3D3DF] mb-1">
     Expiration Date

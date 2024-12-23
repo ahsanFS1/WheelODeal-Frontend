@@ -35,14 +35,13 @@ export const AdminPanel: React.FC<Props> = ({onLogout}) => {
             <Settings className="w-8 h-8 text-[#C33AFF]" />
             Admin Dashboard
           </h1>
-          <Button
+          <button
             onClick={handleLogout}
-            variant="outline"
-            className="flex items-center gap-2 border-[#C33AFF] text-[#D3D3DF] hover:bg-[#C33AFF]/10"
+            className="flex items-center gap-2 px-3 py-2 bg-[#1B1B21] text-[#C33AFF] border border-[#C33AFF] text-sm rounded-lg hover:bg-purple-900/30 hover:text-purple-900 transition-all duration-200"
           >
             <LogOut className="w-4 h-4" />
             Logout
-          </Button>
+          </button>
         </div>
       </header>
 

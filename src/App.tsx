@@ -7,7 +7,8 @@ import { LoginForm } from './components/auth/LoginForm';
 import { UserDashboard } from './components/UserDashboard';
 import { AnalyticsDashboard } from './components/analytics/AnalyticsDashboard';
 import { CookieConsentManager } from './components/CookieConsent/CookieConsentManager';
-
+import { SecretKeyManager } from './components/admin/SecretKeyManager';
+import { AdminPanel } from './components/admin/AdminPanel';
 // Protected Route component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const token = sessionStorage.getItem('userToken'); // Check token in session storage
@@ -19,6 +20,7 @@ export default function App() {
   return (
     
     <BrowserRouter>
+    
       <Routes>
         <Route path="/" element={<MainLandingPage />} />
         <Route path="/wheel/:publicPageId" element={  

@@ -268,9 +268,9 @@ const handleSpinEnd = async (result: SpinResult) => {
 
   
         {/* Wheel Section */}
-        <section className="py-8">
+        <section className="py-3 ">
           <div className="max-w-4xl mx-auto px-4">
-            <div className="relative">
+            <div className="relative mb-5">
               <SpinningWheel
                 prizes={config.prizes}
                 onSpinEnd={handleSpinEnd}
@@ -286,25 +286,12 @@ const handleSpinEnd = async (result: SpinResult) => {
   {spinResult && (
   <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
     <div className="bg-gray-900/90 rounded-lg p-6 shadow-md shadow-purple-500/30 transition-transform transform scale-110">
-      <p className="text-xl text-gray-300">🎉 Bonus Code 🎉</p>
-      <p className="text-3xl font-bold text-purple-400 mt-2 tracking-widest animate-pulse">
-        {spinResult?.prize.bonusCode}
-      </p>
-      <p className="text-sm text-gray-300 italic mt-2">
-        Use this code to claim your reward!
-      </p>
-      <div className="mt-6 border-t border-purple-500/30 pt-4">
-        <p className="text-sm text-gray-300">Expiring In:</p>
-        <br />
-        <p className="text-lg font-semibold text-white">
-          <CountdownTimer
-            expiryTimestamp={new Date(spinResult?.prize.expirationDate).getTime()}
-          />
-        </p>
-      </div>
-
-      {/* Final CTA Button */}
-      <div className="mt-6">
+    <div className="mt-6 text-center">
+               
+                  <h3 className="text-xl font-bold mb-4 shadow-purple-500/30 text-shadow-lg ">
+                    Congratulations! You won: <br></br> {spinResult.prize.text}
+                  </h3>
+                  <div className="mt-6">
         <div className="flex justify-center mt-4">
           <a
             href={spinResult.prize?.redirectUrl || "#"}
@@ -356,13 +343,34 @@ const handleSpinEnd = async (result: SpinResult) => {
           </a>
         </div>
       </div>
+                <br></br>
+              </div>
+      <p className="text-xl text-gray-300">🎉 Bonus Code 🎉</p>
+      <p className="text-3xl font-bold text-purple-400 mt-2 tracking-widest animate-pulse">
+        {spinResult?.prize.bonusCode}
+      </p>
+      <p className="text-sm text-gray-300 italic mt-2">
+        Use this code to claim your reward!
+      </p>
+      <div className="mt-6 border-t border-purple-500/30 pt-4">
+        <p className="text-sm text-gray-300">Expiring In:</p>
+        <br />
+        <p className="text-lg font-semibold text-white">
+          <CountdownTimer
+            expiryTimestamp={new Date(spinResult?.prize.expirationDate).getTime()}
+          />
+        </p>
+      </div>
+
+      {/* Final CTA Button */}
+    
 
       {/* Close Button */}
       <button
         onClick={() => setSpinResult(null)} // Close the modal
-        className="mt-4 bg-red-600 text-white py-2 px-6 rounded-md hover:bg-red-700 flex justify-center mx-auto "
+        className="mt-4 bg-[#8696A0]/5 transparent t items-center jsutify-center py-1 px-3 rounded-full circle hover:bg-gray-700 flex justify-center mx-auto "
       >
-        Close
+        X
       </button>
     </div>
   </div>

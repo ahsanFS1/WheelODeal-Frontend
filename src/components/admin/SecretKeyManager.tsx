@@ -219,13 +219,14 @@ export const SecretKeyManager: React.FC = () => {
             min={new Date().toISOString().split('T')[0]} // Sets today's date as the minimum allowed date
             className="px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF] w-full"
           />
-          <Button
+          <button
             onClick={generateSecretKey}
-            className="flex items-center justify-center gap-2 bg-purple-900 text-white hover:bg-purple-950 w-full sm:w-auto"
+            className="flex items-center gap-2 px-3 py-2 bg-white text-black border border-[#C33AFF] text-sm rounded-lg hover:bg-gray-300 hover:text-black transition-all duration-200"
+     
           >
             <Key className="w-4 h-4" />
             Generate Key
-          </Button>
+          </button>
         </div>
       </div>
 
@@ -282,12 +283,13 @@ export const SecretKeyManager: React.FC = () => {
                 <option value="better">Better Plan</option>
                 <option value="best">Best Plan</option>
               </select>
-              <Button
+              <button
                 onClick={() => handleUpdatePlan(secretKey._id, newPlans[secretKey._id] || secretKey.plan, secretKey.projectId)}
-                className="w-full sm:w-[150px] md:w-[180px] lg:w-[200px]"
+                
+                className=" items-center w-[140px] gap-2 px-4 py-2 bg-white text-black border border-[#C33AFF] text-sm rounded-lg hover:bg-gray-300 hover:text-black transition-all duration-200"
               >
                 Change Plan
-              </Button>
+              </button>
             </div>
 
                 {/* Add Extend Expiry Date input and button */}
@@ -299,12 +301,13 @@ export const SecretKeyManager: React.FC = () => {
                     onChange={(e) => setNewExpiryDate(e.target.value)}
                     className="px-3 py-2 bg-[#121218] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF] w-full"
                   />
-                  <Button
+                  <button
                     onClick={() => handleExtendExpiryDate(secretKey._id)}
-                    className="w-full sm:w-[150px] md:w-[180px] lg:w-[200px]"
+                    className=" items-center w-[140px] gap-2 px-4 py-2 bg-white text-black border border-[#C33AFF] text-sm rounded-lg hover:bg-gray-300 hover:text-black transition-all duration-200"
+            
                   >
                     Extend Expiry
-                  </Button>
+                  </button>
                 </div>
               </div>
               <Button

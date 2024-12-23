@@ -199,14 +199,14 @@ export const PricingEditor: React.FC<Props> = ({ data, onChange }) => {
         onChange={(value) => updateFeature(plan.id, index, value)}
         className="flex-grow"
       />
-      <Button
+      <button
         variant="destructive"
         size="sm"
         onClick={() => removeFeature(plan.id, index)}
-        className="mt-6"
+        className=" items-center mt-6  flex px-4 py-4 bg-red-700  text-black  text-sm rounded-lg hover:bg-red-700/60 hover:text-black transition-all duration-200"
       >
         <Trash className="w-4 h-4" />
-      </Button>
+      </button>
     </div>
   ))}
 

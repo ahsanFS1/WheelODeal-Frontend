@@ -70,7 +70,8 @@ html.light-background {
   background-color: #ffffff !important;
   color: #000000 !important;
 }
-
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);}
 html.light-background .bg-\[\#121218\] {
   background-color: #ffffff !important;
 }

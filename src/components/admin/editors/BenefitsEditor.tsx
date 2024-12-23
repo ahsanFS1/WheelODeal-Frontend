@@ -63,14 +63,14 @@ export const BenefitsEditor: React.FC<Props> = ({ data, onChange }) => {
                onChange={(value) => updateBenefit(index,value)}
               />
             </div>
-            <Button
-              variant="destructive"
+            <button
+              
               size="sm"
               onClick={() => removeBenefit(index)}
-              className="mt-8"
+              className=" mt-12 items-center flex px-4 py-4 bg-red-700  text-black  text-sm rounded-lg hover:bg-red-700/60 hover:text-black transition-all duration-200"
             >
               <Trash className="w-4 h-4" />
-            </Button>
+            </button>
           </div>
         ))}
 
