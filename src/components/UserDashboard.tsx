@@ -616,13 +616,13 @@ export const UserDashboard: React.FC = () => {
                               className="w-full aspect-video object-cover rounded-lg"
                             />
                             <button
-                            onClick={() =>
-                              setSelectedPage((prev) => {
-                                const updatedImages = [...prev.carouselImages];
-                                updatedImages.splice(index, 1); // Safely remove the image
-                                return { ...prev, carouselImages: updatedImages };
-                              })
-                            }
+                           onClick={() =>
+                            setSelectedPage((prev) => {
+                              const updatedImages = prev.carouselImages.filter((_, i) => i !== index);
+                              console.log("Updated Images:", updatedImages); // Debugging
+                              return { ...prev, carouselImages: updatedImages };
+                            })
+                          }
                               className="absolute top-2 right-2 px-2 py-1 bg-red-600 text-white text-sm rounded-lg shadow-lg opacity-90"
                               title="Remove"
                             >
