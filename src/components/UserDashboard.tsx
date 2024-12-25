@@ -248,7 +248,7 @@ export const UserDashboard: React.FC = () => {
             <div className="flex flex-wrap items-center gap-4">
               <button
                 onClick={handleSave}
-                className="flex items-center gap-2 px-3 py-2 bg-gray-100 text-purple-600  text-sm rounded-lg hover:bg-zinc-800 hover:text-purple-900 transition-all duration-200"
+                className="flex items-center gap-2 px-3 py-2 bg-gray-100 text-purple-600  text-sm rounded-lg hover:bg-zinc-800 hover:text-white transition-all duration-200"
               >
                 Save Changes
               </button>
