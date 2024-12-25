@@ -242,20 +242,20 @@ export const UserDashboard: React.FC = () => {
         <header className="bg-[#1B1B21] shadow-lg">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap justify-between items-center gap-4">
             <h1 className="text-3xl font-bold text-[#D3D3DF] flex items-center gap-2">
-              <Settings className="w-8 h-8 text-[#C33AFF]" />
+              <Settings className="w-8 h-8 text-white" />
               Project Configuration
             </h1>
             <div className="flex flex-wrap items-center gap-4">
               <button
                 onClick={handleSave}
-                className="flex items-center gap-2 px-3 py-2 bg-gray-100 text-black border border-[#C33AFF] text-sm rounded-lg hover:bg-[#C33AFF] hover:text-purple-900 transition-all duration-200"
+                className="flex items-center gap-2 px-3 py-2 bg-gray-100 text-purple-600  text-sm rounded-lg hover:bg-zinc-800 hover:text-purple-900 transition-all duration-200"
               >
                 Save Changes
               </button>
               <button
                 onClick={handleLogout}
                 variant="outline"
-                className="flex items-center gap-2 px-3 py-2 bg-[#1B1B21] text-[#C33AFF] border border-[#C33AFF] text-sm rounded-lg hover:bg-[#C33AFF] hover:text-purple-900 transition-all duration-200"
+                className="flex items-center gap-2 px-3 py-2 bg-[#1B1B21] text-[#C33AFF] border border-#aba5ae text-sm rounded-lg hover:bg-zinc-900/5 hover:text-purple-900 transition-all duration-200"
               >
                 <LogOut className="w-4 h-4" />
                 Logout
@@ -267,22 +267,24 @@ export const UserDashboard: React.FC = () => {
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="space-y-4 mb-6">
             <div className="bg-[#1B1B21] rounded-lg shadow-md p-6 text-white space-y-4">
-              <h2 className="text-2xl font-bold text-[#C33AFF]">
+              <h2 className="text-2xl font-bold text-white">
                 Plan Details
               </h2>
               <div className="space-y-2">
                 <p className="text-lg font-bold">
-                  <span className="font-bold text-[#A22BD9]">Plan:</span>{" "}
-                  {planDetails?.plan || "N/A"}
+                  <span className="font-bold text-[#aba5ae]">Plan:</span>{" "}
+                  {planDetails?.plan
+                ? planDetails.plan.charAt(0).toUpperCase() + planDetails.plan.slice(1)
+                : "N/A"}
                 </p>
                 <p className="text-lg font-bold">
-                  <span className="font-semibold text-[#A22BD9]">
+                  <span className="font-semibold text-[#aba5ae]">
                     Remaining Pages:
                   </span>{" "}
                   {remainingPages}
                 </p>
                 <p className="text-lg">
-                  <span className="font-semibold text-[#A22BD9]">
+                  <span className="font-semibold text-[#aba5ae]">
                     Public Page Link:
                   </span>{" "}
                   {selectedPage ? (
@@ -290,7 +292,7 @@ export const UserDashboard: React.FC = () => {
                       href={`${web_Url}/wheel/${selectedPage.publicPageId}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[#C33AFF] underline hover:text-[#A22BD9]"
+                      className="text-white underline hover:text-gray-600"
                     >
                       {web_Url}/wheel/{selectedPage.publicPageId}
                     </a>
@@ -300,9 +302,10 @@ export const UserDashboard: React.FC = () => {
                 </p>
 
                 <p className="text-lg font-bold">
-                  <span className="font-semibold text-[#A22BD9]">
-                    Your plan expires on: {formattedDate}
+                  <span className="font-semibold text-[#aba5ae]">
+                    Your plan expires on: &nbsp; 
                   </span>
+                   {formattedDate}
                 </p>
               </div>
             </div>
@@ -310,7 +313,7 @@ export const UserDashboard: React.FC = () => {
             <Select
               value={selectedPage?.publicPageId || ""}
               onChange={(e) => handlePageSelection(e.target.value)}
-              className="bg-[#1B1B21] text-[#C33AFF] px-4 py-2 rounded-lg"
+              className="bg-[#1B1B21] text-white px-4 py-2 rounded-lg cursor-pointer"
             >
               {publicPages.map((page) => (
                 <SelectItem key={page.publicPageName} value={page.publicPageId}>
@@ -604,7 +607,7 @@ export const UserDashboard: React.FC = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                       {selectedPage &&
                       selectedPage.carouselImages &&
-                      selectedPage.carouselImages.length > 0 ? (
+                      selectedPage?.carouselImages?.length > 0 ? (
                         selectedPage.carouselImages.map((image, index) => (
                           <div key={index} className="relative group">
                             <img
@@ -613,14 +616,13 @@ export const UserDashboard: React.FC = () => {
                               className="w-full aspect-video object-cover rounded-lg"
                             />
                             <button
-                              onClick={() =>
-                                setSelectedPage((prev) => ({
-                                  ...prev,
-                                  carouselImages: prev.carouselImages.filter(
-                                    (_, i) => i !== index
-                                  ),
-                                }))
-                              }
+                            onClick={() =>
+                              setSelectedPage((prev) => {
+                                const updatedImages = [...prev.carouselImages];
+                                updatedImages.splice(index, 1); // Safely remove the image
+                                return { ...prev, carouselImages: updatedImages };
+                              })
+                            }
                               className="absolute top-2 right-2 px-2 py-1 bg-red-600 text-white text-sm rounded-lg shadow-lg opacity-90"
                               title="Remove"
                             >
