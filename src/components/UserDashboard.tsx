@@ -255,7 +255,7 @@ export const UserDashboard: React.FC = () => {
               <button
                 onClick={handleLogout}
                 variant="outline"
-                className="flex items-center gap-2 px-3 py-2 bg-[#1B1B21] text-[#C33AFF] border border-#aba5ae text-sm rounded-lg hover:bg-zinc-900/5 hover:text-purple-900 transition-all duration-200"
+                className="flex items-center gap-2 px-3 py-2 bg-[#1B1B21] text-[#C33AFF] border border-#aba5ae text-sm rounded-lg hover:bg-zinc-900/5 hover:text-white transition-all duration-200"
               >
                 <LogOut className="w-4 h-4" />
                 Logout
