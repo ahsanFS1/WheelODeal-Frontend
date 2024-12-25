@@ -299,7 +299,7 @@ const handleSpinEnd = async (result: SpinResult) => {
           <a
             href={spinResult.prize?.redirectUrl || "#"}
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noopener noreferrer nofollow"
             className="inline-block rounded-lg transition-all duration-200"
             style={{
               padding:
