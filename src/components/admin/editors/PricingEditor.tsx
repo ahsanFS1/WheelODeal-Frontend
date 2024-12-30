@@ -89,6 +89,18 @@ export const PricingEditor: React.FC<Props> = ({ data, onChange }) => {
             })
           }
         />
+         <TextInput
+          label="Text Below Toggle"
+          value={data.plans[0]?.planTextBelow || ''}
+          onChange={(value) =>
+            onChange({
+              ...data,
+              plans: data.plans.map((plan, index) =>
+                index === 0 ? { ...plan, planTextBelow: value } : plan
+              ),
+            })
+          }
+        />
       </div>
 
       {/* Plan Settings */}

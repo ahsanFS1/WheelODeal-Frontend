@@ -9,6 +9,8 @@ import { cn } from '../lib/utils';
 import { useConStore } from '../store/configStore';
 import PricingSection from './PricingSection';
 import { AccessibilityMenu } from './AccessibilityMenu';
+import FloatingWidget from './FloatingWidget';
+import { Carousel } from './carousel/Carousel';
 
 export const MainLandingPage: React.FC = () => {
   const { fetchMLP, mlp: landingPage } = useConStore() as {
@@ -263,7 +265,47 @@ export const MainLandingPage: React.FC = () => {
     )}
 
 
+      {/* Carousel Section */}
+      <section className="py-16 sm:py-20 bg-[#121218]">
+        <motion.div
+          className="container mx-auto px-4"
+          initial="initial"
+          whileInView="animate"
+          variants={fadeIn}
+          viewport={{ once: true }}
+        >
+          <h2
+            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-8 text-center"
+            dangerouslySetInnerHTML={{ __html: landingPage.carousel?.title }}
+          />
+          
+          <div className="max-w-4xl mx-auto mb-12">
+            <Carousel images={landingPage.carousel?.images || []} />
+          </div>
 
+          <div className="text-center">
+            <Button
+              onClick={() => window.open(landingPage.carousel?.ctaButton?.link, '_blank')}
+              className="text-lg px-8 py-4 rounded-full transform hover:scale-105 transition-all shadow-lg"
+              style={{
+                background: landingPage.carousel?.ctaButton?.isGradient
+                  ? `linear-gradient(${landingPage.carousel.ctaButton.gradientDirection}, ${landingPage.carousel.ctaButton.gradientStart}, ${landingPage.carousel.ctaButton.gradientEnd})`
+                  : landingPage.carousel?.ctaButton?.color,
+                color: landingPage.carousel?.ctaButton?.textColor,
+                transition: 'box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out',
+              }}
+              onMouseEnter={(e) =>
+                e.currentTarget.style.boxShadow = `0 4px 20px ${landingPage.carousel?.ctaButton?.glowColor || "transparent"}`
+              }
+              onMouseLeave={(e) =>
+                e.currentTarget.style.boxShadow = "none"
+              }
+            >
+              {landingPage.carousel?.ctaButton?.text || 'Learn More'}
+            </Button>
+          </div>
+        </motion.div>
+      </section>
 
 
 
@@ -539,6 +581,49 @@ export const MainLandingPage: React.FC = () => {
             />
            </div>
            </div>
+           <FloatingWidget
+  text={landingPage.floatingWidget?.text || "Special Offer!"}
+  link={landingPage.floatingWidget?.link || "#"}
+  gradientStart={landingPage.floatingWidget?.gradientStart}
+  gradientEnd={landingPage.floatingWidget?.gradientEnd}
+  enabled={landingPage.floatingWidget?.enabled}
+  position={
+    landingPage.floatingWidget?.position || {
+      side: "right",
+      offset: 0,
+      topOffset: 50,
+    }
+  }
+  style={{
+    position: "fixed",
+    zIndex: 1000,
+    top: landingPage.floatingWidget?.position?.topOffset || 50,
+    [landingPage.floatingWidget?.position?.side || "right"]:
+      landingPage.floatingWidget?.position?.offset || 0,
+    padding: "1rem",
+    background: `linear-gradient(to right, ${
+      landingPage.floatingWidget?.gradientStart || "#C33AFF"
+    }, ${landingPage.floatingWidget?.gradientEnd || "#9D50FF"})`,
+    borderRadius: "10px",
+    color: "#fff",
+    fontSize: "0.875rem", // Base size for text
+    display: landingPage.floatingWidget?.enabled ? "block" : "none",
+    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.3)",
+    transition: "all 0.3s ease-in-out",
+  }}
+  className={`floating-widget ${
+    landingPage.floatingWidget?.enabled ? "visible" : "hidden"
+  } sm:p-2 sm:text-base lg:p-5 lg:text-lg`}
+>
+  {/* Content inside the widget */}
+  <a
+    href={landingPage.floatingWidget?.link || "#"}
+    className="hover:underline"
+  >
+    {landingPage.floatingWidget?.text || "Special Offer!"}
+  </a>
+</FloatingWidget>
+
     </div>
     
   );

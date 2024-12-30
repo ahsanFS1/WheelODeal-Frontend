@@ -16,6 +16,8 @@ import { api_Url } from '../../config';
 import { VideoEditor } from './editors/VideoEditor';
 import { TextInput } from './shared/TextInput';
 import WheelEditor from './editors/WheelEditor';
+import { FloatingWidgetEditor } from './editors/FloatingWidgetEditor';
+import { CarouselEditor } from './editors/CarouselEditor';
 
 
 
@@ -140,9 +142,10 @@ export const LandingPageEditor: React.FC = () => {
 
       <Tabs.Root value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <Tabs.List className="flex space-x-2 overflow-x-auto border-b border-purple-900/20 scrollbar-thin scrollbar-thumb-purple-900/20">
-          {[
+          {[{ value: 'floatingWidget', label: 'Floating Widget' },
             { value: 'hero', label: 'Hero' },
             { value: 'demo', label: 'Demo' },
+            { value: 'carousel', label: 'Carousel' },
             {value: 'wheel-settings', label: 'Wheel Settings'},
             { value: 'video', label: 'Video' },
             { value: 'features', label: 'Features' },
@@ -153,6 +156,7 @@ export const LandingPageEditor: React.FC = () => {
             { value: 'faq', label: 'FAQ' },
             { value: 'finalCta', label: 'Final CTA' },
             { value: 'footer', label: 'Footer' },
+            
           ].map((tab) => (
             <Tabs.Trigger
               key={tab.value}
@@ -165,6 +169,12 @@ export const LandingPageEditor: React.FC = () => {
         </Tabs.List>
 
         <div className="overflow-y-auto max-h-[calc(100vh-300px)] pr-4 -mr-4">
+        <Tabs.Content value="floatingWidget" className="text-[#D3D3DF]">
+        <FloatingWidgetEditor
+          data={mlp.floatingWidget || {}}
+          onChange={(floatingWidget) => setMlp({ ...mlp, floatingWidget })}
+        />
+      </Tabs.Content>
           <Tabs.Content value="hero" className="text-[#D3D3DF]">
             <HeroEditor
               data={mlp.hero}
@@ -200,7 +210,12 @@ export const LandingPageEditor: React.FC = () => {
               onChange={(videoId) => setMlp({ ...mlp, videoId })}
             />
           </Tabs.Content>
-
+          <Tabs.Content value="carousel" className="text-[#D3D3DF]">
+          <CarouselEditor
+            data={mlp.carousel}
+            onChange={(carousel) => setMlp({ ...mlp, carousel })}
+          />
+        </Tabs.Content>
           <Tabs.Content value="features" className="text-[#D3D3DF]">
             <FeaturesEditor
               data={mlp.features}

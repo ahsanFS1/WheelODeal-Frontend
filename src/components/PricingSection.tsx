@@ -27,7 +27,7 @@ const PricingSection: React.FC<{ pricing: any }> = ({ pricing }) => {
 
       {/* Toggle Button */}
   <div
-   className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 mb-10"
+   className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 mb-1"
    onClick={() => setIsYearly((prev) => !prev)} // Switch on click anywhere
 >
   {/* Billed Monthly Label */}
@@ -77,6 +77,11 @@ const PricingSection: React.FC<{ pricing: any }> = ({ pricing }) => {
 
 </div>
 
+<p
+  className="text-center text-sm font-medium text-gray-50 mt-6 mb-8 px-4 sm:px-0 leading-relaxed  bg-clip-text text-transparent"
+>
+  {pricing.plans[0].planTextBelow}
+</p>
 
 
         {/* Pricing Cards */}
