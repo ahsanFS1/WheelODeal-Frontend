@@ -78,7 +78,7 @@ const PricingSection: React.FC<{ pricing: any }> = ({ pricing }) => {
 </div>
 
 <p
-  className="text-center text-sm font-medium text-gray-100 mt-6 mb-8 px-4 sm:px-0 leading-relaxed  bg-clip-text text-transparent"
+  className="text-center text-sm font-medium text-white mt-6 mb-8 px-4 sm:px-0 leading-relaxed  bg-clip-text text-transparent"
 >
   {pricing.plans[0].planTextBelow}
 </p>
