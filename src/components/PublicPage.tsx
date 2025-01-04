@@ -185,13 +185,13 @@ const handleSpinEnd = async (result: SpinResult) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        pageId: publicPageId, // Pass the project/page ID
-        prizeName: result.prize.text, // Pass the prize name
+        pageId: publicPageId,
+        prizeName: result.prize.text,
       }),
     });
-
+  
     const data = await response.json();
-
+  
     if (data.success) {
       console.log(`Prize "${result.prize.text}" saved successfully for pageId "${publicPageId}".`);
     } else {
@@ -204,26 +204,45 @@ const handleSpinEnd = async (result: SpinResult) => {
 
 
   // Handle claim button click
-  const handleClaim = () => {
+  const handleClaim = async () => {
     if (spinResult) {
-      if (window.gtag) {
-        window.gtag('event', 'prize_claimed', {
-          event_category: 'SpinningWheel',
-          event_label: `Prize_${spinResult.prize.text}`,
-          value: spinResult.prize.text,
-          debug_mode: true,
+      try {
+        const response = await fetch(`${api_Url}/api/prizes/claim`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            pageId: publicPageId,
+            prizeName: spinResult.prize.text,
+          }),
         });
-      }
-      if (window.fbq) {
-        window.fbq('track', 'PrizeClaimed', {
-          prize: spinResult.prize.text,
-        });
-      }
+  
+        
+  
+        
+          // Existing analytics tracking
+          if (window.gtag) {
+            window.gtag('event', 'prize_claimed', {
+              event_category: 'SpinningWheel',
+              event_label: `Prize_${spinResult.prize.text}`,
+              value: spinResult.prize.text,
+              debug_mode: true,
+            });
+          }
+          if (window.fbq) {
+            window.fbq('track', 'PrizeClaimed', {
+              prize: spinResult.prize.text,
+            });
+          }
+  
+          // Open the prize URL
+          window.open(spinResult.prize.redirectUrl, '_blank', 'noopener,noreferrer');
       
-      window.open(spinResult.prize.redirectUrl, '_blank', 'noopener,noreferrer');
-
-      
-
+      } catch (error) {
+        console.error('Error handling claim:', error);
+        alert('Failed to claim the prize.');
+      }
     }
   };
 

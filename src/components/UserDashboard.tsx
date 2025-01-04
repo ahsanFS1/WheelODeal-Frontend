@@ -1540,46 +1540,7 @@ export const UserDashboard: React.FC = () => {
                   </div>
 
                   {/* Google Tag Manager Section */}
-                  <div className="bg-[#24242C] rounded-lg p-6 space-y-4 border border-[#C33AFF]/10">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="p-2 rounded-lg bg-[#1A1A1F]">
-                        <svg
-                          className="w-6 h-6 text-[#C33AFF]"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                        >
-                          <path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zm-1.537 19.165v-3.756h3.074v3.756h-3.074zm0-5.162v-3.756h3.074v3.756h-3.074zm0-5.163V5.084h3.074v3.756h-3.074z" />
-                        </svg>
-                      </div>
-                      <div>
-                        <h3 className="text-lg font-semibold text-[#D3D3DF]">
-                          Google Tag Manager
-                        </h3>
-                        <p className="text-sm text-[#9898A3]">
-                          Implement Google tracking tags
-                        </p>
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <input
-                        type="text"
-                        value={selectedPage.googlePixelId || ""}
-                        onChange={(e) =>
-                          setSelectedPage({
-                            ...selectedPage,
-                            googlePixelId: e.target.value,
-                          })
-                        }
-                        placeholder="Enter GTM ID (e.g., GTM-XXXXXX)"
-                        className="w-full px-4 py-3 bg-[#1A1A1F] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF] placeholder-[#6C6C7D] focus:outline-none focus:ring-2 focus:ring-[#C33AFF] focus:border-transparent transition-all duration-200"
-                      />
-                      <p className="text-xs text-[#9898A3]">
-                        Found in Google Tag Manager → Admin → Container Settings
-                        → Container ID
-                      </p>
-                    </div>
-                  </div>
-
+                  
                   <div className="text-center mt-8">
                     <button
                       onClick={handleSave}

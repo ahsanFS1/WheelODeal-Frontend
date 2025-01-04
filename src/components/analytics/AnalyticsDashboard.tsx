@@ -27,6 +27,13 @@ interface Props {
   pageId: string;
 }
 
+interface TopPrize {
+  name: string;
+  revealed: number;
+  claimed: number;
+  redemptionRate: number;
+}
+
 export const AnalyticsDashboard: React.FC<Props> = ({ pageId }) => {
   const [metrics, setMetrics] = useState({
     totalVisitors: 0,
@@ -34,22 +41,7 @@ export const AnalyticsDashboard: React.FC<Props> = ({ pageId }) => {
     prizes_claimed: 0,
     spins: 0,
     spinConversionRate: 0,
-    prizeMetrics: {
-      mostPopularPrize: 'N/A',
-      redemptionRate: 0,
-    },
-    trafficSources: {
-      organic: 0,
-      social: 0,
-      paid: 0,
-      direct: 0,
-    },
-    history: {
-      labels: [],
-      visitors: [],
-      spins: [],
-      conversions: [],
-    },
+    topPrizes: [] as TopPrize[],
   });
 
   const [dateRange, setDateRange] = useState({
@@ -113,20 +105,17 @@ export const AnalyticsDashboard: React.FC<Props> = ({ pageId }) => {
           console.error('Error fetching metrics:', analyticsResult.message);
         }
   
-        // Fetch most popular prize
-        const prizeResponse = await fetch(`${api_Url}/api/prizes/most-popular?pageId=${pageId}`);
+        // Fetch top 5 prizes
+        const prizeResponse = await fetch(`${api_Url}/api/prizes/top-5?pageId=${pageId}`);
         const prizeResult = await prizeResponse.json();
   
         if (prizeResult.success) {
           setMetrics((prevMetrics) => ({
             ...prevMetrics,
-            prizeMetrics: {
-              ...prevMetrics.prizeMetrics,
-              mostPopularPrize: prizeResult.data._id || 'N/A', // Use the _id field as prize name
-            },
+            topPrizes: prizeResult.data,
           }));
         } else {
-          console.error('Error fetching most popular prize:', prizeResult.message);
+          console.error('Error fetching top prizes:', prizeResult.message);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -137,23 +126,23 @@ export const AnalyticsDashboard: React.FC<Props> = ({ pageId }) => {
   }, [pageId, dateRange]);
   
   const chartData = {
-    labels: metrics.history.labels || [],
+    labels: metrics.history?.labels || [],
     datasets: [
       {
         label: 'Page Visits',
-        data: metrics.history.visitors || [],
+        data: metrics.history?.visitors || [],
         borderColor: 'rgb(75, 192, 192)',
         tension: 0.1,
       },
       {
         label: 'Spins',
-        data: metrics.history.spins || [],
+        data: metrics.history?.spins || [],
         borderColor: 'rgb(153, 102, 255)',
         tension: 0.1,
       },
       {
         label: 'Conversions',
-        data: metrics.history.conversions || [],
+        data: metrics.history?.conversions || [],
         borderColor: 'rgb(255, 99, 132)',
         tension: 0.1,
       },
@@ -202,9 +191,22 @@ export const AnalyticsDashboard: React.FC<Props> = ({ pageId }) => {
             <h4 className="text-sm text-gray-400">Conversion Rate</h4>
             <p className="text-lg font-semibold text-white">{metrics.spinConversionRate}%</p>
           </div>
-          <div className="bg-[#2B2B33] p-4 rounded-lg text-center">
-            <h4 className="text-sm text-gray-400">Most Popular Prize</h4>
-            <p className="text-lg font-semibold text-white">{metrics.prizeMetrics.mostPopularPrize}</p>
+        </div>
+        <div className="bg-[#1B1B21] p-6 rounded-lg">
+          <h3 className="text-lg font-semibold text-[#D3D3DF] mb-4">Top 5 Prizes</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {metrics.topPrizes.map((prize, index) => (
+              <div
+                key={index}
+                className="bg-[#2B2B33] p-4 rounded-lg text-center"
+              >
+                <h4 className="text-sm text-gray-400">#{index + 1} Prize</h4>
+                <p className="text-lg font-semibold text-white">{prize.name}</p>
+                <p className="text-sm text-gray-400">Revealed: {prize.revealed}</p>
+                <p className="text-sm text-gray-400">Claimed: {prize.claimed}</p>
+                <p className="text-sm text-gray-400">Redemption Rate: {prize.redemptionRate.toFixed(2)*100}%</p>
+              </div>
+            ))}
           </div>
         </div>
         <div className="bg-[#1B1B21] p-6 rounded-lg">
