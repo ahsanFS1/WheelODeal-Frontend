@@ -118,7 +118,7 @@ export const MainLandingPage: React.FC = () => {
           variants={fadeIn}
         >
           <h1
-            className="inline-block text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-shadow-lg bg-clip-text text-transparent bg-gradient-to-r from-white to-purple-200 break-words"
+            className="inline-block text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-gradient bg-clip-text text-transparent break-words"
             style={{
               fontSize: 'clamp(2rem, 5vw, 4.5rem)',
               overflowWrap: 'break-word',

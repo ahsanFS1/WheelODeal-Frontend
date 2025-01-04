@@ -21,7 +21,9 @@ export const PublicPage: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false); // State to track if the device is mobile
   
  
-  const measurementId = 'G-28B7K98MKT'; // Replace with your GA4 Measurement ID
+  const gaMeasurementId = 'G-28B7K98MKT'; // Replace with your GA4 Measurement ID
+  const facebookPixelId = '1732100940854743'; // Replace with your Facebook Pixel ID
+  const googlePixelId = 'YOUR_GOOGLE_PIXEL_ID'; // Replace with your Google Pixel ID // Replace with your GA4 Measurement ID
 
 
   useEffect(() => {
@@ -36,46 +38,6 @@ export const PublicPage: React.FC = () => {
       window.removeEventListener('resize', checkIfMobile); // Clean up on component unmount
     };
   }, []);
-  // Load gtag.js dynamically
-  useEffect(() => {
-    const loadGtag = () => {
-      const existingScript = document.querySelector(
-        `script[src="https://www.googletagmanager.com/gtag/js?id=${measurementId}"]`
-      );
-
-      if (existingScript) {
-        console.log('Google Analytics script already loaded.');
-        return;
-      }
-
-      const script = document.createElement('script');
-      script.async = true;
-      script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
-      document.head.appendChild(script);
-
-      script.onload = () => {
-        console.log('Google Analytics script loaded.');
-        window.dataLayer = window.dataLayer || [];
-        window.gtag = function gtag() { window.dataLayer.push(arguments); };
-
-        // Track initial pageview
-        window.gtag('js', new Date());
-        window.gtag('config', measurementId, {
-          page_path: `/wheel/${publicPageId}`,
-          debug_mode: true,
-        });
-        console.log('Pageview tracked for:', `/wheel/${publicPageId}`);
-      };
-
-      script.onerror = () => {
-        console.error('Failed to load Google Analytics script.');
-      };
-    };
-
-    loadGtag();
-  }, [publicPageId, measurementId]);
-
-  // Fetch public page configuration
   useEffect(() => {
     const fetchData = async () => {
       console.log('Fetching configuration for PublicPage', publicPageId);
@@ -108,6 +70,84 @@ export const PublicPage: React.FC = () => {
 
     fetchData();
   }, [publicPageId]);
+  // Load gtag.js dynamically
+  useEffect(() => {
+    // Load Google Analytics (gtag.js)
+
+    if (!config) return;
+    const loadGtag = () => {
+      const existingScript = document.querySelector(
+        `script[src="https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}"]`
+      );
+
+      if (!existingScript) {
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = `https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`;
+        document.head.appendChild(script);
+
+        script.onload = () => {
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = function gtag() {
+            window.dataLayer.push(arguments);
+          };
+          window.gtag('js', new Date());
+          window.gtag('config', gaMeasurementId, {
+            page_path: `/wheel/${publicPageId}`,
+          });
+        };
+
+        script.onerror = () => {
+          console.error('Failed to load Google Analytics script.');
+        };
+      }
+    };
+
+    // Load Facebook Pixel
+    const loadFacebookPixel = () => {
+      if (!window.fbq) {
+        const script = document.createElement('script');
+        script.innerHTML = `
+          !function(f,b,e,v,n,t,s)
+          {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+          n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+          if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+          n.queue=[];t=b.createElement(e);t.async=!0;
+          t.src=v;s=b.getElementsByTagName(e)[0];
+          s.parentNode.insertBefore(t,s)}(window, document,'script',
+          'https://connect.facebook.net/en_US/fbevents.js');
+          fbq('init', '${config?.facebookPixelId}');
+          fbq('track', 'PageView');
+        `;
+        document.head.appendChild(script);
+      }
+    };
+
+    // Load Google Pixel
+    const loadGooglePixel = () => {
+      const existingScript = document.querySelector(
+        `script[src="https://www.googletagmanager.com/gtm.js?id=${config?.googlePixelId}"]`
+      );
+
+      if (!existingScript) {
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = `https://www.googletagmanager.com/gtm.js?id=${config?.googlePixelId}`;
+        document.head.appendChild(script);
+
+        script.onerror = () => {
+          console.error('Failed to load Google Pixel script.');
+        };
+      }
+    };
+
+    loadGtag();
+    loadFacebookPixel();
+    loadGooglePixel();
+  }, [publicPageId, gaMeasurementId, config?.facebookPixelId, config?.googlePixelId]);
+
+  // Fetch public page configuration
+ 
 
   // Handle the end of a spin
 // Handle the end of a spin
@@ -127,8 +167,16 @@ const handleSpinEnd = async (result: SpinResult) => {
       value: result.prize.text,
       debug_mode: true,
     });
+    
+
   }
 
+  if (window.fbq) {
+    console.log(config.facebookPixelId)
+    window.fbq('track', 'SpinCompleted', {
+      prize: result.prize.text,
+    });
+  }
   // Save the prize to the backend
   try {
     const response = await fetch(`${api_Url}/api/prizes`, {
@@ -166,7 +214,11 @@ const handleSpinEnd = async (result: SpinResult) => {
           debug_mode: true,
         });
       }
-
+      if (window.fbq) {
+        window.fbq('track', 'PrizeClaimed', {
+          prize: spinResult.prize.text,
+        });
+      }
       
       window.open(spinResult.prize.redirectUrl, '_blank', 'noopener,noreferrer');
 

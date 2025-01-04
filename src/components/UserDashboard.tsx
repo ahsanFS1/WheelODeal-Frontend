@@ -267,15 +267,14 @@ export const UserDashboard: React.FC = () => {
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="space-y-4 mb-6">
             <div className="bg-[#1B1B21] rounded-lg shadow-md p-6 text-white space-y-4">
-              <h2 className="text-2xl font-bold text-white">
-                Plan Details
-              </h2>
+              <h2 className="text-2xl font-bold text-white">Plan Details</h2>
               <div className="space-y-2">
                 <p className="text-lg font-bold">
                   <span className="font-bold text-[#aba5ae]">Plan:</span>{" "}
                   {planDetails?.plan
-                ? planDetails.plan.charAt(0).toUpperCase() + planDetails.plan.slice(1)
-                : "N/A"}
+                    ? planDetails.plan.charAt(0).toUpperCase() +
+                      planDetails.plan.slice(1)
+                    : "N/A"}
                 </p>
                 <p className="text-lg font-bold">
                   <span className="font-semibold text-[#aba5ae]">
@@ -303,9 +302,9 @@ export const UserDashboard: React.FC = () => {
 
                 <p className="text-lg font-bold">
                   <span className="font-semibold text-[#aba5ae]">
-                    Your plan expires on: &nbsp; 
+                    Your plan expires on: &nbsp;
                   </span>
-                   {formattedDate}
+                  {formattedDate}
                 </p>
               </div>
             </div>
@@ -437,6 +436,12 @@ export const UserDashboard: React.FC = () => {
                 className="px-4 py-2 text-[#D3D3DF] hover:text-[#C33AFF] data-[state=active]:text-[#C33AFF] data-[state=active]:border-b-2 data-[state=active]:border-[#C33AFF] transition-colors"
               >
                 Analytics
+              </Tabs.Trigger>
+              <Tabs.Trigger
+                value="tracking"
+                className="px-4 py-2 text-[#D3D3DF] hover:text-[#C33AFF] data-[state=active]:text-[#C33AFF] data-[state=active]:border-b-2 data-[state=active]:border-[#C33AFF] transition-colors"
+              >
+                Tracking
               </Tabs.Trigger>
             </Tabs.List>
 
@@ -616,13 +621,19 @@ export const UserDashboard: React.FC = () => {
                               className="w-full aspect-video object-cover rounded-lg"
                             />
                             <button
-                           onClick={() =>
-                            setSelectedPage((prev) => {
-                              const updatedImages = prev.carouselImages.filter((_, i) => i !== index);
-                              console.log("Updated Images:", updatedImages); // Debugging
-                              return { ...prev, carouselImages: updatedImages };
-                            })
-                          }
+                              onClick={() =>
+                                setSelectedPage((prev) => {
+                                  const updatedImages =
+                                    prev.carouselImages.filter(
+                                      (_, i) => i !== index
+                                    );
+                                  console.log("Updated Images:", updatedImages); // Debugging
+                                  return {
+                                    ...prev,
+                                    carouselImages: updatedImages,
+                                  };
+                                })
+                              }
                               className="absolute top-2 right-2 px-2 py-1 bg-red-600 text-white text-sm rounded-lg shadow-lg opacity-90"
                               title="Remove"
                             >
@@ -1472,6 +1483,114 @@ export const UserDashboard: React.FC = () => {
                 <AnalyticsDashboard
                   pageId={selectedPage.publicPageId || "defaultPageId"}
                 />
+              </div>
+            </Tabs.Content>
+            <Tabs.Content value="tracking" className="space-y-8">
+              <div className="bg-[#1B1B21] rounded-lg shadow-lg p-6">
+                <div className="max-w-2xl mx-auto space-y-8">
+                  <div className="text-center mb-8">
+                    <h2 className="text-2xl font-bold text-[#D3D3DF] mb-2">
+                      Pixel Tracking Setup
+                    </h2>
+                    <p className="text-[#9898A3]">
+                      Configure your tracking pixels to monitor conversions and
+                      user engagement
+                    </p>
+                  </div>
+
+                  {/* Facebook Pixel Section */}
+                  <div className="bg-[#24242C] rounded-lg p-6 space-y-4 border border-[#C33AFF]/10">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="p-2 rounded-lg bg-[#1A1A1F]">
+                        <svg
+                          className="w-6 h-6 text-[#C33AFF]"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                        >
+                          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-[#D3D3DF]">
+                          Facebook Pixel
+                        </h3>
+                        <p className="text-sm text-[#9898A3]">
+                          Track conversions from Facebook Ads
+                        </p>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <input
+                        type="text"
+                        value={selectedPage.facebookPixelId || ""}
+                        onChange={(e) =>
+                          setSelectedPage({
+                            ...selectedPage,
+                            facebookPixelId: e.target.value,
+                          })
+                        }
+                        placeholder="Enter Facebook Pixel ID (e.g., 123456789012345)"
+                        className="w-full px-4 py-3 bg-[#1A1A1F] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF] placeholder-[#6C6C7D] focus:outline-none focus:ring-2 focus:ring-[#C33AFF] focus:border-transparent transition-all duration-200"
+                      />
+                      <p className="text-xs text-[#9898A3]">
+                        Found in Facebook Events Manager → Data Sources → Choose
+                        your pixel → Settings
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Google Tag Manager Section */}
+                  <div className="bg-[#24242C] rounded-lg p-6 space-y-4 border border-[#C33AFF]/10">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="p-2 rounded-lg bg-[#1A1A1F]">
+                        <svg
+                          className="w-6 h-6 text-[#C33AFF]"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                        >
+                          <path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zm-1.537 19.165v-3.756h3.074v3.756h-3.074zm0-5.162v-3.756h3.074v3.756h-3.074zm0-5.163V5.084h3.074v3.756h-3.074z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-[#D3D3DF]">
+                          Google Tag Manager
+                        </h3>
+                        <p className="text-sm text-[#9898A3]">
+                          Implement Google tracking tags
+                        </p>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <input
+                        type="text"
+                        value={selectedPage.googlePixelId || ""}
+                        onChange={(e) =>
+                          setSelectedPage({
+                            ...selectedPage,
+                            googlePixelId: e.target.value,
+                          })
+                        }
+                        placeholder="Enter GTM ID (e.g., GTM-XXXXXX)"
+                        className="w-full px-4 py-3 bg-[#1A1A1F] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF] placeholder-[#6C6C7D] focus:outline-none focus:ring-2 focus:ring-[#C33AFF] focus:border-transparent transition-all duration-200"
+                      />
+                      <p className="text-xs text-[#9898A3]">
+                        Found in Google Tag Manager → Admin → Container Settings
+                        → Container ID
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="text-center mt-8">
+                    <button
+                      onClick={handleSave}
+                      className="px-6 py-3 bg-gradient-to-r from-[#C33AFF] to-[#7C3AFF] text-white rounded-lg hover:opacity-90 transition-all duration-200 flex items-center gap-2 mx-auto"
+                    >
+                      <span>Save Tracking Settings</span>
+                     
+                     
+                    </button>
+                  </div>
+                </div>
               </div>
             </Tabs.Content>
           </Tabs.Root>
