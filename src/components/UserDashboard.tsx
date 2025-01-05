@@ -537,7 +537,7 @@ export const UserDashboard: React.FC = () => {
                     </h2>
                     <div className="bg-[#121218] border border-[#C33AFF]/20 rounded-lg p-4">
                       <a
-                        href={`/wheel/${selectedPage?.publicPageId}`}
+                        href={`https://www.wheelodeal.com/wheel/${selectedPage?.publicPageId}`}
                         target="_blank"
                         rel="noopener noreferrer nofollow"
                         className="relative aspect-video overflow-hidden rounded-lg"
@@ -1529,7 +1529,7 @@ export const UserDashboard: React.FC = () => {
                             facebookPixelId: e.target.value,
                           })
                         }
-                        placeholder="Enter Facebook Pixel ID (e.g., 123456789012345)"
+                        placeholder="Enter Facebook Pixel ID"
                         className="w-full px-4 py-3 bg-[#1A1A1F] border border-[#C33AFF]/20 rounded-lg text-[#D3D3DF] placeholder-[#6C6C7D] focus:outline-none focus:ring-2 focus:ring-[#C33AFF] focus:border-transparent transition-all duration-200"
                       />
                       <p className="text-xs text-[#9898A3]">
