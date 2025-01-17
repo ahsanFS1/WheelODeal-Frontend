@@ -687,6 +687,34 @@ export const UserDashboard: React.FC = () => {
                     <h2 className="text-xl font-semibold text-[#D3D3DF]">
                       Wheel Settings
                     </h2>
+                    <div>
+                      <div className="flex items-center space-x-2">
+                        <label className="text-sm font-medium text-[#D3D3DF]">
+                          Enable Auto Renewal of Expiration Date
+                        </label>
+                        <input
+                          type="checkbox"
+                          checked={selectedPage.automateExpiry || false}
+                          onChange={(e) =>
+                            setSelectedPage({
+                              ...selectedPage,
+                              automateExpiry: e.target.checked, // Directly update the boolean value
+                            })
+                          }
+                          className="w-5 h-5"
+                        />
+                      </div>
+
+                      {/* Disclaimer Text */}
+                      <p className="text-xs text-[#A6A6A6] mt-2">
+                        By enabling this option, AutoRenewal will occur every 2
+                        hours, checking and renewing the expiration date for 2 hours of all
+                        expired prizes automatically. This ensures that all
+                        prizes will remain active, and no prize will expire
+                        without renewal.
+                      </p>
+                    </div>
+
                     {selectedPage.prizes.map((prize, index) => (
                       <div
                         key={index}
@@ -1540,15 +1568,13 @@ export const UserDashboard: React.FC = () => {
                   </div>
 
                   {/* Google Tag Manager Section */}
-                  
+
                   <div className="text-center mt-8">
                     <button
                       onClick={handleSave}
                       className="px-6 py-3 bg-gradient-to-r from-[#C33AFF] to-[#7C3AFF] text-white rounded-lg hover:opacity-90 transition-all duration-200 flex items-center gap-2 mx-auto"
                     >
                       <span>Save Tracking Settings</span>
-                     
-                     
                     </button>
                   </div>
                 </div>
